@@ -1,0 +1,24 @@
+// @flow
+import * as React from 'react';
+
+type Props = {
+  className: string,
+  show: boolean, // Debería de mostrarse?
+  closeIcon: React.Node, // Icono de hamburguesa como componente de react
+  imagotype: string, // Imagotipo del cliente
+  anchors: Array<{ text: string, url: string }>, // Links que van hasta arriba
+
+  onCloseClick: Function, // Función a ejecutar en cuanto se da clic en el icono de hamburguesa
+  onAnchorClick: Function, // Función a ejecutar cuando se da clic en un link (puede ser push)
+};
+
+/**
+ * Componente responsable solamente de desplegar el sidebar
+ */
+export default class Sidebar extends React.Component<void, Props, void> {
+  render() {
+    return (
+      null
+    );
+  }
+}
