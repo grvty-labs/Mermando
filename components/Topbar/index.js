@@ -21,7 +21,18 @@ type Props = {
 export default class Topbar extends React.Component<void, Props, void> {
   render() {
     return (
-      null
+      <div className={this.props.className}>
+        <div className='container'>
+          <div className='column'>
+            <div className='hamburger' dangerouslySetInnerHTML={{ __html: this.props.burguerIcon }} />
+            <img className='imagotype' src={this.props.imagotype} alt='imagotype' />
+          </div>
+          <div className='column'>
+            <div className='avatar' style={{ backgroundImage: `url( ${this.props.avatar} )` }} />
+            <span>{ this.props.username }</span>
+          </div>
+        </div>
+      </div>
     );
   }
 }
