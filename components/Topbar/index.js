@@ -24,14 +24,23 @@ type Props = StoreProps & Actions;
  */
 export default class Topbar extends React.Component<void, Props, void> {
   render() {
+    const anchor = this.props.anchors.map((element, index) => (
+      <div className='anchor' key={index} >
+        <span>{ element.text }</span>
+      </div>
+    ));
+
     return (
       <div className={this.props.className}>
         <div className='container'>
           <div className='column'>
             { this.props.burguerIcon }
             <img className='imagotype' src={this.props.imagotype} alt='imagotype' />
+            <div className='anchors'>
+              { anchor }
+            </div>
           </div>
-          <div className='column'>
+          <div className='column column-avatar'>
             <div className='avatar' style={{ backgroundImage: `url( ${this.props.avatar} )` }} />
             <span>{ this.props.username }</span>
           </div>
