@@ -25,7 +25,7 @@ type Props = StoreProps & Actions;
 export default class Topbar extends React.Component<void, Props, void> {
   render() {
     const anchor = this.props.anchors.map((element, index) => (
-      <div className='anchor' key={index} >
+      <div className='anchor' key={index} onClick={() => this.props.onAnchorClick(element.url)} role='link' tabIndex={0}>
         <span>{ element.text }</span>
       </div>
     ));
