@@ -24,9 +24,11 @@ export default class Sidebar extends React.Component<void, Props, void> {
     ));
 
     return (
-      <div className={this.props.className}>
+      <div className={this.props.className + (this.props.show ? ' show' : ' hidden')}>
         <div className='logo-container'>
-          { this.props.closeIcon }
+          <div className='close-container' onClick={() => { this.props.onCloseClick(); }} role='button' tabIndex={0}>
+            { this.props.closeIcon }
+          </div>
           <img className='imagotype' src={this.props.imagotype} alt='Imagotype' />
         </div>
         <div className='container'>
