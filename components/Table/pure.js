@@ -1,4 +1,5 @@
 // @flow
+/* eslint react/no-unused-prop-types: [0] */
 import * as React from 'react';
 import type { Header, Item, SingleItemActions, MultipleItemsActions } from './types';
 
@@ -59,8 +60,32 @@ export default class PureTable extends React.Component<Default, PureTableProps, 
   }
 
   render() {
+    const header = this.props.headers.map((element, index) => (
+      <div className='header' key={index}>
+        <form>
+          <input type='checkbox' />
+          <span>{ element.title1 }</span>
+          <span>{ element.title2 }</span>
+          <span>{ element.title3 }</span>
+          <span>{ element.title4 }</span>
+          <img src='assets/overflow.svg' alt='overflow' />
+        </form>
+      </div>
+    ));
     return (
-      null
+      <div className={this.props.className}>
+        <div className='title-container'>
+          {/* <h3>{ this.props.Header }</h3> */}
+        </div>
+        <div className='container'>
+          <span>Title 1</span>
+          <span>Title 2</span>
+          <span>Title 3</span>
+          <span>Title 4</span>
+          { header }
+        </div>
+        HEllo
+      </div>
     );
   }
 }
