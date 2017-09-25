@@ -34,7 +34,9 @@ export default class Topbar extends React.Component<void, Props, void> {
       <div className={this.props.className}>
         <div className='container'>
           <div className='column'>
-            { this.props.burguerIcon }
+            <div className='burger-container' onClick={() => { this.props.onBurguerClick(); }} role='button' tabIndex={0}>
+              { this.props.burguerIcon }
+            </div>
             <img className='imagotype' src={this.props.imagotype} alt='imagotype' />
             <div className='anchors'>
               { anchor }

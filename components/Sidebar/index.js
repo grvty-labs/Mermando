@@ -17,8 +17,24 @@ type Props = {
  */
 export default class Sidebar extends React.Component<void, Props, void> {
   render() {
+    const anchor = this.props.anchors.map((element, index) => (
+      <div className='anchor' key={index} onClick={() => this.props.onAnchorClick(element.url)} role='link' tabIndex={0}>
+        <span>{element.text}</span>
+      </div>
+    ));
+
     return (
-      null
+      <div className={this.props.className + (this.props.show ? ' show' : ' hidden')}>
+        <div className='logo-container'>
+          <div className='close-container' onClick={() => { this.props.onCloseClick(); }} role='button' tabIndex={0}>
+            { this.props.closeIcon }
+          </div>
+          <img className='imagotype' src={this.props.imagotype} alt='Imagotype' />
+        </div>
+        <div className='container'>
+          {anchor}
+        </div>
+      </div>
     );
   }
 }
