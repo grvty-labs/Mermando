@@ -27,7 +27,7 @@ export default class Sidebar extends React.Component<void, Props, void> {
       <div className={this.props.className}>
         <div className='logo-container'>
           { this.props.closeIcon }
-          <img src={this.props.imagotype} alt='Imagotype' />
+          <img className='imagotype' src={this.props.imagotype} alt='Imagotype' />
         </div>
         <div className='container'>
           {anchor}
