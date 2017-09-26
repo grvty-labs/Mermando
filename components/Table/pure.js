@@ -62,8 +62,14 @@ export default class PureTable extends React.Component<Default, PureTableProps, 
   render() {
     const header = this.props.headers.map((element, index) => (
       <div className='header' key={index}>
+        <span>{ element.Header.text }</span>
+      </div>
+    ));
+
+    const item = this.props.items.map((element, index) => (
+      <div className='item' key={index}>
         <form>
-          <input type='checkbox' />
+          {/* <input type='checkbox' /> */}
           <span>{ element.title1 }</span>
           <span>{ element.title2 }</span>
           <span>{ element.title3 }</span>
@@ -76,9 +82,12 @@ export default class PureTable extends React.Component<Default, PureTableProps, 
       <div className={this.props.className}>
         <div className='title-container'>
           {/* <h3>{ this.props.Header }</h3> */}
+          <div className='title'>
+            <h3>Table Card</h3>
+          </div>
           <div className='button-container'>
             <div className='secondary-button' role='button'>
-              Secondary Action
+              Secondary
             </div>
             <div className='primary-button' role='button'>
               Primary Action
@@ -86,13 +95,18 @@ export default class PureTable extends React.Component<Default, PureTableProps, 
           </div>
         </div>
         <div className='container'>
-          <span>Title 1</span>
-          <span>Title 2</span>
-          <span>Title 3</span>
-          <span>Title 4</span>
-          { header }
+          <div className='headers'>
+            { header }
+          </div>
+          <div className='items'>
+            { item }
+          </div>
         </div>
-        HEllo
+        <div className='button-container'>
+          <div className='more-button'>
+            More
+          </div>
+        </div>
       </div>
     );
   }
