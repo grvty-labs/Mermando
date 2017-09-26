@@ -76,6 +76,14 @@ export default class PureTable extends React.Component<Default, PureTableProps, 
       <div className={this.props.className}>
         <div className='title-container'>
           {/* <h3>{ this.props.Header }</h3> */}
+          <div className='button-container'>
+            <div className='secondary-button' role='button'>
+              Secondary Action
+            </div>
+            <div className='primary-button' role='button'>
+              Primary Action
+            </div>
+          </div>
         </div>
         <div className='container'>
           <span>Title 1</span>
