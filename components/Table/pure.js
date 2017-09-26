@@ -61,23 +61,19 @@ export default class PureTable extends React.Component<Default, PureTableProps, 
 
   render() {
     const header = this.props.headers.map((element, index) => (
-      <div className='header' key={index}>
-        <span>{ element.Header.text }</span>
-      </div>
+      <th key={index}>{ element.Header.text }</th>
     ));
 
     const item = this.props.items.map((element, index) => (
-      <div className='item' key={index}>
-        <form>
-          {/* <input type='checkbox' /> */}
-          <span>{ element.title1 }</span>
-          <span>{ element.title2 }</span>
-          <span>{ element.title3 }</span>
-          <span>{ element.title4 }</span>
-          <img src='assets/overflow.svg' alt='overflow' />
-        </form>
-      </div>
+      <tr key={index}>
+        { element.Item.titles.map((el, id) => (
+          <td key={id}>
+            { el.text }
+          </td>
+        ))}
+      </tr>
     ));
+
     return (
       <div className={this.props.className}>
         <div className='title-container'>
@@ -95,12 +91,12 @@ export default class PureTable extends React.Component<Default, PureTableProps, 
           </div>
         </div>
         <div className='container'>
-          <div className='headers'>
-            { header }
-          </div>
-          <div className='items'>
-            { item }
-          </div>
+          <table>
+            <tr>
+              { header }
+              { item }
+            </tr>
+          </table>
         </div>
         <div className='button-container'>
           <div className='more-button'>
