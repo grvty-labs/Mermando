@@ -94,8 +94,8 @@ export default class PureTable extends React.Component<Default, PureTableProps, 
           <table>
             <tr>
               { header }
-              { item }
             </tr>
+            { item }
           </table>
         </div>
         <div className='button-container'>
