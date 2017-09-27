@@ -1,5 +1,6 @@
 // @flow
 /* eslint react/no-unused-prop-types: [0] */
+/* eslint consistent-return: [0] */
 import * as React from 'react';
 import type { Header, Item, SingleItemActions, MultipleItemsActions } from './types';
 
@@ -45,6 +46,7 @@ export default class PureTable extends React.Component<Default, PureTableProps, 
   constructor(props: PureTableProps) {
     super(props);
     (this: any).toggleItemHotdog = this.toggleItemHotdog.bind(this);
+    (this: any).renderActions = this.renderActions.bind(this);
   }
 
   state: State = {
@@ -59,6 +61,18 @@ export default class PureTable extends React.Component<Default, PureTableProps, 
     });
   }
 
+  renderActions(element: Item | null) {
+    // console.log(element);
+    if (element) {
+      const actions = element.map((el, index) => (
+        <div key={index}>
+          { el.available ? el.key : null }
+        </div>
+      ));
+      return actions;
+    }
+  }
+
   render() {
     const header = this.props.headers.map((element, index) => (
       <th key={index}>{ element.Header.text }</th>
@@ -68,9 +82,13 @@ export default class PureTable extends React.Component<Default, PureTableProps, 
       <tr key={index}>
         { element.Item.titles.map((el, id) => (
           <td key={id}>
-            { el.text }
+            {id === 0 ? <img className='checkbox' src='assets/checkbox-off.svg' alt='checkbox' /> : null }
+            <span>{ el.text }</span>
           </td>
         ))}
+        <td>
+          { this.renderActions(element.Item.actions)}
+        </td>
       </tr>
     ));
 
@@ -92,10 +110,15 @@ export default class PureTable extends React.Component<Default, PureTableProps, 
         </div>
         <div className='container'>
           <table>
-            <tr>
-              { header }
-            </tr>
-            { item }
+            <thead>
+              <tr>
+                { header }
+                <th />
+              </tr>
+            </thead>
+            <tbody>
+              { item }
+            </tbody>
           </table>
         </div>
         <div className='button-container'>
