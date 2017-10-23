@@ -34,16 +34,30 @@ export default class Topbar extends React.Component<void, Props, void> {
       <div className={this.props.className}>
         <div className='container'>
           <div className='column'>
-            <div className='burger-container' onClick={() => { this.props.onBurguerClick(); }} role='button' tabIndex={0}>
-              { this.props.burguerIcon }
-              <img className='imagotype' src={this.props.imagotype} alt='imagotype' />
+            <div className='menu-container'>
+              <div
+                className='hamburger'
+                onClick={() => { this.props.onBurguerClick(); }}
+                role='button'
+                tabIndex={0}
+              >
+                { this.props.burguerIcon }
+              </div>
+              <img
+                className='imagotype'
+                src={this.props.imagotype}
+                alt='imagotype'
+              />
             </div>
             <div className='anchors'>
               { anchor }
             </div>
           </div>
           <div className='column column-avatar'>
-            <div className='avatar' style={{ backgroundImage: `url( ${this.props.avatar} )` }} />
+            <div
+              className='avatar'
+              style={{ backgroundImage: `url( ${this.props.avatar} )` }}
+            />
             <span>{ this.props.username }</span>
           </div>
         </div>
