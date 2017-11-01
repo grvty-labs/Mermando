@@ -1,0 +1,85 @@
+.pureble {
+  width: 100%;
+
+  > .title-container {
+    width: 100%;
+    display: flex;
+    box-sizing: border-box;
+    justify-content: space-between;
+    padding-top: 14px;
+    margin-bottom: 53px;
+
+    > .title {
+      display: flex;
+      flex-grow: 2;
+      box-sizing: border-box;
+      margin-left: 21px;
+      margin-top: 6px;
+    }
+
+    > .button-container {
+      display: flex;
+      box-sizing: border-box;
+      flex-grow: 1;
+      justify-content: flex-end;
+
+      > .secondary-button {
+        margin-right: 26px;
+      }
+
+      > .primary-button {
+        margin-right: 12px;
+      }
+    }
+  }
+
+  > .container {
+    width: 100%;
+    padding-bottom: 22px;
+    padding-right: 37px;
+    padding-left: 14px;
+
+    > table {
+      /* background-color: blue; */
+      width: 100%;
+      text-align: left;
+
+      > thead {
+        background-color: #fff;
+
+        > tr {
+          height: 3rem;
+
+          > th {
+            border-bottom: 1px solid #ddd;
+          }
+        }
+      }
+
+      > tbody {
+        > tr {
+          height: 3rem;
+
+          > td {
+            border-bottom: 1px solid #ddd;
+
+            /*.checkbox {
+              border-bottom: 1px solid #ddd;
+              margin-right: 14px;
+              vertical-align: middle;
+              cursor: pointer;
+            }*/
+          }
+        }
+      }
+    }
+  }
+
+  > .button-container {
+    display: flex;
+    box-sizing: border-box;
+    justify-content: center;
+    flex-grow: 1;
+    padding-bottom: 17px;
+  }
+}

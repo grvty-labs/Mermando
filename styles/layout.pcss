@@ -1,0 +1,107 @@
+@import './waddles/colours';
+@import './settings';
+@import './waddles/waddles';
+@import './topbar';
+@import './sidebar';
+@import './card';
+@import './override';
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:400,700');
+/*
+@import '../vendors/react-datetime';
+*/
+
+/*
+@import './base';
+@import './coherence';
+@import './buttons';
+@import './panels';
+@import './forms';
+@import './filters';
+@import './tooltips';
+*/
+
+.react {
+  grid-kiss:
+    "+---------------------------------------------------------------------+ ----"
+    "|                                  ↓                                  |     "
+    "|                             ← .topbar →                             | 48px"
+    "|                                  ↑                                  |     "
+    "+---------------------------------------------------------------------+ ----"
+    "                                                                            "
+    "                                                                            "
+    "+--+  +---------------------------------------------------------+  +--+     "
+    "|  |  |                                                         |  |  |     "
+    "|  |  |                                                         |  |  |     "
+    "|  |  |                        >.main                           |  |  |     "
+    "|  |  |                                                         |  |  |     "
+    "|  |  |                                                         |  |  |     "
+    "+--+  +---------------------------1024px------------------------+  +--+     ";
+
+  > .main {
+    margin-top: 48px;
+    width: 100%;
+  }
+}
+
+:root {
+  --sidebar-bgc: var(--persian-indigo);
+  --sidebar-color: var(--white);
+  --sidebar-width: 320px;
+  --sidebar-font: 'Open-Sans' sans-serif;
+  --primary-color: var(--han-purple);
+  --secondary-color: var(--chambray);
+  --more-color: var(--caribbean-green);
+}
+
+.section {
+  margin-top: 48px;
+}
+
+.primary-button {
+  align-items: center;
+  background-color: var(--primary-color);
+  border-radius: 5px;
+  box-sizing: border-box;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  font-family: var(--button-font);
+  font-size: 1rem;
+  font-weight: 700;
+  height: 40px;
+  justify-content: center;
+  line-height: 1.5;
+  width: 177px;
+}
+
+.secondary-button {
+  align-items: center;
+  background-color: var(--secondary-color);
+  border-radius: 5px;
+  box-sizing: border-box;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  font-family: var(--button-font);
+  font-size: 1rem;
+  font-weight: 700;
+  height: 40px;
+  justify-content: center;
+  width: 148px;
+}
+
+.more-button {
+  align-items: center;
+  background-color: var(--more-color);
+  border-radius: 5px;
+  box-sizing: border-box;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  font-family: var(--button-font);
+  font-size: 1rem;
+  font-weight: 700;
+  height: 40px;
+  justify-content: center;
+  width: 116px;
+}

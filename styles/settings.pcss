@@ -1,0 +1,121 @@
+:root {
+  /* Global variables */
+  --global-font-size: 16px;
+  --global-lineheight: 1.5rem;
+  --global-border-radius: 3px;
+
+  /* Action colours */
+  --success: var(--pigment-green);
+  --warning: var(--orange);
+  --alert: var(--trinidad);
+  --dunno: var(--white);
+
+  /* Specific uses colours */
+  /* Specify the color used for each UI component */
+  /* Use only variable, if not defined define it on custom pallette */
+  --body-font-color: var(--blue-haze);
+  --headers-font-color: var(--tolopea);
+
+  --accent-color: var(--moccaccino);
+  --sidebar-background: var(--white);
+  --sidebar-link-color: var(--raven);
+  --sidebar-animation-open: 0.5s;
+  --sidebar-animation-close: 0.3s;
+  --sidebar-animation-text-show: 0.5s;
+  --sidebar-animation-text-show-delay: 0.3s;
+  --sidebar-animation-text-hide: 0.3s;
+  --sidebar-animation-text-hide-delay: 0.5s;
+  --sidebar-animation-overlay: 0.4s;
+  --sidebar-animation-overlay-delay: 0.4s;
+  --main-pane-background: var(--azure);
+  --overlay-background: var(--tundora);
+  --overlapped-sections-background: var(--white);
+  --main-pane-content-background: var(--white);
+
+  --main-link-color: var(--boston-blue);
+  --secondary-link-color: var(--mine-shaft);
+
+  --button-main-background: var(--han-purple);
+  --button-main-font-color: var(--white);
+  --button-secondary-background: var(--caribbean-green);
+  --button-secondary-font-color: var(--white);
+  --button-discrete-background: var(--chambray);
+  --button-discrete-font-color: var(--white);
+  --button-link-background: transparent;
+  --button-link-font-color: var(--tolopea);
+  --button-disabled-background: color(var(--tundora) alpha(-20%));
+  --button-disabled-font-color: color(var(--pale-sky) alpha(-20%));
+
+  /* ==================== TEXTS ============================= */
+  --label-color: var(--tundora);
+
+  /* ==================== FORMS ============================= */
+  /*--placeholder-color: var(--tundora);*/
+  --input-border-color: var(--gray);
+  --input-border-color-focus: var(--boston-blue);
+  --input-disabled-background: transparent;
+  --input-border-color-hover: var(--pale-sky);
+  --input-focus: color(var(--mystic) alpha(-40%));
+
+  /* ====================  ============================= */
+  --table-header-background: transparent;
+  --table-header-font-color: var(--deluge);
+  --table-header-font-size: 0.875rem;
+  --table-body-background: transparent;
+  --table-body-font-color: var(--deluge);
+  --table-body-font-size: 0.875rem;
+  --table-row-border: var(--geyser);
+
+  --pagination-li-color: var(--boston-blue);
+  --pagination-li-background: var(--white);
+  --pagination-action-color: var(--white);
+  --pagination-action-background: color(var(--boston-blue) l(+10%));
+  --pagination-disabled-color: color(var(--white) shade(15%));
+  --pagination-disabled-background: var(--gray);
+  --pagination-active-color: var(--white);
+  --pagination-active-background: var(--boston-blue);
+
+  --toastr-shadow: color(var(--mine-shaft) alpha(-80%));
+  --toastr-success-color: var(--success);
+  --toastr-warning-color: var(--warning);
+  --toastr-alert-color: var(--alert);
+  --toastr-info-color: var(--boston-blue);
+  --toastr-default-color: var(--pale-sky);
+  --toastr-top: 2rem;
+  --toastr-width: 50vw;
+  --toastr-opacity: 85;
+
+  /* Text variables */
+  --main-font: 'Open-Sans' sans-serif;
+  --button-font: 'Open-Sans' sans-serif;
+  --secondary-font: none;
+
+  /* Grid */
+  --hd-grid: 19;
+  --desktop-grid: 15;
+  --tablet-grid: 13;
+  --mobile-grid: 7;
+
+  /* Gutters */
+  --hd-gutter: 24px;
+  --desktop-gutter: 24px;
+  --tablet-gutter: 12px;
+  --mobile-gutter: 12px;
+
+
+  --box-shadow-side: 0 8px 38px rgba(0, 0, 0, 0.25), 0 6px 12px rgba(0, 0, 0, 0.22);
+}
+
+/* Custom selectors */
+@custom-selector :--headers h1,h2,h3,h4,h5,h6;
+@custom-selector :--text-container span, p, a;
+@custom-selector :--enter-action :focus, :active;
+@custom-selector :--button .button, button;
+@custom-selector :--disabled .disabled, :disabled;
+@custom-selector :--inputs textarea, input;
+
+/* Media Queries */
+@custom-media --hd-screens (width >= 1440px);
+@custom-media --desktop-screens (width >= 1024px) and (width < 1440px);
+@custom-media --tablet-screens (width >= 768px) and (width < 1024px);
+@custom-media --mobile-screens (width < 768px);
