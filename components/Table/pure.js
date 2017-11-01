@@ -2,10 +2,15 @@
 /* eslint react/no-unused-prop-types: [0] */
 /* eslint consistent-return: [0] */
 import * as React from 'react';
-import type { Header, Item, SingleItemActions, MultipleItemsActions } from './types';
+import Card from '../Card';
+import Button from '../Button';
+import type {
+  Header, Item, SingleItemActions, MultipleItemsActions,
+  ItemAvailableAction,
+} from './types';
 
 export type PureTableProps = {
-  className: string,
+  className?: string,
 
   // Los encabezados de la tabla, es decir, lo que va en th
   headers: Array<Header>,
@@ -15,6 +20,8 @@ export type PureTableProps = {
   hotdogIcon?: React.Node,
   // Puedes seleccionar 1 o más elementos de la tabla
   selectable: boolean,
+
+  singleItemActionIcon?: React.Node,
 
   // Posible acción a ejecutar en caso de que den clic en el header
   onHeaderClick?: Function,
@@ -28,6 +35,8 @@ export type PureTableProps = {
 
 type Default = {
   selectable: boolean,
+  className: string,
+  singleItemActionIcon: React.Node,
 };
 
 type State = {
@@ -41,12 +50,22 @@ type State = {
 export default class PureTable extends React.Component<Default, PureTableProps, State> {
   static defaultProps: Default = {
     selectable: false,
+    className: 'pure-table',
+    singleItemActionIcon: (
+      <img
+        src={require('../../assets/hotdog.svg')} // eslint-disable-line global-require
+        // src='https://image.flaticon.com/icons/svg/462/462988.svg'
+        alt='Notification Icon'
+      />
+    ),
   };
 
   constructor(props: PureTableProps) {
     super(props);
     (this: any).toggleItemHotdog = this.toggleItemHotdog.bind(this);
     (this: any).renderActions = this.renderActions.bind(this);
+    (this: any).renderHeader = this.renderHeader.bind(this);
+    (this: any).renderItem = this.renderItem.bind(this);
   }
 
   state: State = {
@@ -61,72 +80,101 @@ export default class PureTable extends React.Component<Default, PureTableProps, 
     });
   }
 
-  renderActions(element: Item | null) {
-    // console.log(element);
-    if (element) {
-      const actions = element.map((el, index) => (
-        <div key={index}>
-          { el.available ? el.key : null }
-        </div>
-      ));
-      return actions;
-    }
+  renderActions(id: number | string, actions: Array<ItemAvailableAction>) {
+    const { onSingleItemActions } = this.props;
+    const actionsRender = actions.map((action, index) => {
+      if (onSingleItemActions &&
+        Object.prototype.hasOwnProperty.call(onSingleItemActions, action.key)
+      ) {
+        const ActionObj = onSingleItemActions[action.key];
+        return (
+          <ActionObj.Component
+            key={index}
+            {...ActionObj.componentProps}
+            disabled={action.available}
+            onClick={() => ActionObj.func(id)}
+          />
+        );
+      }
+      return null;
+    });
+    return actionsRender;
+  }
+
+  renderHeader(element: Header) {
+    return (
+      <th key={element.key}>{ element.text }</th>
+    );
+  }
+
+  renderItem(element: Item, index: number) {
+    const { headers, selectable, singleItemActionIcon } = this.props;
+    return (
+      <tr key={index}>
+        { !selectable
+          ? null
+          : <td>
+            <div className='checkbox' >
+              <input type='checkbox' id={`checkbox-${index}`} />
+              <label htmlFor={`checkbox-${index}`} />
+            </div>
+            {/* <img className='checkbox' src='assets/checkbox-off.svg' alt='checkbox' /> */}
+          </td>
+        }
+        { headers.map((header, ind) => (
+          <td key={ind}>
+            <span>{ element[header.key] }</span>
+          </td>))
+        }
+        <td>
+          <Button type='link'>
+            { singleItemActionIcon }
+          </Button>
+          <div className='pop'>
+            { this.renderActions(element.id, element.actions)}
+          </div>
+        </td>
+      </tr>
+    );
   }
 
   render() {
-    const header = this.props.headers.map((element, index) => (
-      <th key={index}>{ element.Header.text }</th>
-    ));
+    const { headers, items, className, selectable, onSingleItemActions } = this.props;
 
-    const item = this.props.items.map((element, index) => (
-      <tr key={index}>
-        { element.Item.titles.map((el, id) => (
-          <td key={id}>
-            {id === 0 ? <img className='checkbox' src='assets/checkbox-off.svg' alt='checkbox' /> : null }
-            <span>{ el.text }</span>
-          </td>
-        ))}
-        <td>
-          { this.renderActions(element.Item.actions)}
-        </td>
-      </tr>
-    ));
+    const headersRender = headers.map(this.renderHeader);
+    const itemsRender = items.map(this.renderItem);
 
     return (
-      <div className={this.props.className}>
-        <div className='title-container'>
-          {/* <h3>{ this.props.Header }</h3> */}
-          <div className='title'>
-            <h3>Table Card</h3>
-          </div>
+      <Card
+        className={className}
+        title='Table Card'
+        actions={
           <div className='button-container'>
-            <div className='secondary-button' role='button'>
-              Secondary
-            </div>
-            <div className='primary-button' role='button'>
-              Primary Action
-            </div>
+            <Button>Discrete</Button>
+            <Button type='main'>Main Action</Button>
           </div>
-        </div>
-        <div className='container'>
-          <table>
-            <thead>
-              <tr>
-                { header }
-                <th />
-              </tr>
-            </thead>
-            <tbody>
-              { item }
-            </tbody>
-          </table>
-        </div>
-        <div className='button-container'>
-          <div className='more-button'>
-            More
-          </div>
-        </div>
-      </div>
+        }
+        footer={
+          <Button type='secondary'>Secondary</Button>
+        }
+      >
+        <table
+          className={
+            `${selectable ? 'multiselect' : ''} ${onSingleItemActions ? 'actionpop' : ''}`
+          }
+        >
+          <thead>
+            <tr>
+              { !selectable ? null : <th />}
+              { headersRender }
+              <th />
+            </tr>
+          </thead>
+          <tbody>
+            { itemsRender }
+          </tbody>
+        </table>
+      </Card>
     );
   }
 }

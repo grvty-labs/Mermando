@@ -6,18 +6,22 @@ export type Header = {
   text: string,
 };
 
+export type ItemAvailableAction = {
+  // La llave de la acción (para obtener la función de 'onSingleItemActions')
+  key: string,
+  // La acción estará disponible o no (sí es visible)
+  available: boolean,
+}
+
 export type Item = { // Cada item es un objeto que requiere tener una llave 'actions'
-  actions: Array<{
-    // La llave de la acción (para obtener la función de 'onSingleItemActions')
-    key: string,
-    // La acción estará disponible o no (sí es visible)
-    available: boolean,
-  }>,
+  id: number | string,
+  actions: Array<ItemAvailableAction>,
 } & Object;
 
 export type SingleItemActions = { // Un json en el cual cada propiedad debe tener 'text' y 'func'
   [key: string]: { // El key es el mismo que en 'Item.actions'
-    text: string, // Texto a mostrar en el objeto button
+    Component: ReactClass<*>, // Botón a mostrar
+    componentProps: { [key: string]: any }, // Botón a mostrar
     func: Function, // Función onClick, como único parametro siempre se envía el item completo
   },
 };
