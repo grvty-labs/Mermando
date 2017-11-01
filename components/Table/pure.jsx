@@ -53,7 +53,7 @@ export default class PureTable extends React.Component<Default, PureTableProps, 
     className: 'pure-table',
     singleItemActionIcon: (
       <img
-        src={require('../../assets/hotdog.svg')} // eslint-disable-line global-require
+        src={'/images/mermando/hotdog.svg'}
         // src='https://image.flaticon.com/icons/svg/462/462988.svg'
         alt='Notification Icon'
       />

@@ -32,13 +32,13 @@ export default class Topbar extends React.Component<Default, Props, void> {
     burgerIcon: (
       <img
         // src='https://image.flaticon.com/icons/svg/462/462998.svg'
-        src={require('../../assets/menu.svg')} // eslint-disable-line global-require
+        src={'/images/mermando/menu.svg'}
         alt='Burguer Icon'
       />
     ),
     notificationIcon: (
       <img
-        src={require('../../assets/bell.svg')} // eslint-disable-line global-require
+        src={'/images/mermando/bell.svg'}
         // src='https://image.flaticon.com/icons/svg/462/462944.svg'
         alt='Notification Icon'
       />
