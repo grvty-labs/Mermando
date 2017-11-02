@@ -1,6 +1,7 @@
 // @flow
 /* eslint no-console: [0, {}] */
 import * as React from 'react';
+import Button from '../Button';
 
 export type StoreProps = {
   className: string,
@@ -10,7 +11,9 @@ export type StoreProps = {
   anchors: Array<{ text: string, url: string }>, // Links que van hasta arriba
   avatar: string, // URL de donde se tiene que cargar el avatar
   username: string, // Nombre completo del usuario, pseudonimo o solo username
+  profileAnchors: Array<{ text: string, url: string }>,
   notificationIcon?: React.Node, // Icono de notificaciones como componente de react
+  notificationAnchors: Array<{ text: string, url: string }>,
 };
 
 export type Actions = {
@@ -46,7 +49,6 @@ export default class Topbar extends React.Component<Default, Props, void> {
   }
 
   render() {
-    console.log(this.props.notificationIcon);
     const anchor = this.props.anchors.map((element, index) => (
       <div className='anchor' key={index} onClick={() => this.props.onAnchorClick(element.url)} role='link' tabIndex={0}>
         <span>{ element.text }</span>
@@ -59,7 +61,7 @@ export default class Topbar extends React.Component<Default, Props, void> {
           <div className='column'>
             <div className='menu-container'>
               <div
-                className='hamburger'
+                className='icon'
                 onClick={() => { this.props.onBurguerClick(); }}
                 role='button'
                 tabIndex={0}
@@ -76,13 +78,42 @@ export default class Topbar extends React.Component<Default, Props, void> {
               { anchor }
             </div>
           </div>
-          {/* TODO: Notification */}
-          <div className='column column-avatar'>
+
+          <div className='column right'>
+            <div className='menu-wrap'>
+              <a
+                href='javascript:void(0)'
+                className='icon'
+                role='button'
+                tabIndex={0}
+              >
+                { this.props.notificationIcon }
+              </a>
+              <div className='dropdown'>
+                { this.props.notificationAnchors.map(anchor => (
+                  <Button key={anchor.id} type='link'>
+                    {anchor.text}
+                  </Button>
+                )) }
+              </div>
+            </div>
+
             <div
               className='avatar'
               style={{ backgroundImage: `url( ${this.props.avatar} )` }}
             />
-            <span>{ this.props.username }</span>
+            <div className='menu-wrap'>
+              <a href='javascript:void(0)' className='angled'>
+                { this.props.username }
+              </a>
+              <div className='dropdown'>
+                { this.props.profileAnchors.map(anchor => (
+                  <Button key={anchor.id} type='link'>
+                    {anchor.text}
+                  </Button>
+                )) }
+              </div>
+            </div>
           </div>
         </div>
       </div>
