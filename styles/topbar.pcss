@@ -88,12 +88,13 @@
           }
         }
 
-        > a {
+        > button {
           color: var(--topbar-menu-link-color, #333);
           display: block;
           font-size: 0.875rem;
           padding-right: 1.5rem;
           position: relative;
+          text-decoration: none;
 
           &.angled {
             &::after {
@@ -129,10 +130,25 @@
       }
 
       .avatar {
-        border-radius: 50%;
+        border-radius: 28px;
         height: 28px;
         margin-right: 8px;
         width: 28px;
+
+        span {
+          align-items: center;
+          background: inherit;
+          -webkit-background-clip: text;
+          background-clip: text;
+          color: transparent;
+          display: block;
+          display: flex;
+          filter: invert(1) grayscale(1) contrast(9);
+          font-size: 0.75rem;
+          height: inherit;
+          justify-content: center;
+          text-align: center;
+        }
       }
     }
   }

@@ -2,6 +2,7 @@
 /* eslint no-console: [0, {}] */
 import * as React from 'react';
 import Button from '../Button';
+import { getNameInitials, getNameColor } from '../utils/userIconGenerator';
 
 export type StoreProps = {
   className: string,
@@ -9,11 +10,11 @@ export type StoreProps = {
   burgerIcon?: React.Node, // Icono de hamburguesa como componente de react
   imagotype: string, // Imagotipo del cliente
   anchors: Array<{ text: string, url: string }>, // Links que van hasta arriba
-  avatar: string, // URL de donde se tiene que cargar el avatar
+  avatar?: string, // URL de donde se tiene que cargar el avatar
   username: string, // Nombre completo del usuario, pseudonimo o solo username
-  profileAnchors: Array<{ text: string, url: string }>,
+  profileAnchors: Array<{ id: number, text: string, url: string }>,
   notificationIcon?: React.Node, // Icono de notificaciones como componente de react
-  notificationAnchors: Array<{ text: string, url: string }>,
+  notificationAnchors: Array<{ id: number, text: string, url: string }>,
 };
 
 export type Actions = {
@@ -30,18 +31,18 @@ type Default = {
 /**
  * Componente responsable solamente de desplegar el topbar
  */
-export default class Topbar extends React.Component<Default, Props, void> {
-  static defaultProps = {
+export default class Topbar extends React.Component<Props, void> {
+  static defaultProps: Default = {
     burgerIcon: (
       <img
         // src='https://image.flaticon.com/icons/svg/462/462998.svg'
-        src={'/images/mermando/menu.svg'}
+        src='/images/mermando/menu.svg'
         alt='Burguer Icon'
       />
     ),
     notificationIcon: (
       <img
-        src={'/images/mermando/bell.svg'}
+        src='/images/mermando/bell.svg'
         // src='https://image.flaticon.com/icons/svg/462/462944.svg'
         alt='Notification Icon'
       />
@@ -49,8 +50,15 @@ export default class Topbar extends React.Component<Default, Props, void> {
   }
 
   render() {
-    const anchor = this.props.anchors.map((element, index) => (
-      <div className='anchor' key={index} onClick={() => this.props.onAnchorClick(element.url)} role='link' tabIndex={0}>
+    const centralAnchors = this.props.anchors.map((element, index) => (
+      <div
+        className='anchor'
+        key={index}
+        onClick={() => this.props.onAnchorClick(element.url)}
+        onKeyPress={() => this.props.onAnchorClick(element.url)}
+        role='link'
+        tabIndex={0}
+      >
         <span>{ element.text }</span>
       </div>
     ));
@@ -63,6 +71,7 @@ export default class Topbar extends React.Component<Default, Props, void> {
               <div
                 className='icon'
                 onClick={() => { this.props.onBurguerClick(); }}
+                onKeyPress={() => { this.props.onBurguerClick(); }}
                 role='button'
                 tabIndex={0}
               >
@@ -75,20 +84,18 @@ export default class Topbar extends React.Component<Default, Props, void> {
               />
             </div>
             <div className='anchors'>
-              { anchor }
+              { centralAnchors }
             </div>
           </div>
 
           <div className='column right'>
             <div className='menu-wrap'>
-              <a
-                href='javascript:void(0)'
+              <Button
                 className='icon'
-                role='button'
-                tabIndex={0}
+                type='link'
               >
                 { this.props.notificationIcon }
-              </a>
+              </Button>
               <div className='dropdown'>
                 { this.props.notificationAnchors.map(anchor => (
                   <Button key={anchor.id} type='link'>
@@ -100,12 +107,17 @@ export default class Topbar extends React.Component<Default, Props, void> {
 
             <div
               className='avatar'
-              style={{ backgroundImage: `url( ${this.props.avatar} )` }}
-            />
+              style={this.props.avatar
+                ? { backgroundImage: `url(${this.props.avatar})` }
+                : { backgroundColor: getNameColor(this.props.username) }
+              }
+            >
+              { this.props.avatar ? null : <span>{getNameInitials(this.props.username)}</span> }
+            </div>
             <div className='menu-wrap'>
-              <a href='javascript:void(0)' className='angled'>
+              <Button type='link' className='angled'>
                 { this.props.username }
-              </a>
+              </Button>
               <div className='dropdown'>
                 { this.props.profileAnchors.map(anchor => (
                   <Button key={anchor.id} type='link'>
