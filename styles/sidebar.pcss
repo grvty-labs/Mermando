@@ -1,12 +1,13 @@
 .sidebar {
-  background-color: var(--sidebar-bgc);
+  background-color: var(--sidebar-body-background, #2b0076);
   height: 100vh;
   position: fixed;
   transition: all 0.6s ease-in-out;
-  width: var(--sidebar-width);
+  width: var(--sidebar-full-width, 320px);
   z-index: 10;
 
-  > .logo-container {
+  > .head {
+    background-color: var(--sidebar-head-background, #2b0076);
     align-items: center;
     box-sizing: border-box;
     display: flex;
@@ -32,7 +33,7 @@
     }
   }
 
-  > .container {
+  > .body {
     align-items: center;
     box-sizing: border-box;
     display: flex;
@@ -40,9 +41,9 @@
     margin-top: 65px;
 
     > .anchor {
-      color: var(--sidebar-color);
+      color: var(--sidebar-link-font-color, #fff);
       cursor: pointer;
-      font-family: var(--sidebar-font);
+      font-family: var(--sidebar-link-font, 'sans-serif');
       font-size: 1.25rem;
       font-weight: 700;
       letter-spacing: 0.1rem;
@@ -53,12 +54,12 @@
       }
     }
   }
-}
 
-.hidden {
-  left: -var(--sidebar-width);
-}
+  &.hidden {
+    left: calc(var(--sidebar-sm-width, 0) - var(--sidebar-full-width, 320px));
+  }
 
-.show {
-  left: 0;
+  &.show {
+    left: 0;
+  }
 }
