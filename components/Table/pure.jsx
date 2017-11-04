@@ -4,6 +4,7 @@
 import * as React from 'react';
 import Card from '../Card';
 import Button from '../Button';
+import { Checkbox } from '../Inputs';
 import type {
   Header, Item, SingleItemActions, MultipleItemsActions,
   ItemAvailableAction,
@@ -42,18 +43,19 @@ type Default = {
 type State = {
   // Que hotdog se encuentra abierto
   itemHotdogActive: number,
+  selected: { [key: string]: boolean },
 };
 
 /**
  * Componente responsable solamente de desplegar la tabla de datos
  */
-export default class PureTable extends React.Component<Default, PureTableProps, State> {
+export default class PureTable extends React.Component<PureTableProps, State> {
   static defaultProps: Default = {
     selectable: false,
     className: 'pure-table',
     singleItemActionIcon: (
       <img
-        src={'/images/mermando/hotdog.svg'}
+        src='/images/mermando/hotdog.svg'
         // src='https://image.flaticon.com/icons/svg/462/462988.svg'
         alt='Notification Icon'
       />
@@ -66,10 +68,12 @@ export default class PureTable extends React.Component<Default, PureTableProps, 
     (this: any).renderActions = this.renderActions.bind(this);
     (this: any).renderHeader = this.renderHeader.bind(this);
     (this: any).renderItem = this.renderItem.bind(this);
+    (this: any).rowCheckClick = this.rowCheckClick.bind(this);
   }
 
   state: State = {
     itemHotdogActive: -1,
+    selected: {},
   };
 
   toggleItemHotdog(itemIndex: number) {
@@ -78,6 +82,12 @@ export default class PureTable extends React.Component<Default, PureTableProps, 
         ? itemIndex
         : -1,
     });
+  }
+
+  rowCheckClick(id: string, value: boolean) {
+    const { selected } = this.state;
+    selected[id] = value;
+    this.setState({ selected });
   }
 
   renderActions(id: number | string, actions: Array<ItemAvailableAction>) {
@@ -109,17 +119,20 @@ export default class PureTable extends React.Component<Default, PureTableProps, 
 
   renderItem(element: Item, index: number) {
     const { headers, selectable, singleItemActionIcon } = this.props;
+    const { selected } = this.state;
+    const key = `checkbox-${index}`;
     return (
       <tr key={index}>
         { !selectable
           ? null
-          : <td>
-            <div className='checkbox' >
-              <input type='checkbox' id={`checkbox-${index}`} />
-              <label htmlFor={`checkbox-${index}`} />
-            </div>
-            {/* <img className='checkbox' src='assets/checkbox-off.svg' alt='checkbox' /> */}
-          </td>
+          : (
+            <td>
+              <Checkbox
+                id={key}
+                value={Object.prototype.hasOwnProperty.call(selected, key) && selected[key]}
+                onChange={(value) => { this.rowCheckClick(key, value); }}
+              />
+            </td>)
         }
         { headers.map((header, ind) => (
           <td key={ind}>
@@ -139,7 +152,9 @@ export default class PureTable extends React.Component<Default, PureTableProps, 
   }
 
   render() {
-    const { headers, items, className, selectable, onSingleItemActions } = this.props;
+    const {
+      headers, items, className, selectable, onSingleItemActions,
+    } = this.props;
 
     const headersRender = headers.map(this.renderHeader);
     const itemsRender = items.map(this.renderItem);
