@@ -12,7 +12,7 @@ type Props = {
 
   onClick?: Function,
 
-  children: React.Children | Array<React.Children>,
+  children: React.Node | Array<React.Node>,
 };
 
 type Default = {
@@ -28,8 +28,8 @@ type Default = {
 /**
  * Componente responsable solamente de desplegar el sidebar
  */
-export default class Button extends React.Component<Default, Props, void> {
-  static defaultProps = {
+export default class Button extends React.Component<Props, void> {
+  static defaultProps: Default = {
     className: '',
     type: 'discrete',
     size: 'regular',
