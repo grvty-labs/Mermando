@@ -2,7 +2,6 @@
 /* eslint react/no-unused-prop-types: [0] */
 /* eslint consistent-return: [0] */
 import * as React from 'react';
-import Card from '../Card';
 import Button from '../Button';
 import { Checkbox } from '../Inputs';
 import type {
@@ -23,16 +22,20 @@ export type PureTableProps = {
   selectable: boolean,
 
   singleItemActionIcon?: React.Node,
+};
 
+export type PureTableActions = {
   // Posible acción a ejecutar en caso de que den clic en el header
   onHeaderClick?: Function,
   // Posible función para manejar en un reducer la selección de items
   onSelect?: Function,
   // Posible lista de acciones disponibles en el botón de hotdog de cada item
   onSingleItemActions?: SingleItemActions,
-  // Posible lista de acciones disponibles para selección de múltiples items
+  // Posible lista de acciones disponibles para la selección de múltiples items
   onMultipleItemsActions?: MultipleItemsActions,
 };
+
+type Props = PureTableProps & PureTableActions;
 
 type Default = {
   selectable: boolean,
@@ -49,7 +52,7 @@ type State = {
 /**
  * Componente responsable solamente de desplegar la tabla de datos
  */
-export default class PureTable extends React.Component<PureTableProps, State> {
+export default class PureTable extends React.Component<Props, State> {
   static defaultProps: Default = {
     selectable: false,
     className: 'pure-table',
@@ -62,7 +65,7 @@ export default class PureTable extends React.Component<PureTableProps, State> {
     ),
   };
 
-  constructor(props: PureTableProps) {
+  constructor(props: Props) {
     super(props);
     (this: any).toggleItemHotdog = this.toggleItemHotdog.bind(this);
     (this: any).renderActions = this.renderActions.bind(this);
@@ -160,36 +163,22 @@ export default class PureTable extends React.Component<PureTableProps, State> {
     const itemsRender = items.map(this.renderItem);
 
     return (
-      <Card
-        className={className}
-        title='Table Card'
-        actions={
-          <div className='button-container'>
-            <Button>Discrete</Button>
-            <Button type='main'>Main Action</Button>
-          </div>
-        }
-        footer={
-          <Button type='secondary'>Secondary</Button>
+      <table
+        className={
+          `${className || ''} ${selectable ? 'multiselect' : ''} ${onSingleItemActions ? 'actionpop' : ''}`
         }
       >
-        <table
-          className={
-            `${selectable ? 'multiselect' : ''} ${onSingleItemActions ? 'actionpop' : ''}`
-          }
-        >
-          <thead>
-            <tr>
-              { !selectable ? null : <th />}
-              { headersRender }
-              <th />
-            </tr>
-          </thead>
-          <tbody>
-            { itemsRender }
-          </tbody>
-        </table>
-      </Card>
+        <thead>
+          <tr>
+            { !selectable ? null : <th />}
+            { headersRender }
+            <th />
+          </tr>
+        </thead>
+        <tbody>
+          { itemsRender }
+        </tbody>
+      </table>
     );
   }
 }

@@ -1,4 +1,6 @@
 // @flow
+import * as React from 'react';
+
 export type Header = {
   // El nombre de la propiedad de un item que se va a desplegar en la columna del header
   key: string,
@@ -20,7 +22,7 @@ export type Item = { // Cada item es un objeto que requiere tener una llave 'act
 
 export type SingleItemActions = { // Un json en el cual cada propiedad debe tener 'text' y 'func'
   [key: string]: { // El key es el mismo que en 'Item.actions'
-    Component: ReactClass<*>, // Botón a mostrar
+    Component: React.ComponentType<*>, // Botón a mostrar
     componentProps: { [key: string]: any }, // Botón a mostrar
     func: Function, // Función onClick, como único parametro siempre se envía el item completo
   },
