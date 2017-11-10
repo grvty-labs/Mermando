@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import Label from './Label';
+import Label from './label';
 
 type Props = {
   id: string,
@@ -22,11 +22,17 @@ export default class Checkbox extends React.Component<Props, void> {
     const {
       id,
       value,
+      ...otherProps
     } = this.props;
 
     return (
       <div className='checkbox' >
-        <input type='checkbox' id={id} checked={value} onChange={this.onValueChange} />
+        <input
+          {...otherProps}
+          type='checkbox'
+          id={id} checked={value}
+          onChange={this.onValueChange}
+        />
         <Label htmlFor={id} />
       </div>
     );
