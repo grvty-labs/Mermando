@@ -12,7 +12,7 @@ type Props = {
 
   onClick?: Function,
 
-  children: React.Node | Array<React.Node>,
+  children?: React.Node | Array<React.Node>,
 };
 
 type Default = {
