@@ -1,28 +1,46 @@
 .section {
-  .header {
+  > .header {
     align-items: center;
     display: flex;
+    justify-content: space-between;
+    padding: 0 2.6875rem;
     width: 100%;
 
     h3 {
+      font-weight: normal;
       margin: 0 1.5rem 0 0;
     }
   }
 
-  > * {
-    padding: 0 2.6875rem;
-  }
+  > .content {
+    margin: 2rem 2.6875rem;
 
-  .cards-panel {
-    align-items: stretch;
-    display: grid;
-    grid-gap: 1.875rem;
-    grid-template-columns: repeat(3, 1fr);
-    justify-content: center;
-    padding-top: 1.3125rem;
+    > table {
+      width: 100%;
+    }
 
-    > .card {
-      margin-bottom: 0;
+    &.cards-panel {
+      align-items: stretch;
+      display: grid;
+      grid-gap: 1.875rem;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 300px));
+      justify-content: flex-start;
+
+      > .card {
+        margin-bottom: 0;
+      }
+    }
+
+    &.separated-rows {
+      > div {
+        padding-top: 1.5rem;
+
+        &:not(:empty),
+        &:not(:last-of-type) {
+          border-bottom: 1px solid var(--whisper-3, #ededed);
+          padding-bottom: 0.5rem;
+        }
+      }
     }
   }
 }

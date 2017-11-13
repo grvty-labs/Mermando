@@ -3,23 +3,24 @@ import * as React from 'react';
 
 export type StoreProps = {
   title: string,
+  className?: string,
   topComponent?: React.Node | Array<React.Node>,
   children: React.Node | Array<React.Node>,
-  type?: 'cards-panel' | 'rows',
+  type?: 'cards-panel' | 'none' | 'separated-rows',
 };
-
-export type Actions = {
-};
+export type Actions = {};
 
 type Props = StoreProps & Actions;
 type State = {};
 type Default = {
-  type: 'rows',
+  className: string,
+  type: 'cards-panel' | 'none' | 'separated-rows',
 };
 
-export default class Section extends React.Component<Props, State> {
+export default class Section extends React.PureComponent<Props, State> {
   static defaultProps: Default = {
-    type: 'rows',
+    className: '',
+    type: 'none',
   };
   // constructor(props: Props) {
   //   super(props);
@@ -27,22 +28,18 @@ export default class Section extends React.Component<Props, State> {
 
   state: State = {};
 
-  componentWillMount() {}
-  componentDidMount() {}
-  componentWillUnmount() {}
-
   render() {
     const {
-      children, title, topComponent, type,
+      className, children, title, topComponent, type,
     } = this.props;
 
     return (
-      <div className='section'>
+      <div className={`section ${className || ''}`}>
         <div className='header'>
           <h3>{title}</h3>
           {topComponent}
         </div>
-        <div className={type}>
+        <div className={`content ${type || ''}`}>
           {children}
         </div>
       </div>
