@@ -40,115 +40,44 @@
         }
       }
 
-      .icon {
+      /*.icon {
         cursor: pointer;
         display: flex;
-        height: 24px;
+        height: 20px;
         margin: 2px;
-        width: 24px;
+        width: 20px;
 
         > img {
-          height: 22px;
-          width: 22px;
+          height: 20px;
+          width: 20px;
         }
-      }
+      }*/
 
-      > .menu-wrap {
-        position: relative;
+      > .dropdown-wrapper {
+        &.notifications {
+          margin-right: 1.625rem;
 
-        > .dropdown {
-          background-color: var(--white, #fff);
-          box-shadow:
-            0 12px 20px 0 rgba(26, 26, 26, 0.07),
-            0 0 6px 2px rgba(0, 0, 0, 0.05);
-          display: flex;
-          flex-direction: column;
-          position: absolute;
-          right: 0;
-          top: 99%;
-          visibility: hidden;
+          > .icon {
+            font-size: 20px;
+            min-height: 20px;
+            min-width: 20px;
+          }
 
-          > button,
-          > div {
-            &.title {
-              align-items: center;
-              display: flex;
-              justify-content: space-between;
-              padding: 1rem;
+          > .dropdown {
+            min-width: 16.25rem;
 
-              > div,
-              > span,
-              > button {
-                color: var(--nero);
-                display: flex;
-                flex: 1;
-                font-size: 0.75rem;
-                justify-content: center;
-                text-align: center;
-
-                &:first-of-type {
-                  justify-content: flex-start;
-                }
-
-                &:last-of-type {
-                  justify-content: flex-end;
-                }
+            > button,
+            > div {
+              &:not(.title) {
+                padding: 0.625rem 0.25rem 1rem 0.5625rem;
               }
             }
-
-            &:not(.title) {
-              font-size: 0.75rem;
-              margin: 0 0.5rem;
-              padding: 0.75rem 0.5rem;
-              white-space: nowrap;
-            }
-
-            &:not(:last-of-type) {
-              border-bottom: solid 1px var(--whisper-2, #e9e9e9);
-            }
-          }
-
-          &:hover,
-          &:--enter-action {
-            visibility: visible;
-          }
-
-          &.notifications {
-            min-width: 16.25rem;
           }
         }
 
-        > button {
-          color: var(--topbar-menu-link-color, #333);
-          display: block;
-          font-size: 0.875rem;
-          padding-right: 1.5rem;
-          position: relative;
-          text-decoration: none;
-
-          &.angled {
-            &::after {
-              align-items: center;
-              border-bottom: 2px solid #333;
-              border-left: 2px solid #333;
-              bottom: 0;
-              content: " ";
-              display: flex;
-              height: 0.4375rem;
-              justify-content: center;
-              position: absolute;
-              right: 0.25rem;
-              top: 0;
-              transform: rotate(-45deg);
-              width: 0.4375rem;
-            }
-          }
-
-          &:hover,
-          &:--enter-action {
-            + .dropdown {
-              visibility: visible;
-            }
+        &.user-options {
+          > .dropdown {
+            padding: 0.25rem 0;
           }
         }
       }
@@ -157,34 +86,6 @@
     > .right {
       justify-content: flex-end;
       margin-right: 45px;
-
-      > .menu-wrap {
-        &:not(:last-of-type) {
-          margin-right: 1.625rem;
-        }
-      }
-
-      .avatar {
-        border-radius: 28px;
-        height: 28px;
-        margin-right: 8px;
-        width: 28px;
-
-        span {
-          align-items: center;
-          background: inherit;
-          -webkit-background-clip: text;
-          background-clip: text;
-          color: transparent;
-          display: block;
-          display: flex;
-          filter: invert(1) grayscale(1) contrast(9);
-          font-size: 0.75rem;
-          height: inherit;
-          justify-content: center;
-          text-align: center;
-        }
-      }
     }
   }
 }

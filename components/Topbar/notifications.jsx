@@ -1,11 +1,19 @@
 // @flow
 import * as React from 'react';
 import Button from '../Button';
+import { Dropdown } from '../Menu';
 
 export type StoreProps = {
   title?: string,
   icon?: React.Node, // Icono de notificaciones como componente de react
-  anchors: Array<{ id: number, text: string, url: string }>,
+  anchors: Array<{
+    id: number,
+    title: string,
+    text?: string,
+    icon?: string,
+    url: string,
+    [key: string]: string,
+  }>,
   leftElement?: React.Node,
   rightElement?: React.Node,
 }
@@ -25,30 +33,25 @@ export default class Notifications extends React.Component<Props, State> {
     } = this.props;
 
     return (
-      <div className='menu-wrap'>
-        <Button
-          className='icon'
-          type='link'
-        >
-          {icon}
-        </Button>
-        <div className='dropdown notifications'>
-          <div className='title'>
-            <div>{leftElement}</div>
-            <div>{title}</div>
-            <div>{rightElement}</div>
-          </div>
-          {anchors.map(anchor => (
-            <Button
-              key={anchor.id}
-              type='link'
-              onClick={() => onAnchorClick(anchor.url)}
-            >
-              {anchor.text}
-            </Button>
-          ))}
-        </div>
-      </div>
+      <Dropdown
+        className='notifications'
+        icon={icon}
+        showHead
+        headTitle={title}
+        headLeftElement={leftElement}
+        headRightElement={rightElement}
+      >
+        {anchors.map(anchor => (
+          <Button
+            key={anchor.id}
+            type={anchor.title || anchor.text ? 'link' : 'icon'}
+            icon={anchor.icon}
+            onClick={() => onAnchorClick(anchor.url)}
+          >
+            <b>{anchor.title}</b> {anchor.text}
+          </Button>
+        ))}
+      </Dropdown>
     );
   }
 }

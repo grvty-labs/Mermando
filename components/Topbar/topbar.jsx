@@ -2,7 +2,8 @@
 /* eslint no-console: [0, {}] */
 import * as React from 'react';
 import Button from '../Button';
-import { getNameInitials, getNameColor } from '../utils/userIconGenerator';
+import { Avatar } from '../User';
+import { Dropdown } from '../Menu';
 
 export type StoreProps = {
   className: string,
@@ -92,27 +93,18 @@ export default class Topbar extends React.Component<Props, void> {
           <div className='column right'>
             {notificationsComponent}
 
-            <div
-              className='avatar'
-              style={avatar
-                ? { backgroundImage: `url(${avatar})` }
-                : { backgroundColor: getNameColor(username) }
-              }
+            <Avatar url={avatar} name={username} />
+            <Dropdown
+              className='user-options'
+              text={username}
+              showAngle
             >
-              { avatar ? null : <span>{getNameInitials(username)}</span> }
-            </div>
-            <div className='menu-wrap'>
-              <Button type='link' className='angled'>
-                {username}
-              </Button>
-              <div className='dropdown'>
-                {profileAnchors.map(anchor => (
-                  <Button key={anchor.id} type='link'>
-                    {anchor.text}
-                  </Button>
-                ))}
-              </div>
-            </div>
+              {profileAnchors.map(anchor => (
+                <Button key={anchor.id} type='link'>
+                  {anchor.text}
+                </Button>
+              ))}
+            </Dropdown>
           </div>
         </div>
       </div>
