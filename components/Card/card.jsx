@@ -3,7 +3,8 @@ import * as React from 'react';
 
 export type CardProps = {
   className?: string,
-  type?: 'small' | 'medium' | 'large';
+  type?: 'small' | 'medium' | 'large',
+  orientation?: 'normal' | 'centered',
 
   title?: string, // Título de la tarjeta
   actions?: React.Node | Array<React.Node>, // Container(s) a desplegar
@@ -13,8 +14,9 @@ export type CardProps = {
   children: React.Node | Array<React.Node>, // Contenido de la tarjeta
 };
 
-type Default = {
-  type: 'small';
+export type Default = {
+  orientation: 'normal' | 'centered';
+  type: 'small' | 'medium' | 'large';
 }
 
 /**
@@ -22,18 +24,19 @@ type Default = {
  */
 export default class Card extends React.Component<CardProps, void> {
   static defaultProps: Default = {
+    orientation: 'normal',
     type: 'small',
   };
 
   render() {
     const {
-      className, title, actions, footer, type,
+      className, title, actions, footer, orientation, type,
     } = this.props;
     return (
-      <div className={`card ${type || ''} ${className || ''}`}>
+      <div className={`card ${type || ''} ${orientation || ''} ${className || ''}`}>
         <div className='header'>
-          <h5>{title}</h5>
-          { actions }
+          {title ? <h5>{title}</h5> : null}
+          {actions}
         </div>
         <div className='content'>
           { this.props.children }
