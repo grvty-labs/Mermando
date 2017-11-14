@@ -37,7 +37,7 @@ type Default = {
   type: 'text' | 'number' | 'password',
 }
 
-export default class Checkbox extends React.Component<Props, void> {
+export default class Input extends React.PureComponent<Props, void> {
   static defaultProps: Default = {
     label: '',
     className: '',
@@ -83,7 +83,7 @@ export default class Checkbox extends React.Component<Props, void> {
         title={
           !label && message
             ? message
-            : required
+            : required && !label
               ? 'Required field'
               : null
         }

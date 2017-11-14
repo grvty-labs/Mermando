@@ -60,7 +60,7 @@ export default class PureTable extends React.Component<Props, State> {
       <img
         src='/images/mermando/hotdog.svg'
         // src='https://image.flaticon.com/icons/svg/462/462988.svg'
-        alt='Notification Icon'
+        alt='Hotdog Icon'
       />
     ),
   };
