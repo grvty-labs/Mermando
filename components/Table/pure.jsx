@@ -2,8 +2,8 @@
 /* eslint react/no-unused-prop-types: [0] */
 /* eslint consistent-return: [0] */
 import * as React from 'react';
-import Button from '../Button';
 import { Checkbox } from '../Inputs';
+import { Contextual } from '../Menu';
 import type {
   Header, Item, SingleItemActions, MultipleItemsActions,
   ItemAvailableAction,
@@ -40,7 +40,6 @@ type Props = PureTableProps & PureTableActions;
 type Default = {
   selectable: boolean,
   className: string,
-  singleItemActionIcon: React.Node,
 };
 
 type State = {
@@ -56,13 +55,6 @@ export default class PureTable extends React.Component<Props, State> {
   static defaultProps: Default = {
     selectable: false,
     className: 'pure-table',
-    singleItemActionIcon: (
-      <img
-        src='/images/mermando/hotdog.svg'
-        // src='https://image.flaticon.com/icons/svg/462/462988.svg'
-        alt='Hotdog Icon'
-      />
-    ),
   };
 
   constructor(props: Props) {
@@ -104,7 +96,7 @@ export default class PureTable extends React.Component<Props, State> {
           <ActionObj.Component
             key={index}
             {...ActionObj.componentProps}
-            disabled={action.available}
+            disabled={!action.available}
             onClick={() => ActionObj.func(id)}
           />
         );
@@ -121,7 +113,7 @@ export default class PureTable extends React.Component<Props, State> {
   }
 
   renderItem(element: Item, index: number) {
-    const { headers, selectable, singleItemActionIcon } = this.props;
+    const { headers, selectable } = this.props;
     const { selected } = this.state;
     const key = `checkbox-${index}`;
     return (
@@ -143,12 +135,9 @@ export default class PureTable extends React.Component<Props, State> {
           </td>))
         }
         <td>
-          <Button type='link'>
-            { singleItemActionIcon }
-          </Button>
-          <div className='pop'>
+          <Contextual>
             { this.renderActions(element.id, element.actions)}
-          </div>
+          </Contextual>
         </td>
       </tr>
     );
@@ -165,7 +154,7 @@ export default class PureTable extends React.Component<Props, State> {
     return (
       <table
         className={
-          `${className || ''} ${selectable ? 'multiselect' : ''} ${onSingleItemActions ? 'actionpop' : ''}`
+          `${className || ''} ${selectable ? 'multiselect' : ''} ${onSingleItemActions ? 'contextual-actions' : ''}`
         }
       >
         <thead>

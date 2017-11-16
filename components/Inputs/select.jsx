@@ -83,9 +83,12 @@ export default class Select extends React.PureComponent<Props, State> {
   onSelectValue(newValue: string | number) {
     const { type, value } = this.props;
     if (type === 'single') {
-      this.props.onChange(newValue);
+      this.setState({ showOptionsLevel: 0 }, () => {
+        this.props.onChange(newValue);
+        document.removeEventListener('click', this.handleOutsideClick, false);
+      });
     } else {
-      const casted = (value: Array<string | number>);
+      const casted = [...(value: Array<string | number>)];
       if (casted.indexOf(newValue) < 0) {
         this.props.onChange(casted.concat(newValue));
       }
@@ -98,7 +101,8 @@ export default class Select extends React.PureComponent<Props, State> {
     if (type === 'multiple') {
       const casted = (value: Array<string | number>);
       if (index >= 0) {
-        this.props.onChange(casted.splice(index, 1));
+        casted.splice(index, 1);
+        this.props.onChange(casted);
       }
     }
   }
@@ -110,19 +114,18 @@ export default class Select extends React.PureComponent<Props, State> {
     if (this.state.showOptionsLevel === 0) {
       document.addEventListener('click', this.handleOutsideClick, false);
       this.setState({ showOptionsLevel: 1 });
-    } else {
-      document.removeEventListener('click', this.handleOutsideClick, false);
     }
   }
 
   @autobind
   handleOutsideClick(e) {
     // ignore clicks on the component itself
-    if (this.node.contains(e.target)) {
+    if (this.node && this.node.contains(e.target)) {
       return;
     }
 
     this.setState({ showOptionsLevel: 0 });
+    document.removeEventListener('click', this.handleOutsideClick, false);
   }
 
   @autobind
@@ -135,7 +138,7 @@ export default class Select extends React.PureComponent<Props, State> {
         ref={(node) => { this.node = node; }}
       >
         {options.map((option: Options, index: number) => (
-          <div
+          <span
             key={index}
             onClick={option.options
               ? () => this.onSelectValue(option.value)
@@ -149,7 +152,7 @@ export default class Select extends React.PureComponent<Props, State> {
             tabIndex={0}
           >
             {option.display}
-          </div>
+          </span>
         ))}
       </div>
     );
@@ -157,27 +160,35 @@ export default class Select extends React.PureComponent<Props, State> {
 
   @autobind
   renderValue() {
-    const { value } = this.props;
-    if (typeof value === 'string') {
+    const {
+      options, placeholder, type, value,
+    } = this.props;
+    if (type === 'single' && value) {
+      const option = options.find(opt => value === opt.value);
       return (
-        <div className='value single'><span>{value}</span></div>
+        <div className='value single'><span>{option ? option.display : value}</span></div>
+      );
+    } else if (value.constructor === Array && value.length > 0) {
+      const casted = (value: Array<string | number>);
+      const optsFiltered = options.filter(opt => casted.indexOf(opt.value) > -1);
+      return (
+        <div className='value multiple'>
+          {optsFiltered.map((opt, i) => (
+            <span
+              key={i}
+              onClick={() => this.onRemoveIndex(i)}
+              onKeyPress={() => this.onRemoveIndex(i)}
+              tabIndex={0}
+              role='menuitem'
+            >
+              {opt.display}
+            </span>
+          ))}
+        </div>
       );
     }
-    const casted = (value: Array<string | number>);
     return (
-      <div className='value multiple'>
-        {casted.map((v, i) => (
-          <span
-            key={i}
-            onClick={() => this.onRemoveIndex(i)}
-            onKeyPress={() => this.onRemoveIndex(i)}
-            tabIndex={0}
-            role='menuitem'
-          >
-            {v}
-          </span>
-        ))}
-      </div>
+      <div className='placeholder'>{placeholder || (type === 'single' ? 'Select...' : 'Select multiple...')}</div>
     );
   }
 
@@ -203,9 +214,6 @@ export default class Select extends React.PureComponent<Props, State> {
     const {
       id,
       label,
-      type,
-      placeholder,
-      value,
       className,
 
       messageType,
@@ -224,19 +232,16 @@ export default class Select extends React.PureComponent<Props, State> {
             `input-group ${leftIcon ? 'l-icon' : ''} r-icon
             ${messageType === 'error' ? 'error' : ''}`
           }
+          onClick={this.handleClick}
+          onKeyPress={this.handleClick}
+          tabIndex={0}
+          role='button'
         >
           <div
             id={id}
             className={`select ${disabled || !editable ? 'disabled' : ''}`}
-            onClick={this.handleClick}
-            onKeyPress={this.handleClick}
-            tabIndex={0}
-            role='button'
           >
-            { value || (value.constructor === Array && value.length > 0)
-              ? this.renderValue()
-              : <div className='placeholder'>{placeholder || (type === 'single' ? 'Select...' : 'Select multiple...')}</div>
-            }
+            { this.renderValue() }
             { this.renderOptions() }
           </div>
           <span className={`symbolicon ${leftIcon || 'none'}`} />
