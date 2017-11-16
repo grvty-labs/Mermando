@@ -1,6 +1,5 @@
 // @flow
 import * as React from 'react';
-import autobind from 'autobind-decorator';
 import Button from '../Button';
 
 export type Props = {
@@ -21,6 +20,7 @@ type State = {};
 type Default = {
   className: string,
   text: string,
+  icon: string,
   showHead: boolean,
   showAngle: boolean,
 };

@@ -1,0 +1,55 @@
+.contextual-wrapper {
+  position: relative;
+
+  > button {
+    font-size: 1.3rem;
+
+    &:hover,
+    &:--enter-action {
+      color: var(--royal-blue);
+
+      + .contextual {
+        opacity: 1;
+        visibility: visible;
+      }
+    }
+  }
+
+  .contextual {
+    background-color: var(--snow, #fafafa);
+    border-radius: 3px;
+    box-shadow: 0 8px 16px 0 rgba(82, 97, 115, 0.18);
+    display: flex;
+    flex-direction: column;
+    min-width: 178px;
+    opacity: 0;
+    padding: 8px 0;
+    position: absolute;
+    right: 90%;
+    top: 10%;
+    transition: opacity 0.3s;
+    visibility: hidden;
+    z-index: 2;
+
+    > button,
+    > div {
+      font-size: 0.75rem;
+      margin: 0.25rem 0.5rem;
+      padding: 0.25rem 0.5rem;
+      text-align: left;
+
+      &:hover {
+        background-color: var(--white-smoke);
+      }
+
+      &:--disabled {
+        background-color: var(--button-link-background, transparent);
+      }
+    }
+
+    &:hover {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+}
