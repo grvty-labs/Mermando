@@ -8,6 +8,7 @@ export type StoreProps = {
   type?: string,
   topComponent?: React.Node | Array<React.Node>,
   children: React.Node | Array<React.Node>,
+  type?: 'separated-rows',
 };
 export type Actions = {};
 
@@ -21,7 +22,7 @@ type Default = {
 export default class Page extends React.PureComponent<Props, State> {
   static defaultProps: Default = {
     className: '',
-    type: '',
+    type: 'separated-rows',
   };
 
   state: State = {};
