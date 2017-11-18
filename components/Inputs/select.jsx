@@ -85,7 +85,7 @@ export default class Select extends React.PureComponent<Props, State> {
     if (type === 'single') {
       this.setState({ showOptionsLevel: 0 }, () => {
         this.props.onChange(newValue);
-        document.removeEventListener('click', this.handleOutsideClick, false);
+        document.removeEventListener('click', this.handleOutsideClick);
       });
     } else {
       const casted = [...(value: Array<string | number>)];
@@ -112,7 +112,7 @@ export default class Select extends React.PureComponent<Props, State> {
   @autobind
   handleClick() {
     if (this.state.showOptionsLevel === 0) {
-      document.addEventListener('click', this.handleOutsideClick, false);
+      document.addEventListener('click', this.handleOutsideClick);
       this.setState({ showOptionsLevel: 1 });
     }
   }
@@ -125,7 +125,7 @@ export default class Select extends React.PureComponent<Props, State> {
     }
 
     this.setState({ showOptionsLevel: 0 });
-    document.removeEventListener('click', this.handleOutsideClick, false);
+    document.removeEventListener('click', this.handleOutsideClick);
   }
 
   @autobind

@@ -4,6 +4,7 @@ import Label from './label';
 
 type Props = {
   id: string,
+  label?: string,
   value: boolean,
   onChange: Function,
 };
@@ -21,6 +22,7 @@ export default class Checkbox extends React.Component<Props, void> {
   render() {
     const {
       id,
+      label,
       value,
       ...otherProps
     } = this.props;
@@ -34,6 +36,7 @@ export default class Checkbox extends React.Component<Props, void> {
           onChange={this.onValueChange}
         />
         <Label htmlFor={id} />
+        <Label htmlFor={id}>{label}</Label>
       </div>
     );
   }
