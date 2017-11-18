@@ -28,11 +28,8 @@
   }
 
   > .content {
+    color: var(--blue-haze);
     width: 100%;
-
-    > span {
-      font-size: inherit;
-    }
 
     &:not(:empty) {
       padding-top: 35px;
@@ -106,6 +103,7 @@
   }
 
   &.small {
+    font-size: 0.75rem;
     padding: 1rem 0.75rem;
 
     > .header {
@@ -113,9 +111,12 @@
     }
 
     > .content {
-      font-size: 0.75rem;
       padding-top: 0;
     }
+  }
+
+  &.medium {
+    font-size: 1rem;
   }
 
   &.large {

@@ -2,11 +2,12 @@
   position: relative;
 
   > button {
+    color: var(--menu-icon-color, #c3bfcc);
     font-size: 1.3rem;
 
     &:hover,
     &:--enter-action {
-      color: var(--royal-blue);
+      color: var(--menu-icon-hover-color, #5969e1);
 
       + .contextual {
         opacity: 1;
@@ -16,7 +17,7 @@
   }
 
   .contextual {
-    background-color: var(--snow, #fafafa);
+    background-color: var(--menu-background, #fafafa);
     border-radius: 3px;
     box-shadow: 0 8px 16px 0 rgba(82, 97, 115, 0.18);
     display: flex;
@@ -39,7 +40,7 @@
       text-align: left;
 
       &:hover {
-        background-color: var(--white-smoke);
+        background-color: var(--menu-item-hover-background, #f2f2f2);
       }
 
       &:--disabled {
