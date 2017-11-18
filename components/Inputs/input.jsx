@@ -9,14 +9,17 @@ type Props = {
   message?: string,
   messageType?: 'info' | 'subtle' | 'success' | 'error',
   className?: string,
-  value: string | number,
+  value?: string | number,
   onChange: Function,
 
   leftIcon?: string,
   rightIcon?: string,
 
-  type?: 'text' | 'number' | 'password',
+  type?: 'text' | 'number' | 'float' | 'password',
+  pattern?: string,
+  placeholder?: string,
   required?: boolean,
+  forceRequiredIcon?: boolean,
   editable?: boolean,
   disabled?: boolean,
 };
@@ -32,9 +35,10 @@ type Default = {
   rightIcon: string,
 
   required: boolean,
+  forceRequiredIcon: boolean,
   editable: boolean,
   disabled: boolean,
-  type: 'text' | 'number' | 'password',
+  type: 'text' | 'number' | 'float' | 'password',
 }
 
 export default class Input extends React.PureComponent<Props, void> {
@@ -49,6 +53,7 @@ export default class Input extends React.PureComponent<Props, void> {
     rightIcon: '',
 
     required: false,
+    forceRequiredIcon: false,
     disabled: false,
     editable: true,
     type: 'text',
@@ -56,12 +61,40 @@ export default class Input extends React.PureComponent<Props, void> {
 
   @autobind
   onValueChange(event: SyntheticEvent<*>) {
-    this.props.onChange(event.target.value);
+    const { type } = this.props;
+    const { value } = event.target;
+    let clean;
+
+    if (!value) {
+      this.props.onChange(value);
+      return;
+    }
+
+    switch (type) {
+      case 'number':
+        clean = Number.parseInt(value, 10);
+        if (!Number.isNaN(clean)) {
+          this.props.onChange(clean);
+        }
+        break;
+
+      case 'float':
+        clean = Number.parseFloat(value);
+        if (!Number.isNaN(clean)) {
+          this.props.onChange(clean);
+        }
+        break;
+
+      default:
+        clean = value;
+        this.props.onChange(clean);
+    }
   }
 
   @autobind
   renderRightIcon() {
     const {
+      forceRequiredIcon,
       label,
       required,
       message,
@@ -75,7 +108,7 @@ export default class Input extends React.PureComponent<Props, void> {
           `symbolicon ${
             !label && message
             ? messageType || ''
-            : required && !label
+            : required && (!label || forceRequiredIcon)
               ? 'required'
               : rightIcon || 'none'
             }`
@@ -83,7 +116,7 @@ export default class Input extends React.PureComponent<Props, void> {
         title={
           !label && message
             ? message
-            : required && !label
+            : required && (!label || forceRequiredIcon)
               ? 'Required field'
               : null
         }
@@ -94,12 +127,14 @@ export default class Input extends React.PureComponent<Props, void> {
   @autobind
   renderMessages() {
     const {
+      forceRequiredIcon,
       label,
       required,
       message,
       messageType,
     } = this.props;
-    if (label && (message || required)) {
+
+    if (label && (message || (required && !forceRequiredIcon))) {
       return (
         <small className={`symbolicon ${messageType || 'required'}`}>
           {message || 'Required field'}
@@ -113,10 +148,12 @@ export default class Input extends React.PureComponent<Props, void> {
     const {
       id,
       label,
+      forceRequiredIcon,
       required,
       type,
       value,
       className,
+      pattern,
 
       message,
       messageType,
@@ -136,16 +173,21 @@ export default class Input extends React.PureComponent<Props, void> {
         <div
           className={
             `input-group ${leftIcon ? 'l-icon' : ''} ${
-              required || rightIcon || (!label && message) ? 'r-icon' : ''
+              ((!label || forceRequiredIcon) && required) || rightIcon || (!label && message) ? 'r-icon' : ''
             } ${messageType === 'error' ? 'error' : ''}`
           }
         >
           <input
             {...otherProps}
             type={type} id={id}
-            value={value} onChange={this.onValueChange}
+            value={value || ''} onChange={this.onValueChange}
             required={required}
             disabled={disabled || !editable}
+            pattern={
+              pattern ||
+              type === 'number' ? '[0-9]*' : '' ||
+              type === 'float' ? '[.0-9]*' : ''
+            }
           />
           <span className={`symbolicon ${leftIcon || 'none'}`} />
           {this.renderRightIcon()}
