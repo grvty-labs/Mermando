@@ -1,21 +1,21 @@
 // @flow
-import Checkbox from './checkbox';
+import CheckboxInput from './checkbox';
+import FormSection from './formSection';
 import Input from './input';
 import InputsWrap from './inputsWrap';
-import FormSection from './formSection';
-import Select from './select';
 import Label from './label';
+import SelectInput from './select';
 
 import type { Value as SelectValue } from './select';
 
 export default Input;
 export {
-  Checkbox,
+  CheckboxInput,
   FormSection,
   Input,
   InputsWrap,
-  Select,
   Label,
+  SelectInput,
 };
 
 export type {

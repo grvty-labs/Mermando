@@ -2,6 +2,8 @@
 import * as React from 'react';
 import autobind from 'autobind-decorator';
 import Label from './label';
+import { messageTypes } from '../../js/inputs';
+import InputAtom from './input-atom';
 
 export type Value = string | number | Array<string | number>;
 
@@ -15,20 +17,20 @@ type Props = {
   id: string,
   label?: string,
   message?: string,
-  messageType?: 'info' | 'subtle' | 'success' | 'error',
+  messageType?: $Keys<typeof messageTypes>,
   className?: string,
   value: Value,
-  onChange: Function,
 
   leftIcon?: string,
-  rightIcon?: string,
 
-  options: Array<Options>,
-  placeholder: string,
   type?: 'single' | 'multiple',
+  options: Array<Options>,
+  placeholder?: string,
   required?: boolean,
   editable?: boolean,
   disabled?: boolean,
+
+  onChange: Function,
 };
 
 type Default = {
@@ -36,10 +38,9 @@ type Default = {
   className: string,
 
   message: string,
-  messageType: 'info' | 'subtle' | 'success' | 'error',
+  messageType: $Keys<typeof messageTypes>,
 
   leftIcon: string,
-  rightIcon: string,
 
   required: boolean,
   editable: boolean,
@@ -57,10 +58,9 @@ export default class Select extends React.PureComponent<Props, State> {
     className: '',
 
     message: '',
-    messageType: 'info',
+    messageType: 'text',
 
     leftIcon: '',
-    rightIcon: '',
 
     required: false,
     disabled: false,
@@ -97,8 +97,10 @@ export default class Select extends React.PureComponent<Props, State> {
 
   @autobind
   onRemoveIndex(index: number) {
-    const { type, value } = this.props;
-    if (type === 'multiple') {
+    const {
+      editable, disabled, type, value,
+    } = this.props;
+    if (type === 'multiple' && editable && !disabled) {
       const casted = (value: Array<string | number>);
       if (index >= 0) {
         casted.splice(index, 1);
@@ -111,6 +113,10 @@ export default class Select extends React.PureComponent<Props, State> {
 
   @autobind
   handleClick() {
+    const { editable, disabled } = this.props;
+    if (!editable || disabled) {
+      return;
+    }
     if (this.state.showOptionsLevel === 0) {
       document.addEventListener('click', this.handleOutsideClick);
       this.setState({ showOptionsLevel: 1 });
@@ -149,7 +155,7 @@ export default class Select extends React.PureComponent<Props, State> {
               : () => this.onSelectValue(option.value)
             }
             role='menuitem'
-            tabIndex={0}
+            tabIndex={showOptionsLevel > 0 ? 0 : -1}
           >
             {option.display}
           </span>
@@ -161,14 +167,14 @@ export default class Select extends React.PureComponent<Props, State> {
   @autobind
   renderValue() {
     const {
-      options, placeholder, type, value,
+      options, placeholder, type, value, disabled, editable,
     } = this.props;
     if (type === 'single' && value) {
       const option = options.find(opt => value === opt.value);
       return (
         <div className='value single'><span>{option ? option.display : value}</span></div>
       );
-    } else if (value.constructor === Array && value.length > 0) {
+    } else if (value && value.constructor === Array && value.length > 0) {
       const casted = (value: Array<string | number>);
       const optsFiltered = options.filter(opt => casted.indexOf(opt.value) > -1);
       return (
@@ -178,7 +184,7 @@ export default class Select extends React.PureComponent<Props, State> {
               key={i}
               onClick={() => this.onRemoveIndex(i)}
               onKeyPress={() => this.onRemoveIndex(i)}
-              tabIndex={0}
+              tabIndex={!disabled && editable ? 0 : -1}
               role='menuitem'
             >
               {opt.display}
@@ -192,30 +198,14 @@ export default class Select extends React.PureComponent<Props, State> {
     );
   }
 
-  @autobind
-  renderMessages() {
-    const {
-      label,
-      required,
-      message,
-      messageType,
-    } = this.props;
-    if (label && (message || required)) {
-      return (
-        <small className={`symbolicon ${messageType || 'required'}`}>
-          {message || 'Required field'}
-        </small>
-      );
-    }
-    return null;
-  }
-
   render() {
     const {
       id,
       label,
       className,
+      required,
 
+      message,
       messageType,
 
       leftIcon,
@@ -225,30 +215,28 @@ export default class Select extends React.PureComponent<Props, State> {
 
 
     return (
-      <div className={`input-atom ${!editable ? 'blocked' : ''} ${className || ''}`}>
-        { label ? <Label htmlFor={id}>{label}</Label> : null}
+      <InputAtom
+        id={id} label={label}
+        message={message}
+        messageType={messageType}
+        forceMessageBeneath
+        className={className}
+        leftIcon={leftIcon}
+        required={required}
+        rightIcon='angle'
+      >
         <div
-          className={
-            `input-group ${leftIcon ? 'l-icon' : ''} r-icon
-            ${messageType === 'error' ? 'error' : ''}`
-          }
+          id={id}
+          className={`select ${disabled ? 'disabled' : ''} ${!editable ? 'blocked' : ''}`}
           onClick={this.handleClick}
           onKeyPress={this.handleClick}
-          tabIndex={0}
+          tabIndex={!disabled && editable ? 0 : -1}
           role='button'
         >
-          <div
-            id={id}
-            className={`select ${disabled || !editable ? 'disabled' : ''}`}
-          >
-            { this.renderValue() }
-            { this.renderOptions() }
-          </div>
-          <span className={`symbolicon ${leftIcon || 'none'}`} />
-          <span className='symbolicon angle' />
+          { this.renderValue() }
+          { this.renderOptions() }
         </div>
-        {this.renderMessages()}
-      </div>
+      </InputAtom>
     );
   }
 }

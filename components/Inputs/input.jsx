@@ -1,27 +1,31 @@
 // @flow
 import * as React from 'react';
 import autobind from 'autobind-decorator';
-import Label from './label';
+import Datetime from 'react-datetime';
+import InputAtom from './input-atom';
+import { inputTypes, messageTypes } from '../../js/inputs';
 
 type Props = {
   id: string,
   label?: string,
   message?: string,
-  messageType?: 'info' | 'subtle' | 'success' | 'error',
+  messageType?: $Keys<typeof messageTypes>,
+  forceMessageBeneath?: boolean,
   className?: string,
   value?: string | number,
-  onChange: Function,
 
   leftIcon?: string,
   rightIcon?: string,
 
-  type?: 'text' | 'number' | 'float' | 'password',
+  type?: $Keys<typeof inputTypes>,
   pattern?: string,
   placeholder?: string,
   required?: boolean,
-  forceRequiredIcon?: boolean,
+  forceInlineRequired?: boolean,
   editable?: boolean,
   disabled?: boolean,
+
+  onChange: Function,
 };
 
 type Default = {
@@ -29,17 +33,18 @@ type Default = {
   className: string,
 
   message: string,
-  messageType: 'info' | 'subtle' | 'success' | 'error',
+  messageType: $Keys<typeof messageTypes>,
+  forceMessageBeneath: boolean,
 
   leftIcon: string,
   rightIcon: string,
 
   required: boolean,
-  forceRequiredIcon: boolean,
+  forceInlineRequired: boolean,
   editable: boolean,
   disabled: boolean,
-  type: 'text' | 'number' | 'float' | 'password',
-}
+  type: $Keys<typeof inputTypes>,
+};
 
 export default class Input extends React.PureComponent<Props, void> {
   static defaultProps: Default = {
@@ -47,13 +52,14 @@ export default class Input extends React.PureComponent<Props, void> {
     className: '',
 
     message: '',
-    messageType: 'info',
+    messageType: 'text',
+    forceMessageBeneath: false,
 
     leftIcon: '',
     rightIcon: '',
 
     required: false,
-    forceRequiredIcon: false,
+    forceInlineRequired: false,
     disabled: false,
     editable: true,
     type: 'text',
@@ -85,6 +91,9 @@ export default class Input extends React.PureComponent<Props, void> {
         }
         break;
 
+      case 'password':
+      case 'text':
+      case 'textarea':
       default:
         clean = value;
         this.props.onChange(clean);
@@ -92,94 +101,75 @@ export default class Input extends React.PureComponent<Props, void> {
   }
 
   @autobind
-  renderRightIcon() {
+  renderInput(otherProps: { [key: string]: string }) {
     const {
-      forceRequiredIcon,
-      label,
-      required,
-      message,
-      messageType,
-      rightIcon,
+      id, type, value, required, disabled, editable,
+      pattern, onChange,
     } = this.props;
 
-    return (
-      <span
-        className={
-          `symbolicon ${
-            !label && message
-            ? messageType || ''
-            : required && (!label || forceRequiredIcon)
-              ? 'required'
-              : rightIcon || 'none'
-            }`
-        }
-        title={
-          !label && message
-            ? message
-            : required && (!label || forceRequiredIcon)
-              ? 'Required field'
-              : null
-        }
-      />
-    );
-  }
+    let className = otherProps.className || '';
+    className = `${className} ${!editable ? 'blocked' : ''}`;
 
-  @autobind
-  renderMessages() {
-    const {
-      forceRequiredIcon,
-      label,
-      required,
-      message,
-      messageType,
-    } = this.props;
+    switch (type) {
+      case 'textarea':
+        return (
+          <textarea
+            {...otherProps}
+            id={id}
+            className={className}
+            value={value || ''} onChange={this.onValueChange}
+            required={required}
+            disabled={disabled || !editable}
+          />
+        );
 
-    if (label && (message || (required && !forceRequiredIcon))) {
-      return (
-        <small className={`symbolicon ${messageType || 'required'}`}>
-          {message || 'Required field'}
-        </small>
-      );
-    }
-    return null;
-  }
+      case 'datetime':
+        return (
+          <Datetime
+            value={value}
+            className='datetime'
+            onChange={onChange}
+            dateFormat='DD-MMM-YYYY'
+            timeFormat='hh:mm A'
+            inputProps={{
+              ...otherProps,
+              id,
+              className,
+              required,
+              disabled: disabled || !editable,
+              readOnly: true,
+            }}
+          />
+        );
 
-  render() {
-    const {
-      id,
-      label,
-      forceRequiredIcon,
-      required,
-      type,
-      value,
-      className,
-      pattern,
+      case 'date':
+        return (
+          <Datetime
+            value={value}
+            className='datetime'
+            onChange={onChange}
+            dateFormat='DD-MMM-YYYY'
+            timeFormat={false}
+            inputProps={{
+              ...otherProps,
+              id,
+              className,
+              required,
+              disabled: disabled || !editable,
+              readOnly: true,
+            }}
+          />
+        );
 
-      message,
-      messageType,
-
-      leftIcon,
-      rightIcon,
-      editable,
-      disabled,
-
-      ...otherProps
-    } = this.props;
-
-
-    return (
-      <div className={`input-atom ${!editable ? 'blocked' : ''} ${className || ''}`}>
-        { label ? <Label htmlFor={id}>{label}</Label> : null}
-        <div
-          className={
-            `input-group ${leftIcon ? 'l-icon' : ''} ${
-              ((!label || forceRequiredIcon) && required) || rightIcon || (!label && message) ? 'r-icon' : ''
-            } ${messageType === 'error' ? 'error' : ''}`
-          }
-        >
+      case 'text':
+      case 'number':
+      case 'float':
+      case 'password':
+        return (
           <input
             {...otherProps}
             type={type} id={id}
+            className={className}
             value={value || ''} onChange={this.onValueChange}
             required={required}
             disabled={disabled || !editable}
@@ -189,11 +179,43 @@ export default class Input extends React.PureComponent<Props, void> {
               type === 'float' ? '[.0-9]*' : ''
             }
           />
-          <span className={`symbolicon ${leftIcon || 'none'}`} />
-          {this.renderRightIcon()}
-        </div>
-        {this.renderMessages()}
-      </div>
+        );
+
+      default:
+        return (null);
+    }
+  }
+
+  render() {
+    const {
+      id, label, forceInlineRequired,
+      required, type, value,
+      className, pattern,
+
+      forceMessageBeneath, message, messageType,
+
+      leftIcon, rightIcon, editable,
+      disabled, onChange,
+
+      ...otherProps
+    } = this.props;
+
+
+    return (
+      <InputAtom
+        id={id} label={label}
+        message={message}
+        messageType={messageType}
+        forceInlineRequired={forceInlineRequired}
+        forceMessageBeneath={forceMessageBeneath}
+        className={className}
+        leftIcon={leftIcon}
+        rightIcon={rightIcon}
+        required={required}
+        type={type}
+      >
+        {this.renderInput(otherProps)}
+      </InputAtom>
     );
   }
 }
