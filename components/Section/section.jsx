@@ -5,6 +5,7 @@ export type StoreProps = {
   title: string,
   className?: string,
   topComponent?: React.Node | Array<React.Node>,
+  middleComponent?: React.Node | Array<React.Node>,
   children: React.Node | Array<React.Node>,
   type?: 'cards-panel' | 'none' | 'separated-rows',
 };
@@ -30,7 +31,7 @@ export default class Section extends React.PureComponent<Props, State> {
 
   render() {
     const {
-      className, children, title, topComponent, type,
+      className, children, title, middleComponent, topComponent, type,
     } = this.props;
 
     return (
@@ -38,6 +39,9 @@ export default class Section extends React.PureComponent<Props, State> {
         <div className='header'>
           <h3>{title}</h3>
           {topComponent}
+        </div>
+        <div className='middle'>
+          {middleComponent}
         </div>
         <div className={`content ${type || ''}`}>
           {children}
