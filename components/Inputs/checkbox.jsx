@@ -28,7 +28,7 @@ export default class Checkbox extends React.Component<Props, void> {
     } = this.props;
 
     return (
-      <div className='checkbox' >
+      <div className='checkbox'>
         <input
           {...otherProps}
           type='checkbox'

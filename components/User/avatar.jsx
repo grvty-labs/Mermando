@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import autobind from 'autobind-decorator';
-import { hashCode, intToRGB } from '../utils';
+import { hashCode, intToRGB } from '../../js/utils';
 
 export type AvatarProps = {
   url?: string,

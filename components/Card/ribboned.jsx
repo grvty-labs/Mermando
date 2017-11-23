@@ -1,15 +1,15 @@
 // @flow
 import * as React from 'react';
 import Card from './card';
-import { ribbonColors } from '../globals';
 import type { CardProps, Default as CardDefault } from './card';
+import colours from '../../js/theme';
 
 export type RibbonedCardProps = {
-  ribbonColor?: $Keys<typeof ribbonColors> | string,
+  ribbonColor?: $Keys<typeof colours> | string,
 } & CardProps;
 
 type Default = {
-  ribbonColor: $Keys<typeof ribbonColors> | string,
+  ribbonColor: $Keys<typeof colours> | string,
 } & CardDefault;
 
 /**
@@ -26,7 +26,7 @@ export default class RibbonedCard extends React.Component<RibbonedCardProps, voi
     const { ribbonColor, className, ...cardProps } = this.props;
     const safeRibbonColor = ribbonColor || 'brand';
     const isKnownRibbon = Object.prototype.hasOwnProperty.call(
-      ribbonColors,
+      colours,
       safeRibbonColor.toLowerCase(),
     );
     return (

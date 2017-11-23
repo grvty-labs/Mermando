@@ -1,7 +1,5 @@
 // @flow
-export const version = '0.0.1';
-
-export const ribbonColors = {
+const colours = {
   brand: 'brand',
   accent: 'accent',
   success: 'success',
@@ -11,4 +9,4 @@ export const ribbonColors = {
   disabled: 'disabled',
 };
 
-export default version;
+export default colours;
