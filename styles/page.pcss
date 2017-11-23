@@ -1,10 +1,36 @@
 .page {
-  animation: push var(--page-enter-time, 0.3s) ease-out;
   background-color: var(--white, #fff);
+  grid-kiss:
+    "+-----+     +----------------------------------------+     +-----+ ----"
+    "|     |     |                    ↓                   |     |     |     "
+    "|     |     |               ← >.top →                |     |     | 60px"
+    "|     |     |                    ↑                   |     |     |     "
+    "|     |     +----------------------------------------+     |     | ----"
+    "|     |     +----------------------------------------+     |     | ----"
+    "|     |     |                   ↓                    |     |     |     "
+    "|     |     |             ← >.header →               |     |     | auto"
+    "|     |     |                   ↑                    |     |     |     "
+    "|     |     +----------------------------------------+     |     | ----"
+    "|     |     +----------------------------------------+     |     | ----"
+    "|     |     |                                        |     |     |     "
+    "|     |     |                                        |     |     |     "
+    "|     |     |             ← >.content →              |     |     | auto"
+    "|     |     |                   ↑                    |     |     |     "
+    "|     |     |                                        |     |     |     "
+    "+-----+     +----------------------------------------+     +-----+ ----"
+    "                                                                       "
+    "                                                                    1fr"
+    "                                                                       "
+    "+----------------------------------------------------------------+ ----"
+    "|                                                                | 10fr"
+    "+----------------------------------------------------------------+ ----"
+    "| 1px | 1fr |              300px - 1326px            | 1fr | 1px |     "
+    "                                                                       "
+    "                                                                       ";
   max-height: 100vh;
-  max-width: 100vw;
+  max-width: var(--page-max-width, 90vw);
   min-height: 100vh;
-  min-width: 100vw;
+  min-width: var(--page-max-width, 90vw);
   overflow: auto;
   position: absolute;
   right: 0;
@@ -14,7 +40,6 @@
   > .top {
     align-items: center;
     display: flex;
-    height: 60px;
     margin: 0 2.6875rem;
 
     > button {
@@ -44,7 +69,6 @@
     border-bottom: 1px solid var(--gainsboro, #dcdcdc);
     display: flex;
     padding: 0 2.6875rem 1.625rem;
-    width: 100%;
 
     h3 {
       font-weight: normal;
@@ -70,19 +94,40 @@
         &:not(:empty),
         &:not(:last-of-type) {
           border-bottom: 1px solid var(--whisper-3, #ededed);
-          padding-bottom: 0.5rem;
+          padding-bottom: 1.5rem;
         }
       }
     }
   }
+
+  &.open {
+    animation: push-in var(--page-enter-time, 0.3s) ease-out;
+    right: 0;
+  }
+
+  &.close {
+    animation: push-out var(--page-enter-time, 0.3s) ease-out;
+    right: -100vw;
+  }
 }
 
-@keyframes push {
+@keyframes push-in {
   0% {
     right: -100vw;
   }
 
   100% {
     right: 0;
+  }
+}
+
+@keyframes push-out {
+  0% {
+    overflow: hidden;
+    right: 0;
+  }
+
+  100% {
+    right: -100vw;
   }
 }
