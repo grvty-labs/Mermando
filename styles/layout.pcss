@@ -1,0 +1,68 @@
+@import './waddles/colours';
+@import './waddles/animations';
+@import './waddles/base';
+@import './waddles/buttons';
+@import './waddles/custom-animations';
+@import './waddles/modals';
+@import './waddles/tables';
+@import './waddles/texts';
+@import './waddles/toastr';
+@import './waddles/utils';
+@import './card';
+
+/* ORDER REQUIRED */
+@import './waddles/forms';
+@import './inputs/checkbox';
+@import './inputs/datetime';
+@import './inputs/file';
+@import './inputs/select';
+@import './inputs/tags';
+@import './inputs/formSection';
+@import './inputs/inputsWrap';
+
+/* UNTIL HERE */
+@import './menu/contextual';
+@import './menu/dropdown';
+@import './page';
+@import './section';
+@import './sidebar';
+@import './topbar';
+@import './user';
+@import './override';
+
+/*
+@import '../vendors/react-datetime';
+*/
+
+/*
+@import './base';
+@import './coherence';
+@import './buttons';
+@import './panels';
+@import './forms';
+@import './filters';
+@import './tooltips';
+*/
+
+.react {
+  grid-kiss:
+    "+---------------------------------------------------------------------+ ----"
+    "|                                  ↓                                  |     "
+    "|                             ← .topbar →                             | 48px"
+    "|                                  ↑                                  |     "
+    "+---------------------------------------------------------------------+ ----"
+    "                                                                            "
+    "                                                                            "
+    "+--+  +---------------------------------------------------------+  +--+     "
+    "|  |  |                                                         |  |  |     "
+    "|  |  |                                                         |  |  |     "
+    "|  |  |                        >.main                           |  |  |     "
+    "|  |  |                                                         |  |  |     "
+    "|  |  |                                                         |  |  |     "
+    "+--+  +---------------------------1024px------------------------+  +--+     ";
+
+  > .main {
+    margin-top: 48px;
+    width: 100%;
+  }
+}

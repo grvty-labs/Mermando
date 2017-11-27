@@ -1,0 +1,15 @@
+{
+  "name": "Mermando",
+  "version": "0.0.1",
+  "repository": "https://github.com/grvty-labs/Mermando.git",
+  "author": "GRVTY S.A.P.I. de C.V.",
+  "license": "MIT",
+  "peerDependencies": {
+    "autobind-decorator": "^2.1.0",
+    "moment": "^2.18.1",
+    "react": "^15.0.0-0 || ^16.0.0-0",
+    "react-datetime": "^2.11.0",
+    "react-dropzone": "^4.2.3",
+    "react-tag-input": "^4.7.2"
+  }
+}

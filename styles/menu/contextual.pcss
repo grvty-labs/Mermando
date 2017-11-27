@@ -1,0 +1,64 @@
+.contextual-wrapper {
+  position: relative;
+
+  > button {
+    color: var(--menu-icon-color, #c3bfcc);
+    font-size: 1.3rem;
+
+    /* &:hover, */
+    &:--enter-action {
+      color: var(--menu-icon-hover-color, #5969e1);
+
+      + .contextual {
+        opacity: 1;
+        transition:
+          opacity var(--menu-transition-appear-time, 0.3s) ease-in-out,
+          visibility 0s 0s ease-in-out;
+        visibility: visible;
+      }
+    }
+  }
+
+  .contextual {
+    background-color: var(--menu-background, #fafafa);
+    border-radius: 3px;
+    box-shadow: 0 8px 16px 0 rgba(82, 97, 115, 0.18);
+    display: flex;
+    flex-direction: column;
+    min-width: 178px;
+    opacity: 0;
+    padding: 8px 0;
+    position: absolute;
+    right: 90%;
+    top: 10%;
+    transition:
+      opacity var(--menu-transition-appear-time, 0.3s) ease-in-out,
+      visibility 0s var(--menu-transition-appear-time, 0.3s) ease-in-out;
+    visibility: hidden;
+    z-index: 1;
+
+    > button,
+    > div {
+      font-size: 0.75rem;
+      margin: 0.25rem 0.5rem;
+      padding: 0.25rem 0.5rem;
+      text-align: left;
+
+      &:hover {
+        background-color: var(--menu-item-hover-background, #f2f2f2);
+      }
+
+      &:--disabled {
+        background-color: var(--button-link-background, transparent);
+      }
+    }
+
+    &:hover {
+      opacity: 1;
+      transition:
+        opacity var(--menu-transition-appear-time, 0.3s) ease-in-out,
+        visibility 0s 0s ease-in-out;
+      visibility: visible;
+    }
+  }
+}

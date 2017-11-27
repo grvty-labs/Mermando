@@ -1,0 +1,101 @@
+.input {
+  > .tags {
+    padding-bottom: 0;
+    position: relative;
+
+    > .inputEmul {
+      align-items: center;
+      display: flex;
+      flex-wrap: wrap;
+      min-height: 2em;
+
+      > .tag {
+        align-items: center;
+        background-color: var(--tag-background-color, #5969e1);
+        border-radius: 3em;
+        color: var(--tag-font-color, #fff);
+        content: '';
+        display: flex;
+        font-size: 0.75em;
+        font-weight: bold;
+        justify-content: center;
+        margin-bottom: 0.666em;
+        margin-right: 1em;
+        padding: 0.333em 0.666em;
+
+        > .remove {
+          align-items: center;
+          color: transparent;
+          cursor: pointer;
+          display: flex;
+          justify-content: center;
+          position: relative;
+
+          &::after {
+            align-items: center;
+            background-color: var(--tag-remove-background-color, #5969e1);
+            border-radius: 3em;
+            color: var(--tag-remove-font-color, #fff);
+            content: "\e95b";
+            display: flex;
+            font-family: 'SymboliconAir' !important;
+            font-size: 0.5em;
+            font-smoothing: antialiased;
+            font-style: normal;
+            font-variant: normal;
+            font-weight: normal;
+            height: 2em;
+            justify-content: center;
+            line-height: 1;
+            speak: none;
+            text-align: center;
+            text-transform: none;
+            width: 2em;
+          }
+        }
+      }
+
+      > .inputLine {
+        > .inputField {
+          background-color: transparent;
+          border: 0;
+          margin-bottom: 0.5em;
+          padding: 0;
+          width: auto;
+        }
+
+        > .suggestions {
+          animation: fade-in var(--tag-transition-time, 0.2s) ease-in-out;
+          background-color: var(--tag-suggestion-background, #fafafa);
+          border-radius: var(--tag-suggestion-border-radius, 3px);
+          box-shadow: var(--tag-suggestion-box-shadow, none);
+          left: 0;
+          min-width: 100%;
+          overflow: hidden;
+          position: absolute;
+          top: 100%;
+          z-index: 1;
+
+          > ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+
+            > li {
+              cursor: pointer;
+              padding: 0.666em 0.75em;
+
+              &:hover {
+                background-color: var(--tag-suggestion-hover-background, #f2f2f2);
+              }
+            }
+          }
+
+          /*.active {
+            background: var(--royal-blue);
+          }*/
+        }
+      }
+    }
+  }
+}

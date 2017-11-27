@@ -1,0 +1,51 @@
+
+.avatar {
+  align-items: center;
+  background-color: var(--white);
+  background-position: bottom;
+  background-repeat: no-repeat;
+  background-size: cover;
+  border-color: var(--white);
+  border-radius: 32px;
+  border-style: solid;
+  border-width: 2px;
+  display: flex;
+  height: 32px;
+  justify-content: center;
+  margin-right: 8px;
+  width: 32px;
+
+  span {
+    background: inherit;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    display: block;
+    filter: invert(1) grayscale(1) contrast(20);
+    font-size: 0.75rem;
+    text-align: center;
+    user-select: none;
+  }
+}
+
+.avatars-list {
+  display: flex;
+
+  .avatar {
+    border-radius: 24px;
+    height: 24px;
+    margin-left: -5px;
+    margin-right: 0;
+    width: 24px;
+    z-index: 0;
+
+    span {
+      font-size: 0.6rem;
+    }
+
+    &:hover,
+    &:--enter-action {
+      z-index: 1;
+    }
+  }
+}

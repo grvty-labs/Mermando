@@ -1,0 +1,29 @@
+.inputs-wrap {
+  > .legend {
+    margin: 0;
+  }
+
+  > div {
+    &.column {
+      display: flex;
+      flex-direction: column;
+    }
+
+    &.inline {
+      display: flex;
+      flex-flow: row wrap;
+
+      > * {
+        &:not(:last-child) {
+          margin-right: 1.25rem;
+        }
+      }
+    }
+
+    &.grid-row,
+    &.grid-col {
+      display: grid;
+      grid-gap: 8px 20px;
+    }
+  }
+}

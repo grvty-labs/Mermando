@@ -1,0 +1,131 @@
+.card {
+  align-items: baseline;
+  background-color: var(--white, #fff);
+  box-shadow: 0 2px 4px 0 rgba(12, 0, 51, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  margin-bottom: 1.25rem;
+
+  > .header {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+
+    h5 {
+      margin-bottom: 0;
+    }
+
+    > div {
+      display: flex;
+    }
+
+    &:not(:empty) {
+      border-bottom: 2px solid var(--whisper, #e5e5e5);
+      padding-bottom: 5px;
+    }
+  }
+
+  > .content {
+    color: var(--blue-haze);
+    width: 100%;
+
+    &:not(:empty) {
+      padding-top: 35px;
+    }
+  }
+
+  &.normal {
+    align-items: baseline;
+    justify-content: flex-start;
+
+    > .content {
+      align-items: baseline;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+    }
+  }
+
+  &.centered {
+    align-items: center;
+    justify-content: center;
+
+    > .content {
+      align-items: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      text-align: center;
+    }
+  }
+
+  > .footer {
+    width: 100%;
+
+    &:not(:empty) {
+      padding-top: 30px;
+    }
+  }
+
+  &.ribbon {
+    border-style: solid;
+    border-width: 0 0 0 4px;
+
+    &.brand {
+      border-color: var(--card-colors-brand);
+    }
+
+    &.accent {
+      border-color: var(--card-colors-accent);
+    }
+
+    &.success {
+      border-color: var(--card-colors-success);
+    }
+
+    &.warning {
+      border-color: var(--card-colors-warning);
+    }
+
+    &.error {
+      border-color: var(--card-colors-error);
+    }
+
+    &.info {
+      border-color: var(--card-colors-info);
+    }
+
+    &.disabled {
+      border-color: var(--card-colors-disabled);
+    }
+  }
+
+  &.small {
+    font-size: 0.75rem;
+    padding: 1rem 0.75rem;
+
+    > .header {
+      border: none;
+    }
+
+    > .content {
+      padding-top: 0;
+    }
+  }
+
+  &.medium {
+    font-size: 1rem;
+  }
+
+  &.large {
+    padding: 1.25rem 1.1875rem;
+
+    > .content {
+      > table {
+        width: 100%;
+      }
+    }
+  }
+}

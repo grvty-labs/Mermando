@@ -1,0 +1,118 @@
+.input {
+  > .datetime {
+    position: relative;
+
+    > input {
+      cursor: pointer;
+
+      &.blocked,
+      &:--disabled {
+        cursor: default;
+      }
+    }
+
+    > .rdtPicker {
+      background-color: var(--datetime-background, #fafafa);
+      border-radius: var(--datetime-border-radius, 3px);
+      box-shadow: var(--datetime-box-shadow, none);
+      min-width: 100%;
+      opacity: 0;
+      overflow: hidden;
+      position: absolute;
+      top: 100%;
+      transition:
+        opacity var(--datetime-transition-time, 0.2s) ease-in-out,
+        visibility 0s var(--datetime-transition-time, 0.2s) ease-in-out;
+      visibility: hidden;
+      z-index: 1;
+
+      table {
+        table-layout: auto;
+        width: 100%;
+
+        thead {
+          background: var(--datetime-header-background, #5969e1);
+          color: var(--datetime-header-font-color, #fff);
+
+          th {
+            cursor: pointer;
+            height: auto;
+            padding: 0.5em 0.6784em;
+            text-align: center;
+          }
+
+          .rdtSwitch {
+            font-weight: bold;
+          }
+
+          .rdtNext,
+          .rdtPrev {
+            font-size: 1.5em;
+          }
+        }
+
+        tbody {
+          tr {
+            border: 0;
+            height: 100%;
+
+            td {
+              cursor: pointer;
+              padding: 0.5em;
+              text-align: center;
+            }
+
+            .rdtNew,
+            .rdtOld {
+              opacity: 0.5;
+            }
+          }
+        }
+
+        tfoot {
+          background: var(--datetime-header-background, #5969e1);
+          color: var(--datetime-header-font-color, #fff);
+          text-align: center;
+
+          td {
+            cursor: pointer;
+            padding: 0.5em;
+          }
+        }
+      }
+
+      .rdtDays {
+        table {
+          tbody {
+            td {
+              transition:
+                background var(--datetime-transition-time, 0.2s) ease-in-out,
+                border-radius var(--datetime-transition-time, 0.2s) ease-in-out;
+            }
+
+            .rdtActive {
+              background: var(--datetime-selected-background, #5969e1);
+              border-radius: 3.125em;
+              color: var(--datetime-selected-font-color, #fff);
+            }
+          }
+        }
+      }
+
+      .rdtCounters {
+        align-items: center;
+        display: flex;
+        justify-content: space-around;
+        padding: 0.5em 1.5em;
+      }
+    }
+
+    &.rdtOpen {
+      > .rdtPicker {
+        opacity: 1;
+        transition: opacity var(--datetime-transition-time, 0.2s) ease-in-out;
+        visibility: visible;
+      }
+    }
+  }
+}
