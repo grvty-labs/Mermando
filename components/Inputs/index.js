@@ -7,6 +7,7 @@ import InputsWrap from './inputsWrap';
 import Label from './label';
 import SelectInput from './select';
 
+import type { TagType as TagValue } from './input';
 import type { Value as SelectValue } from './select';
 import type { FileType as FileValue } from './file';
 
@@ -24,4 +25,5 @@ export {
 export type {
   SelectValue,
   FileValue,
+  TagValue,
 };
