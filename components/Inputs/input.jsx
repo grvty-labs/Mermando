@@ -2,8 +2,11 @@
 import * as React from 'react';
 import autobind from 'autobind-decorator';
 import Datetime from 'react-datetime';
+import { WithContext as ReactTags } from 'react-tag-input';
 import InputAtom from './input-atom';
-import { inputTypes, messageTypes } from '../../js/inputs';
+import { inputTypes, messageTypes, keyCodes } from '../../js/inputs';
+
+export type TagType = { id: number, text: string };
 
 type Props = {
   id: string,
@@ -12,13 +15,15 @@ type Props = {
   messageType?: $Keys<typeof messageTypes>,
   forceMessageBeneath?: boolean,
   className?: string,
-  value?: string | number,
+  value?: string | number | Date | Array<TagType>,
 
   leftIcon?: string,
   rightIcon?: string,
 
   type?: $Keys<typeof inputTypes>,
   pattern?: string,
+  autoComplete?: boolean,
+  autoCompleteOptions?: Array<string>,
   placeholder?: string,
   required?: boolean,
   forceInlineRequired?: boolean,
@@ -58,6 +63,7 @@ export default class Input extends React.PureComponent<Props, void> {
     leftIcon: '',
     rightIcon: '',
 
+    autoComplete: false,
     required: false,
     forceInlineRequired: false,
     disabled: false,
@@ -66,13 +72,13 @@ export default class Input extends React.PureComponent<Props, void> {
   };
 
   @autobind
-  onValueChange(event: SyntheticEvent<*>) {
-    const { type } = this.props;
+  onHTMLInputChange(event: SyntheticInputEvent<*>) {
+    const { type, onChange } = this.props;
     const { value } = event.target;
     let clean;
 
     if (!value) {
-      this.props.onChange(value);
+      onChange(value);
       return;
     }
 
@@ -80,35 +86,69 @@ export default class Input extends React.PureComponent<Props, void> {
       case 'number':
         clean = Number.parseInt(value, 10);
         if (!Number.isNaN(clean)) {
-          this.props.onChange(clean);
+          onChange(clean);
         }
         break;
 
       case 'float':
         clean = Number.parseFloat(value);
         if (!Number.isNaN(clean)) {
-          this.props.onChange(clean);
+          onChange(clean);
         }
         break;
 
+      case 'email':
       case 'password':
+      case 'tel':
       case 'text':
       case 'textarea':
+      case 'url':
       default:
         clean = value;
-        this.props.onChange(clean);
+        onChange(clean);
     }
   }
 
   @autobind
+  onCustomInputChange(newValue: any, index?: number) {
+    const { type, onChange, value } = this.props;
+    let casted;
+
+    switch (type) {
+      case 'datetime':
+      case 'date':
+        onChange(newValue);
+        break;
+
+      case 'tags':
+        casted = value && value.length > 0
+          ? (value: Array<TagType>)
+          : [];
+        if (index === 0 || index) {
+          casted.splice(index, 1);
+          onChange(casted);
+        } else {
+          onChange(casted.concat({ id: this.counter, text: newValue }));
+          this.counter += 1;
+        }
+        break;
+
+      default:
+        break;
+    }
+  }
+
+  counter: number = 0;
+
+  @autobind
   renderInput(otherProps: { [key: string]: string }) {
     const {
-      id, type, value, required, disabled, editable,
-      pattern, onChange,
+      id, type, className, value, required, disabled, editable,
+      pattern, autoComplete, autoCompleteOptions, placeholder,
     } = this.props;
 
-    let className = otherProps.className || '';
-    className = `${className} ${!editable ? 'blocked' : ''}`;
+    let newClassName = className || '';
+    newClassName = `${newClassName} ${!editable ? 'blocked' : ''}`;
 
     switch (type) {
       case 'textarea':
@@ -116,10 +156,12 @@ export default class Input extends React.PureComponent<Props, void> {
           <textarea
             {...otherProps}
             id={id}
-            className={className}
-            value={value || ''} onChange={this.onValueChange}
+            className={newClassName}
+            value={value || ''}
+            onChange={this.onHTMLInputChange}
             required={required}
             disabled={disabled || !editable}
+            autoComplete={autoComplete}
           />
         );
 
@@ -128,13 +170,13 @@ export default class Input extends React.PureComponent<Props, void> {
           <Datetime
             value={value}
             className='datetime'
-            onChange={onChange}
+            onChange={this.onCustomInputChange}
             dateFormat='DD-MMM-YYYY'
             timeFormat='hh:mm A'
             inputProps={{
               ...otherProps,
               id,
-              className,
+              className: newClassName,
               required,
               disabled: disabled || !editable,
               readOnly: true,
@@ -147,13 +189,13 @@ export default class Input extends React.PureComponent<Props, void> {
           <Datetime
             value={value}
             className='datetime'
-            onChange={onChange}
+            onChange={this.onCustomInputChange}
             dateFormat='DD-MMM-YYYY'
             timeFormat={false}
             inputProps={{
               ...otherProps,
               id,
-              className,
+              className: newClassName,
               required,
               disabled: disabled || !editable,
               readOnly: true,
@@ -161,18 +203,55 @@ export default class Input extends React.PureComponent<Props, void> {
           />
         );
 
-      case 'text':
-      case 'number':
+      case 'tags':
+        return (
+          <ReactTags
+            id={id}
+            readOnly={disabled || !editable}
+            tags={value}
+            suggestions={autoCompleteOptions}
+            delimiters={[
+              keyCodes.PERIOD,
+              keyCodes.COMMA,
+              keyCodes.SEMI_COLON,
+              keyCodes.COLON,
+              keyCodes.SPACE,
+              keyCodes.ENTER,
+              keyCodes.TAB,
+            ]}
+            classNames={{
+              tags: `tags ${editable && disabled ? 'disabled' : ''} ${newClassName}`,
+              tagInput: 'inputLine',
+              tagInputField: 'inputField',
+              selected: 'inputEmul',
+              tag: 'tag',
+              remove: 'remove',
+              suggestions: 'suggestions',
+              activeSuggestion: 'active',
+            }}
+            handleDelete={(index: number) => this.onCustomInputChange(null, index)}
+            handleAddition={this.onCustomInputChange}
+            placeholder={placeholder}
+          />
+        );
+
+      case 'email':
       case 'float':
+      case 'number':
       case 'password':
+      case 'tel':
+      case 'text':
+      case 'url':
         return (
           <input
             {...otherProps}
             type={type} id={id}
-            className={className}
-            value={value || ''} onChange={this.onValueChange}
+            className={newClassName}
+            value={value || ''}
+            onChange={this.onHTMLInputChange}
             required={required}
             disabled={disabled || !editable}
+            autoComplete={autoComplete}
             pattern={
               pattern ||
               type === 'number' ? '[0-9]*' : '' ||
@@ -195,7 +274,8 @@ export default class Input extends React.PureComponent<Props, void> {
       forceMessageBeneath, message, messageType,
 
       leftIcon, rightIcon, editable,
-      disabled, onChange,
+      disabled, onChange, autoComplete,
+      autoCompleteOptions,
 
       ...otherProps
     } = this.props;
