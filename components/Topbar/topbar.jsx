@@ -30,7 +30,7 @@ type Default = {
 /**
  * Componente responsable solamente de desplegar el topbar
  */
-export default class Topbar extends React.Component<Props, void> {
+export default class Topbar extends React.PureComponent<Props, void> {
   static defaultProps: Default = {
     notifications: false,
   }

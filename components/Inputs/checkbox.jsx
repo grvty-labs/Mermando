@@ -9,7 +9,7 @@ type Props = {
   onChange: Function,
 };
 
-export default class Checkbox extends React.Component<Props, void> {
+export default class Checkbox extends React.PureComponent<Props, void> {
   constructor(props: Props) {
     super(props);
     (this: any).onValueChange = this.onValueChange.bind(this);

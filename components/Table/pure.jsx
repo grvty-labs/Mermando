@@ -2,7 +2,7 @@
 /* eslint react/no-unused-prop-types: [0] */
 /* eslint consistent-return: [0] */
 import * as React from 'react';
-import { Checkbox } from '../Inputs';
+import { CheckboxInput } from '../Inputs';
 import { Contextual } from '../Menu';
 import type {
   Header, Item, SingleItemActions, MultipleItemsActions,
@@ -51,7 +51,7 @@ type State = {
 /**
  * Componente responsable solamente de desplegar la tabla de datos
  */
-export default class PureTable extends React.Component<Props, State> {
+export default class Table extends React.PureComponent<Props, State> {
   static defaultProps: Default = {
     selectable: false,
     className: 'pure-table',
@@ -122,10 +122,10 @@ export default class PureTable extends React.Component<Props, State> {
           ? null
           : (
             <td>
-              <Checkbox
+              <CheckboxInput
                 id={key}
                 value={Object.prototype.hasOwnProperty.call(selected, key) && selected[key]}
-                onChange={(value) => { this.rowCheckClick(key, value); }}
+                onChange={(value: boolean) => { this.rowCheckClick(key, value); }}
               />
             </td>)
         }

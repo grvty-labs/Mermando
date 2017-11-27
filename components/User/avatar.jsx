@@ -13,7 +13,7 @@ type Default = {
   hover: 'simple' | 'complex' | 'none',
 };
 
-export default class Avatar extends React.Component<Props, void> {
+export default class Avatar extends React.PureComponent<Props, void> {
   static defaultProps: Default = {
     hover: 'none',
   };

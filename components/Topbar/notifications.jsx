@@ -25,7 +25,7 @@ export type Actions = {
 type Props = StoreProps & Actions;
 type State = {};
 
-export default class Notifications extends React.Component<Props, State> {
+export default class Notifications extends React.PureComponent<Props, State> {
   render() {
     const {
       icon, anchors, title, onAnchorClick,

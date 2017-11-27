@@ -30,7 +30,7 @@ type Default = {
 /**
  * Componente responsable solamente de desplegar el sidebar
  */
-export default class Button extends React.Component<Props, void> {
+export default class Button extends React.PureComponent<Props, void> {
   static defaultProps: Default = {
     className: '',
     type: 'discrete',
@@ -57,7 +57,7 @@ export default class Button extends React.Component<Props, void> {
         onClick={onClick}
         disabled={disabled}
         className={
-          `${type || ''} ${size || ''} ${iconRender ? 'iconned' : ''} ${iconSide === 'right' ? 'invert' : ''} ${className || ''}`
+          `button ${type || ''} ${size || ''} ${iconRender ? 'iconned' : ''} ${iconSide === 'right' ? 'invert' : ''} ${className || ''}`
         }
         aria-label={aria || null}
         aria-hidden={children && type !== 'icon'}

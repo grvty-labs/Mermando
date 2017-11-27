@@ -37,7 +37,7 @@ type Default = {
 /**
  * Componente responsable solamente de desplegar el sidebar
  */
-export default class Sidebar extends React.Component<Props, State> {
+export default class Sidebar extends React.PureComponent<Props, State> {
   static defaultProps: Default = {
     closeIcon: (
       <img

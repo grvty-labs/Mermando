@@ -15,7 +15,7 @@ type Default = {
 /**
  * Componente responsable solamente de desplegar el sidebar
  */
-export default class RibbonedCard extends React.Component<RibbonedCardProps, void> {
+export default class RibbonedCard extends React.PureComponent<RibbonedCardProps, void> {
   static defaultProps: Default = {
     ribbonColor: 'brand',
     orientation: 'normal',

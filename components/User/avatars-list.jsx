@@ -11,7 +11,7 @@ type AvatarsListProps = {
 type Props = AvatarsListProps;
 type State = {};
 
-export default class AvatarsList extends React.Component<Props, State> {
+export default class AvatarsList extends React.PureComponent<Props, State> {
   render() {
     const { avatars } = this.props;
     return (

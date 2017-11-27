@@ -15,7 +15,7 @@ type Props = {
 /**
  * Componente responsable solamente de desplegar el sidebar
  */
-export default class TabbedCards extends React.Component<void, Props, void> {
+export default class TabbedCards extends React.PureComponent<void, Props, void> {
   render() {
     return (
       null

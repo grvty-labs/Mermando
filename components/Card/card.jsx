@@ -24,7 +24,7 @@ export type Default = {
 /**
  * Componente responsable solamente de desplegar el sidebar
  */
-export default class Card extends React.Component<CardProps, void> {
+export default class Card extends React.PureComponent<CardProps, void> {
   static defaultProps: Default = {
     orientation: 'normal',
     type: 'small',
