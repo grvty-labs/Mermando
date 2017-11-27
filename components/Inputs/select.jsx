@@ -1,7 +1,6 @@
 // @flow
 import * as React from 'react';
 import autobind from 'autobind-decorator';
-import Label from './label';
 import { messageTypes } from '../../js/inputs';
 import InputAtom from './input-atom';
 
@@ -88,7 +87,9 @@ export default class Select extends React.PureComponent<Props, State> {
         document.removeEventListener('click', this.handleOutsideClick);
       });
     } else {
-      const casted = [...(value: Array<string | number>)];
+      const casted = value && value.length > 0
+        ? (value: Array<string | number>)
+        : [];
       if (casted.indexOf(newValue) < 0) {
         this.props.onChange(casted.concat(newValue));
       }
@@ -213,7 +214,7 @@ export default class Select extends React.PureComponent<Props, State> {
       disabled,
     } = this.props;
 
-
+    // TODO: Change for react-autocomplete
     return (
       <InputAtom
         id={id} label={label}
