@@ -1,13 +1,18 @@
 // @flow
 import * as React from 'react';
 import autobind from 'autobind-decorator';
+import Dropzone from 'react-dropzone';
 import InputAtom from './input-atom';
 import { messageTypes } from '../../js/inputs';
 
 export type FileType = {
-  data: string,
-  filename: string,
-  filetype: string,
+  lastModified: number,
+  lastModifiedDate: Date,
+  name: string,
+  preview: string,
+  size: number,
+  type: string,
+  webkitRelativePath: string,
 };
 
 type Props = {
@@ -22,13 +27,16 @@ type Props = {
   rightIcon?: string,
 
   type?: 'single' | 'multiple',
+  previewType?: 'filename' | 'image',
   placeholder?: string,
+  acceptedExtensions?: string,
   required?: boolean,
   forceInlineRequired?: boolean,
   editable?: boolean,
   disabled?: boolean,
 
   onChange: Function,
+  onZoomClick: Function,
 };
 
 type Default = {
@@ -42,6 +50,7 @@ type Default = {
   rightIcon: string,
 
   type: 'single' | 'multiple',
+  previewType: 'filename' | 'image',
   required: boolean,
   forceInlineRequired: boolean,
   editable: boolean,
@@ -59,91 +68,132 @@ export default class Input extends React.PureComponent<Props, void> {
 
     rightIcon: '',
 
+    type: 'single',
+    previewType: 'filename',
     required: false,
     forceInlineRequired: false,
     disabled: false,
     editable: true,
-    type: 'single',
   };
 
   @autobind
-  onSelectValue(event: SyntheticEvent<*>) {
-    const { type, value } = this.props;
-    const { files } = event.target;
+  onSelectValue(acceptedFiles: Array<FileType>, rejectedFiles: Array<FileType>) {
+    const {
+      disabled, editable, type, value, onChange,
+    } = this.props;
 
-    if (!files || files.length < 0) {
-      return;
-    }
-
-    const file = files[0];
-    const reader = new FileReader();
-
-    reader.onload = (upload) => {
-      const fileData = {
-        data: upload.target.result,
-        filename: file.name,
-        filetype: file.type,
-      };
-      if (type === 'single') {
-        this.props.onChange(fileData);
-      } else {
+    if (!disabled && editable) {
+      if (type === 'single' && acceptedFiles.length >= 1) {
+        onChange(acceptedFiles[0]);
+      } else if (type === 'multiple' && acceptedFiles.length >= 1) {
         const casted = value && value.length > 0
           ? (value: Array<FileType>)
           : [];
-        this.props.onChange(casted.concat(fileData));
+        onChange(casted.concat(acceptedFiles));
       }
-    };
-
-
-    reader.readAsDataURL(file);
+    }
   }
 
   @autobind
   onRemoveIndex(index: number = 0) {
-    const { type, value } = this.props;
-    if (type === 'multiple') {
-      const casted = (value: Array<FileType>);
-      if (index >= 0) {
-        casted.splice(index, 1);
-        this.props.onChange(casted);
+    const {
+      disabled, editable, type, value, onChange,
+    } = this.props;
+    if (!disabled && editable) {
+      if (type === 'multiple') {
+        const casted = (value: Array<FileType>);
+        if (index >= 0 && index < casted.length) {
+          casted.splice(index, 1);
+          onChange(casted);
+        }
+      } else {
+        onChange(undefined);
       }
-    } else {
-      this.props.onChange(undefined);
     }
   }
 
   @autobind
-  renderValue() {
-    const { type, value } = this.props;
-    let fileRender;
-    if (type === 'single' && value) {
+  renderSinglePreview(file: FileType, index: number = 0) {
+    const {
+      disabled, editable, onZoomClick, previewType,
+    } = this.props;
+    if (!editable) {
+      if (previewType === 'image') {
+        return (
+          <div className='img' key={index}>
+            <img
+              src={file.preview}
+              alt={file.name}
+            />
+            <span className='tag'>{index === 0 ? 'Main Image' : ''}</span>
+            <div
+              className='overlay'
+              onClick={onZoomClick}
+              onKeyPress={onZoomClick}
+              role='button'
+              tabIndex={0}
+            >
+              <span className='symbolicon zoom' />
+            </div>
+          </div>
+        );
+      }
       return (
-        <div className='files single'>
+        <a
+          key={index}
+          href={file.preview}
+          target='_blank'
+        >
+          {file.name}
+        </a>
+      );
+    }
+    if (previewType === 'image') {
+      return (
+        <div className='img' key={index}>
+          <img
+            src={file.preview}
+            alt={file.name}
+          />
+          <span className='tag'>{index === 0 ? 'Main Image' : null}</span>
           <span
-            onClick={() => this.onRemoveIndex()}
-            onKeyPress={() => this.onRemoveIndex()}
+            className={`remove ${disabled ? 'disabled' : ''}`}
+            onClick={() => this.onRemoveIndex(index)}
+            onKeyPress={() => this.onRemoveIndex(index)}
             tabIndex={0}
-            role='menuitem'
-          >
-            {value.filename}
-          </span>
+            role='button'
+          />
         </div>
       );
-    } else if (value && value.constructor === Array && value.length > 0) {
+    }
+    return (
+      <span
+        key={index}
+        onClick={() => this.onRemoveIndex(index)}
+        onKeyPress={() => this.onRemoveIndex(index)}
+        tabIndex={0}
+        role='menuitem'
+      >
+        {file.name}
+      </span>
+    );
+  }
+
+  @autobind
+  renderValues() {
+    const { previewType, type, value } = this.props;
+    if (type === 'single' && value && value.constructor !== Array) {
+      const casted = (value: FileType);
+      return (
+        <div className={`attachment single ${previewType === 'image' ? 'grid' : ''}`}>
+          { this.renderSinglePreview(casted) }
+        </div>
+      );
+    } else if (type === 'multiple' && value && value.constructor === Array && value.length > 0) {
       const casted = (value: Array<FileType>);
       return (
-        <div className='files multiple'>
-          {casted.map((file, i) => (
-            <span
-              key={i}
-              onClick={() => this.onRemoveIndex(i)}
-              onKeyPress={() => this.onRemoveIndex(i)}
-              tabIndex={0}
-              role='menuitem'
-            >
-              {file.filename}
-            </span>
-          ))}
+        <div className={`attachment multiple ${previewType === 'image' ? 'grid' : ''}`}>
+          { casted.map(this.renderSinglePreview) }
         </div>
       );
     }
@@ -151,16 +201,30 @@ export default class Input extends React.PureComponent<Props, void> {
     return null;
   }
 
+  @autobind
+  renderPlaceholder(values: { isDragActive: boolean, isDragAccept: boolean }) {
+    const { type, placeholder } = this.props;
+    let placeholderMessage = placeholder;
+    if (values.isDragActive) {
+      if (values.isDragAccept) {
+        placeholderMessage = type === 'multiple'
+          ? 'All files will be accepted'
+          : 'The file will be accepted';
+      } else {
+        placeholderMessage = type === 'multiple'
+          ? 'One or multiple files will be rejected'
+          : 'The file will be rejected';
+      }
+    }
+    return (<span className='placeholder'>{placeholderMessage}</span>);
+  }
+
   render() {
     const {
       id, label, forceInlineRequired,
-      required, type, value,
+      required, type, acceptedExtensions,
       className, forceMessageBeneath, message, messageType,
-
-      rightIcon, editable, placeholder,
-      disabled, onChange,
-
-      ...otherProps
+      rightIcon, editable, disabled,
     } = this.props;
 
 
@@ -175,20 +239,21 @@ export default class Input extends React.PureComponent<Props, void> {
         leftIcon='cloud-upload'
         rightIcon={rightIcon}
         required={required}
+        footer={editable ? this.renderValues() : undefined}
       >
-        <div className='file'>
-          <label htmlFor={id}>
-            {placeholder}
-          </label>
-          <input
-            {...otherProps}
-            id={id}
-            type='file'
-            value=''
-            onChange={this.onSelectValue}
-          />
-        </div>
-        { this.renderValue() }
+        <Dropzone
+          className={`file ${!editable ? 'blocked' : ''}`}
+          disabled={disabled || !editable}
+          multiple={type === 'multiple'}
+          activeClassName='active'
+          acceptClassName='accept'
+          disabledClassName='disabled'
+          rejectClassName='reject'
+          accept={acceptedExtensions}
+          onDrop={this.onSelectValue}
+        >
+          {!editable ? this.renderValues() : this.renderPlaceholder}
+        </Dropzone>
       </InputAtom>
     );
   }
