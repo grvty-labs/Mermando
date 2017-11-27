@@ -20,6 +20,7 @@ type Props = {
   forceInlineRequired?: boolean,
 
   children: React.Node | Array<React.Node>,
+  footer?: React.Node | Array<React.Node>,
 };
 
 type Default = {
@@ -153,7 +154,7 @@ export default class InputAtom extends React.PureComponent<Props, void> {
     const {
       id, label, forceInlineRequired,
       required, type, className, message, messageType,
-      leftIcon, rightIcon, children,
+      leftIcon, rightIcon, children, footer,
     } = this.props;
 
 
@@ -173,7 +174,8 @@ export default class InputAtom extends React.PureComponent<Props, void> {
           {this.renderLeftIcon()}
           {this.renderRightIcon()}
         </div>
-        {this.renderMessages()}
+        <div className='msgs'>{this.renderMessages()}</div>
+        <div className='footer'>{footer}</div>
       </div>
     );
   }
