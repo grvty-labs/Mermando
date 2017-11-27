@@ -2,6 +2,7 @@
 import * as React from 'react';
 
 type Props = {
+  className?: string,
   legend?: string,
   children: React.Node | Array<React.Node>,
   type?: 'column' | 'inline' | 'grid-row' | 'grid-col',
@@ -21,7 +22,7 @@ export default class InputsWrap extends React.PureComponent<Props, State> {
 
   render() {
     const {
-      legend, children, rowsNumber, type,
+      className, legend, children, rowsNumber, type,
     } = this.props;
     const style = type === 'grid-row'
       ? { gridTemplateRows: `repeat(${rowsNumber || 3}, min-content)` }
@@ -30,7 +31,7 @@ export default class InputsWrap extends React.PureComponent<Props, State> {
         : {};
 
     return (
-      <div className='inputs-wrap'>
+      <div className={`inputs-wrap ${className || ''}`}>
         <span className='legend'>{legend}</span>
         <div className={type || ''} style={style}>
           {children}
