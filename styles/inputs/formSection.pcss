@@ -2,17 +2,19 @@
   > .legend {
     color: var(--light-grey);
     display: block;
-    font-size: 0.875rem;
+    font-size: 0.875em;
 
     &:not(:empty) {
-      margin-bottom: 0.875rem;
+      margin-bottom: 0.875em;
     }
   }
 
   > .input-atom,
-  > .checkbox,
-  > .select {
-    margin-bottom: 1rem;
+  > .checkbox {
     width: auto;
+
+    &:not(:last-child) {
+      margin-bottom: 1em;
+    }
   }
 }
