@@ -36,7 +36,7 @@ type Props = {
   disabled?: boolean,
 
   onChange: Function,
-  onZoomClick: Function,
+  onZoomClick?: Function,
 };
 
 type Default = {
@@ -128,8 +128,8 @@ export default class Input extends React.PureComponent<Props, void> {
             <span className='tag'>{index === 0 ? 'Main Image' : ''}</span>
             <div
               className='overlay'
-              onClick={onZoomClick}
-              onKeyPress={onZoomClick}
+              onClick={onZoomClick ? onZoomClick : () => {}} // eslint-disable-line
+              onKeyPress={onZoomClick ? onZoomClick : () => {}} // eslint-disable-line
               role='button'
               tabIndex={0}
             >

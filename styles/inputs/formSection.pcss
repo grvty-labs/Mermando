@@ -1,11 +1,23 @@
 .form-section {
-  > .legend {
-    color: var(--light-grey);
-    display: block;
-    font-size: 0.875em;
+  > .top {
+    display: flex;
 
-    &:not(:empty) {
-      margin-bottom: 0.875em;
+    > .legend {
+      color: var(--light-grey);
+      display: block;
+      font-size: 0.875em;
+
+      &:not(:empty) {
+        margin-bottom: 0.875em;
+      }
+    }
+
+    > .button-container {
+      margin-left: auto;
+
+      > .link {
+        color: var(--royal-blue);
+      }
     }
   }
 

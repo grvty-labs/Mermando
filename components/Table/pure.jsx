@@ -113,6 +113,7 @@ export default class Table extends React.PureComponent<Props, State> {
   }
 
   renderItem(element: Item, index: number) {
+    const { onSingleItemActions } = this.props;
     const { headers, selectable } = this.props;
     const { selected } = this.state;
     const key = `checkbox-${index}`;
@@ -131,14 +132,19 @@ export default class Table extends React.PureComponent<Props, State> {
         }
         { headers.map((header, ind) => (
           <td key={ind}>
-            <span>{ element[header.key] }</span>
+            <span>{element[header.key]}</span>
           </td>))
         }
-        <td>
-          <Contextual>
-            { this.renderActions(element.id, element.actions)}
-          </Contextual>
-        </td>
+        { onSingleItemActions
+          ? (
+            <td>
+              <Contextual>
+                { this.renderActions(element.id, element.actions)}
+              </Contextual>
+            </td>
+          )
+          : null
+        }
       </tr>
     );
   }
@@ -161,7 +167,10 @@ export default class Table extends React.PureComponent<Props, State> {
           <tr>
             { !selectable ? null : <th />}
             { headersRender }
-            <th />
+            { onSingleItemActions
+              ? <th />
+              : null
+            }
           </tr>
         </thead>
         <tbody>

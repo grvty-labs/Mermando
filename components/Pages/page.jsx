@@ -5,12 +5,14 @@ import Button from '../Button';
 
 export type StoreProps = {
   className?: string,
-  title: string,
+  title?: string,
+  legend?: string,
   backText?: string,
   type?: string,
   topComponent?: React.Node | Array<React.Node>,
+  middleComponent?: React.Node | Array<React.Node>,
   children: React.Node | Array<React.Node>,
-  type?: 'separated-rows',
+  type?: 'separated-rows' | 'none',
 };
 export type Actions = {
   onBackClick: Function,
@@ -22,7 +24,7 @@ type State = {
 };
 type Default = {
   className: string,
-  type: string,
+  type?: 'separated-rows' | 'none',
   backText: string,
 };
 
@@ -45,7 +47,8 @@ export default class Page extends React.PureComponent<Props, State> {
 
   render() {
     const {
-      backText, className, children, title, topComponent, type,
+      backText, className, children, legend, title, topComponent, type,
+      middleComponent,
     } = this.props;
     const { close } = this.state;
 
@@ -60,7 +63,11 @@ export default class Page extends React.PureComponent<Props, State> {
           <h3>{title}</h3>
           {topComponent}
         </div>
+        <div className='middle'>
+          {middleComponent}
+        </div>
         <div className={`content ${type || ''}`}>
+          <span className='legend'>{legend}</span>
           {children}
         </div>
       </div>

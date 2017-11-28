@@ -12,6 +12,11 @@
     "|     |     |                   ↑                    |     |     |     "
     "|     |     +----------------------------------------+     |     | ----"
     "|     |     +----------------------------------------+     |     | ----"
+    "|     |     |                   ↓                    |     |     |     "
+    "|     |     |             ← >.middle →               |     |     | auto"
+    "|     |     |                   ↑                    |     |     |     "
+    "|     |     +----------------------------------------+     |     | ----"
+    "|     |     +----------------------------------------+     |     | ----"
     "|     |     |                                        |     |     |     "
     "|     |     |                                        |     |     |     "
     "|     |     |             ← >.content →              |     |     | auto"
@@ -19,7 +24,7 @@
     "|     |     |                                        |     |     |     "
     "+-----+     +----------------------------------------+     +-----+ ----"
     "                                                                       "
-    "                                                                    1fr"
+    "                                                                   30vh"
     "                                                                       "
     "+----------------------------------------------------------------+ ----"
     "|                                                                | 10fr"
@@ -40,13 +45,20 @@
   > .top {
     align-items: center;
     display: flex;
-    margin: 0 2.6875rem;
+    margin: 0 2.6875em;
+
+    h3 {
+      &:empty {
+        margin: 0;
+      }
+    }
 
     > button {
       align-items: center;
       color: var(--page-back-button-font-color, #5969e1);
       display: flex;
       padding-left: 0;
+      width: auto;
 
       &::before {
         content: "\ea08";
@@ -57,7 +69,7 @@
         font-variant: normal;
         font-weight: normal;
         line-height: 1;
-        margin-right: 0.5rem;
+        margin-right: 0.5em;
         speak: none;
         text-transform: none;
       }
@@ -66,13 +78,12 @@
 
   > .header {
     align-items: center;
-    border-bottom: 1px solid var(--gainsboro, #dcdcdc);
     display: flex;
-    padding: 0 2.6875rem 1.625rem;
+    padding: 0 2.6875em 1.625em;
 
     h3 {
       font-weight: normal;
-      margin: 0 1.5rem 0 0;
+      margin: 0 1.5em 0 0;
     }
 
     > .button-container {
@@ -80,21 +91,59 @@
     }
   }
 
+  > .middle {
+    border-bottom: 1px solid var(--gainsboro);
+    display: flex;
+    font-size: 0.875em;
+
+    &:not(:empty) {
+      padding: 0 2.6875em;
+    }
+
+    > .tab {
+      border-bottom: 3px solid transparent;
+      color: var(--nero);
+      cursor: pointer;
+      margin-right: 0.6428em;
+      min-width: 5.782em;
+      opacity: 0.25;
+      outline: none;
+      padding: 0.5em;
+      text-align: center;
+      text-transform: uppercase;
+      transition: opacity 0.3s;
+
+      &.selected {
+        border-bottom: 3px solid var(--nero);
+        font-weight: bold;
+        opacity: 1;
+      }
+
+      &:not(:first-of-type) {
+        margin-left: 0.6428em;
+      }
+    }
+  }
+
   > .content {
-    margin: 1.5rem 2.6875rem;
+    margin: 1.5em 2.6875em;
 
     > .legend {
-      margin-bottom: 1.5rem;
+      &:not(:empty) {
+        margin-bottom: 1.5em;
+      }
     }
 
     &.separated-rows {
       > div {
-        padding-top: 1.5rem;
+        border-bottom: 1px solid var(--whisper-3, #ededed);
+        padding-bottom: 1.5em;
+        padding-top: 1.5em;
 
-        &:not(:empty),
-        &:not(:last-of-type) {
-          border-bottom: 1px solid var(--whisper-3, #ededed);
-          padding-bottom: 1.5rem;
+        &:empty,
+        &:last-of-type {
+          border-width: 0;
+          padding-bottom: 0;
         }
       }
     }
