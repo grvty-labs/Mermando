@@ -210,6 +210,7 @@ export default class Input extends React.PureComponent<Props, void> {
             readOnly={disabled || !editable}
             tags={value}
             suggestions={autoCompleteOptions}
+            autofocus={false}
             delimiters={[
               keyCodes.PERIOD,
               keyCodes.COMMA,

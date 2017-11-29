@@ -51,7 +51,7 @@ type State = {
 /**
  * Componente responsable solamente de desplegar la tabla de datos
  */
-export default class Table extends React.PureComponent<Props, State> {
+export default class Table extends React.Component<Props, State> {
   static defaultProps: Default = {
     selectable: false,
     className: 'pure-table',
