@@ -1,11 +1,14 @@
 .card {
   align-items: baseline;
   background-color: var(--white, #fff);
-  box-shadow: 0 2px 4px 0 rgba(12, 0, 51, 0.1);
+  box-shadow: var(--card-box-shadow);
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   margin-bottom: 1.25rem;
+  transition:
+    box-shadow var(--card-transitions-time) ease-in-out,
+    transform var(--card-transitions-time) ease-in-out;
 
   > .header {
     align-items: center;
@@ -127,5 +130,11 @@
         width: 100%;
       }
     }
+  }
+
+  &:--enter-action,
+  &:hover {
+    box-shadow: var(--card-hover-box-shadow);
+    transform: scale(1.01);
   }
 }
