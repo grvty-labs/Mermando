@@ -40,7 +40,7 @@ export default class Card extends React.PureComponent<CardProps, void> {
         style={style}
       >
         <div className='header'>
-          {title ? <h5>{title}</h5> : null}
+          {title ? <span className='title'>{title}</span> : null}
           {actions}
         </div>
         <div className='content'>

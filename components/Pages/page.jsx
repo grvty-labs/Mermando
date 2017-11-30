@@ -60,7 +60,7 @@ export default class Page extends React.PureComponent<Props, State> {
           </Button>
         </div>
         <div className='header'>
-          <h3>{title}</h3>
+          <span className='title'>{title}</span>
           {topComponent}
         </div>
         <div className='middle'>
