@@ -7,12 +7,12 @@
 
     /* &:hover, */
     &:--enter-action {
-      color: var(--menu-icon-hover-color, #5969e1);
+      color: var(--contextual-icon-hover-color, #5969e1);
 
       + .contextual {
         opacity: 1;
         transition:
-          opacity var(--menu-transition-appear-time, 0.3s) ease-in-out,
+          opacity var(--contextual-transition-appear-time, 0.3s) ease-in-out,
           visibility 0s 0s ease-in-out;
         visibility: visible;
       }
@@ -20,32 +20,32 @@
   }
 
   .contextual {
-    background-color: var(--menu-background, #fafafa);
+    background-color: var(--contextual-background, #fafafa);
     border-radius: 3px;
-    box-shadow: 0 8px 16px 0 rgba(82, 97, 115, 0.18);
+    box-shadow: var(--contextual-box-shadow);
     display: flex;
     flex-direction: column;
-    min-width: 178px;
+    min-width: 11.125em;
     opacity: 0;
-    padding: 8px 0;
+    padding: 0.5em 0;
     position: absolute;
     right: 90%;
     top: 10%;
     transition:
-      opacity var(--menu-transition-appear-time, 0.3s) ease-in-out,
-      visibility 0s var(--menu-transition-appear-time, 0.3s) ease-in-out;
+      opacity var(--contextual-transition-appear-time, 0.3s) ease-in-out,
+      visibility 0s var(--contextual-transition-appear-time, 0.3s) ease-in-out;
     visibility: hidden;
     z-index: 1;
 
-    > button,
+    > :--button,
     > div {
-      font-size: 0.75rem;
-      margin: 0.25rem 0.5rem;
-      padding: 0.25rem 0.5rem;
+      font-size: 0.75em;
+      margin: 0.333em 0.666em;
+      padding: 0.333em 0.666em;
       text-align: left;
 
       &:hover {
-        background-color: var(--menu-item-hover-background, #f2f2f2);
+        background-color: var(--contextual-item-hover-background, #f2f2f2);
       }
 
       &:--disabled {
@@ -56,7 +56,7 @@
     &:hover {
       opacity: 1;
       transition:
-        opacity var(--menu-transition-appear-time, 0.3s) ease-in-out,
+        opacity var(--contextual-transition-appear-time, 0.3s) ease-in-out,
         visibility 0s 0s ease-in-out;
       visibility: visible;
     }
