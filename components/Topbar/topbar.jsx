@@ -1,7 +1,7 @@
 // @flow
 /* eslint no-console: [0, {}] */
 import * as React from 'react';
-import Button from '../Button';
+import { Button } from '../Button';
 import { Avatar } from '../User';
 import { Dropdown } from '../Menu';
 
@@ -96,6 +96,7 @@ export default class Topbar extends React.PureComponent<Props, void> {
             <Avatar url={avatar} name={username} />
             <Dropdown
               className='user-options'
+              buttonSize='small'
               text={username}
               showAngle
             >

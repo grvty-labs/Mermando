@@ -19,7 +19,7 @@ export default class RibbonedCard extends React.PureComponent<RibbonedCardProps,
   static defaultProps: Default = {
     ribbonColor: 'brand',
     orientation: 'normal',
-    type: 'small',
+    size: 'small',
   };
 
   render() {

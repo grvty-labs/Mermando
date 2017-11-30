@@ -1,12 +1,13 @@
 // @flow
 import * as React from 'react';
+import { types, sizes } from '../../js/buttons';
 
 type Props = {
   className?: string,
-  type?: 'main' | 'secondary' | 'discrete' | 'link' | 'icon',
+  type?: $Keys<typeof types>,
   aria?: string,
 
-  size?: 'small' | 'regular' | 'big' | 'huge',
+  size?: $Keys<typeof sizes>,
   icon?: React.Node | string,
   iconSide?: 'left' | 'right',
   disabled?: boolean,
@@ -18,8 +19,8 @@ type Props = {
 
 type Default = {
   className: string,
-  type: 'main' | 'secondary' | 'discrete' | 'link' | 'icon',
-  size: 'small' | 'regular' | 'big' | 'huge',
+  type: $Keys<typeof types>,
+  size: $Keys<typeof sizes>,
   iconSide: 'left' | 'right',
   aria: string,
 
@@ -57,7 +58,7 @@ export default class Button extends React.PureComponent<Props, void> {
         onClick={onClick}
         disabled={disabled}
         className={
-          `button ${type || ''} ${size || ''} ${iconRender ? 'iconned' : ''} ${iconSide === 'right' ? 'invert' : ''} ${className || ''}`
+          `button ${type || ''} ${size || ''} ${iconRender && type !== 'icon' ? 'iconned' : ''} ${iconSide === 'right' ? 'inverted' : ''} ${className || ''}`
         }
         aria-label={aria || null}
         aria-hidden={children && type !== 'icon'}

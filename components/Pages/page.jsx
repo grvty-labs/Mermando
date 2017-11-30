@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import autobind from 'autobind-decorator';
-import Button from '../Button';
+import { Button } from '../Button';
 
 export type StoreProps = {
   className?: string,

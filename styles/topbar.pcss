@@ -42,13 +42,7 @@
 
       > .dropdown-wrapper {
         &.notifications {
-          margin-right: 1.625rem;
-
-          > .icon {
-            font-size: 20px;
-            min-height: 20px;
-            min-width: 20px;
-          }
+          margin-right: 1.5em;
 
           > .dropdown {
             min-width: 16.25rem;
@@ -56,6 +50,7 @@
             > button,
             > div {
               &:not(.title) {
+                display: unset;
                 padding: 0.625rem 0.25rem 1rem 0.5625rem;
               }
             }
@@ -63,6 +58,10 @@
         }
 
         &.user-options {
+          > :--button {
+            padding-left: 0.5em
+          }
+
           > .dropdown {
             font-size: 0.875rem;
             padding: 0.25rem 0;

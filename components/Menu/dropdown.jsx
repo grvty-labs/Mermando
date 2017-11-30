@@ -1,11 +1,13 @@
 // @flow
 import * as React from 'react';
-import Button from '../Button';
+import { Button } from '../Button';
+import { sizes } from '../../js/buttons';
 
 export type Props = {
   className?: string,
   text?: string,
   icon?: React.Node | string,
+  buttonSize?: $Keys<typeof sizes>,
   showAngle?: boolean,
 
   showHead?: boolean,
@@ -36,7 +38,7 @@ export default class Notifications extends React.PureComponent<Props, State> {
 
   render() {
     const {
-      className, icon, text, headTitle, children,
+      className, icon, text, headTitle, children, buttonSize,
       headLeftElement, headRightElement, showAngle, showHead,
     } = this.props;
 
@@ -55,7 +57,9 @@ export default class Notifications extends React.PureComponent<Props, State> {
         <Button
           className={showAngle ? 'angled' : ''}
           type={text ? 'link' : 'icon'}
+          iconSide='right'
           icon={icon}
+          size={buttonSize}
         >
           {text}
         </Button>

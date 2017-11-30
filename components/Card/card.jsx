@@ -4,7 +4,7 @@ import * as React from 'react';
 export type CardProps = {
   className?: string,
   style?: { [key: string]: any },
-  type?: 'small' | 'medium' | 'large',
+  size?: 'small' | 'medium' | 'large',
   orientation?: 'normal' | 'centered',
 
   title?: string, // Título de la tarjeta
@@ -18,7 +18,7 @@ export type CardProps = {
 
 export type Default = {
   orientation: 'normal' | 'centered';
-  type: 'small' | 'medium' | 'large';
+  size: 'small' | 'medium' | 'large';
 }
 
 /**
@@ -27,16 +27,16 @@ export type Default = {
 export default class Card extends React.PureComponent<CardProps, void> {
   static defaultProps: Default = {
     orientation: 'normal',
-    type: 'small',
+    size: 'small',
   };
 
   render() {
     const {
-      className, title, actions, footer, orientation, style, type,
+      className, title, actions, footer, orientation, style, size,
     } = this.props;
     return (
       <div
-        className={`card ${type || ''} ${orientation || ''} ${className || ''}`}
+        className={`card ${size || ''} ${orientation || ''} ${className || ''}`}
         style={style}
       >
         <div className='header'>
