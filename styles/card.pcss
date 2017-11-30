@@ -7,8 +7,7 @@
   justify-content: flex-start;
   margin-bottom: 1.25rem;
   transition:
-    box-shadow var(--card-transitions-time) ease-in-out,
-    transform var(--card-transitions-time) ease-in-out;
+    box-shadow var(--card-transitions-time) ease-in-out;
 
   > .header {
     align-items: center;
@@ -106,24 +105,24 @@
   }
 
   &.small {
-    font-size: 0.75rem;
-    padding: 1rem 0.75rem;
+    padding: 1em 0.75em;
 
     > .header {
       border: none;
     }
 
     > .content {
+      font-size: 0.75em;
       padding-top: 0;
     }
   }
 
   &.medium {
-    font-size: 1rem;
+    font-size: 1em;
   }
 
   &.large {
-    padding: 1.25rem 1.1875rem;
+    padding: 1.25em 1.1875em;
 
     > .content {
       > table {
@@ -135,6 +134,5 @@
   &:--enter-action,
   &:hover {
     box-shadow: var(--card-hover-box-shadow);
-    transform: scale(1.01);
   }
 }
