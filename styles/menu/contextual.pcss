@@ -19,7 +19,7 @@
     }
   }
 
-  .contextual {
+  > .contextual {
     background-color: var(--contextual-background, #fafafa);
     border-radius: 3px;
     box-shadow: var(--contextual-box-shadow);
@@ -53,7 +53,8 @@
       }
     }
 
-    &:hover {
+    &:hover,
+    &:--enter-action {
       opacity: 1;
       transition:
         opacity var(--contextual-transition-appear-time, 0.3s) ease-in-out,
