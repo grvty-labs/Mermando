@@ -57,7 +57,7 @@
 
       &::before {
         content: "\ea08";
-        font-family: 'SymboliconAir' !important;
+        font-family: var(--icons-font-family) !important;
         font-size: 0.75em;
         font-smoothing: antialiased;
         font-style: normal;
@@ -137,6 +137,11 @@
           padding-bottom: 0;
         }
       }
+    }
+
+    &.split {
+      display: flex;
+      justify-content: space-between;
     }
   }
 

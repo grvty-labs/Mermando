@@ -37,7 +37,7 @@ export default class Section extends React.PureComponent<Props, State> {
     return (
       <div className={`section ${className || ''}`}>
         <div className='header'>
-          <h3>{title}</h3>
+          <span className='title'>{title}</span>
           {topComponent}
         </div>
         <div className='middle'>

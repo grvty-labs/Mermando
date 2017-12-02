@@ -7,9 +7,10 @@ type Zone = {
   id: string | number,
   title: string,
   className?: string,
+  statusClassName?: string,
   legend?: string,
   renderComponent: Function,
-  type: 'separated-rows' | 'none',
+  type: 'separated-rows' | 'split' | 'none',
 }
 
 export type StoreProps = {
@@ -17,6 +18,7 @@ export type StoreProps = {
   className?: string,
   backText?: string,
   topComponent?: React.Node | Array<React.Node>,
+  children?: React.Node | Array<React.Node>,
   zones: Array<Zone>,
 };
 
@@ -60,7 +62,7 @@ export default class TabbedPage extends React.PureComponent<Props, State> {
     const renderedZones = this.props.zones.map(z => (
       <div
         key={z.id}
-        className={`tab ${z.id === zoneSelected ? 'selected' : ''}`}
+        className={`tab ${z.id === zoneSelected ? 'selected' : ''} ${z.statusClassName || ''}`}
         onClick={() => this.onZoneClick(z.id)}
         onKeyPress={() => this.onZoneClick(z.id)}
         role='menuitemradio'
@@ -75,7 +77,8 @@ export default class TabbedPage extends React.PureComponent<Props, State> {
 
   render() {
     const {
-      backText, className, title, topComponent, zones, onBackClick,
+      backText, className, title, topComponent, zones,
+      children, onBackClick,
     } = this.props;
     const { zoneSelected } = this.state;
 
@@ -96,6 +99,7 @@ export default class TabbedPage extends React.PureComponent<Props, State> {
         type={zoneToRender.type}
       >
         { zoneToRender.renderComponent() }
+        { children }
       </Page>
     );
   }

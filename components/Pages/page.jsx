@@ -8,11 +8,10 @@ export type StoreProps = {
   title?: string,
   legend?: string,
   backText?: string,
-  type?: string,
   topComponent?: React.Node | Array<React.Node>,
   middleComponent?: React.Node | Array<React.Node>,
   children: React.Node | Array<React.Node>,
-  type?: 'separated-rows' | 'none',
+  type?: 'separated-rows' | 'split' | 'none',
 };
 export type Actions = {
   onBackClick: Function,
@@ -24,7 +23,7 @@ type State = {
 };
 type Default = {
   className: string,
-  type?: 'separated-rows' | 'none',
+  type?: 'separated-rows' | 'split' | 'none',
   backText: string,
 };
 
@@ -60,14 +59,22 @@ export default class Page extends React.PureComponent<Props, State> {
           </Button>
         </div>
         <div className='header'>
-          <span className='title'>{title}</span>
+          {
+            title
+              ? <span className='title'>{title}</span>
+              : null
+          }
           {topComponent}
         </div>
         <div className='middle'>
           {middleComponent}
         </div>
         <div className={`content ${type || ''}`}>
-          <span className='legend'>{legend}</span>
+          {
+            legend
+              ? <span className='legend'>{legend}</span>
+              : null
+          }
           {children}
         </div>
       </div>
