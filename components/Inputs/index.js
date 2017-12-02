@@ -8,7 +8,7 @@ import Label from './label';
 import SelectInput from './select';
 
 import type { TagType as TagValue } from './input';
-import type { Value as SelectValue } from './select';
+import type { Value as SelectValue, Option as SelectOption } from './select';
 import type { FileType as FileValue } from './file';
 
 export default Input;
@@ -24,6 +24,7 @@ export {
 
 export type {
   SelectValue,
+  SelectOption,
   FileValue,
   TagValue,
 };

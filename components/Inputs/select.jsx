@@ -6,10 +6,10 @@ import InputAtom from './input-atom';
 
 export type Value = string | number | Array<string | number>;
 
-type Options = {
+export type Option = {
   display: string | number,
   value: string | number,
-  options?: Array<Options>,
+  options?: Array<Option>,
 };
 
 type Props = {
@@ -23,7 +23,7 @@ type Props = {
   leftIcon?: string,
 
   type?: 'single' | 'multiple',
-  options: Array<Options>,
+  options: Array<Option>,
   placeholder?: string,
   required?: boolean,
   editable?: boolean,
@@ -144,7 +144,7 @@ export default class Select extends React.PureComponent<Props, State> {
         className={`options ${showOptionsLevel > 0 ? 'open' : ''}`}
         ref={(node) => { this.node = node; }}
       >
-        {options.map((option: Options, index: number) => (
+        {options.map((option: Option, index: number) => (
           <span
             key={index}
             onClick={option.options

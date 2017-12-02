@@ -246,7 +246,9 @@ export default class Input extends React.PureComponent<Props, void> {
         return (
           <input
             {...otherProps}
-            type={type} id={id}
+            type={
+              type === 'float' ? 'number' : type
+            } id={id}
             className={newClassName}
             value={value || ''}
             onChange={this.onHTMLInputChange}
@@ -255,8 +257,9 @@ export default class Input extends React.PureComponent<Props, void> {
             autoComplete={autoComplete}
             pattern={
               pattern ||
-              type === 'number' ? '[0-9]*' : '' ||
-              type === 'float' ? '[.0-9]*' : ''
+              type === 'number' ? '[-+]?[0-9]+' : '' ||
+              type === 'float' ? '[-+]?[0-9]*[.,]?[0-9]+' : '' ||
+              type === 'email' ? '[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]$' : ''
             }
           />
         );
