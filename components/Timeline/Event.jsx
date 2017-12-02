@@ -52,14 +52,16 @@ export default class Event extends React.PureComponent<Props, void> {
     } = this.props;
     return (
       <div className={`event ${eventType} ${status || ''} ${className || ''}`}>
-        <div className='header'>
-          {/* FIXME: Remove path when connected to db */}
-          <img src={`/images/svg/${icon}.svg`} alt={eventType} />
-          {this.renderTitle()}
-          <span className='date'>{date.fromNow()}</span>
-        </div>
-        <div className='content'>
-          {children}
+        {/* FIXME: Remove path when connected to db */}
+        <img src={`/images/svg/${icon}.svg`} alt={eventType} />
+        <div className='data'>
+          <div className='header'>
+            {this.renderTitle()}
+            <span className='date'>{date.fromNow()}</span>
+          </div>
+          <div className='content'>
+            {children}
+          </div>
         </div>
       </div>
     );
