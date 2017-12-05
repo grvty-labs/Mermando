@@ -3,7 +3,7 @@ import * as React from 'react';
 import autobind from 'autobind-decorator';
 import Page from './page';
 
-type Zone = {
+export type Zone = {
   id: string | number,
   title: string,
   className?: string,
