@@ -63,12 +63,14 @@
 
     &.separated-rows {
       > div {
+        border-bottom: 1px solid var(--whisper-3, #ededed);
+        padding-bottom: 1.5em;
         padding-top: 1.5em;
 
-        &:not(:empty),
-        &:not(:last-of-type) {
-          border-bottom: 1px solid var(--whisper-3, #ededed);
-          padding-bottom: 1.5em;
+        &:empty,
+        &:last-of-type {
+          border-bottom: none;
+          padding-bottom: 0;
         }
       }
     }
