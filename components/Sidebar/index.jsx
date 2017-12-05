@@ -11,6 +11,7 @@ export type AnchorType = {
 };
 
 export type StoreProps = {
+
   className?: string,
   show: boolean, // Debería de mostrarse?
   closeIcon?: React.Node, // Icono de hamburguesa como componente de react

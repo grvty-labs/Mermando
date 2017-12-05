@@ -10,6 +10,7 @@ export type Option = {
   display: string | number,
   value: string | number,
   options?: Array<Option>,
+  [key: string]: any,
 };
 
 type Props = {
