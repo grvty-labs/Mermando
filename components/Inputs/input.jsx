@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import autobind from 'autobind-decorator';
+import moment from 'moment';
 import Datetime from 'react-datetime';
 import { WithContext as ReactTags } from 'react-tag-input';
 import InputAtom from './input-atom';
@@ -15,7 +16,7 @@ type Props = {
   messageType?: $Keys<typeof messageTypes>,
   forceMessageBeneath?: boolean,
   className?: string,
-  value?: string | number | Date | Array<TagType>,
+  value?: string | number | Date | moment | Array<TagType>,
 
   leftIcon?: string,
   rightIcon?: string,
@@ -30,7 +31,7 @@ type Props = {
   editable?: boolean,
   disabled?: boolean,
 
-  onChange: Function,
+  onChange?: Function,
 };
 
 type Default = {
@@ -49,6 +50,7 @@ type Default = {
   editable: boolean,
   disabled: boolean,
   type: $Keys<typeof inputTypes>,
+  onChange: Function,
 };
 
 export default class Input extends React.PureComponent<Props, void> {
@@ -69,6 +71,7 @@ export default class Input extends React.PureComponent<Props, void> {
     disabled: false,
     editable: true,
     type: 'text',
+    onChange: () => {},
   };
 
   @autobind
