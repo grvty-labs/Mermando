@@ -8,12 +8,13 @@ export type CardProps = {
   orientation?: 'normal' | 'centered',
 
   title?: string, // Título de la tarjeta
+  icon?: string,
   actions?: React.Node | Array<React.Node>, // Container(s) a desplegar
 
   footer?: React.Node | Array<React.Node>, // Container(s) a desplegar
 
   children: React.Node | Array<React.Node>, // Contenido de la tarjeta
-
+  onClick?: Function,
 };
 
 export type Default = {
@@ -32,18 +33,24 @@ export default class Card extends React.PureComponent<CardProps, void> {
 
   render() {
     const {
-      className, title, actions, footer, orientation, style, size,
+      className, title, actions, footer, orientation, style,
+      size, onClick, icon,
     } = this.props;
     return (
       <div
-        className={`card ${size || ''} ${orientation || ''} ${className || ''}`}
+        className={`card ${size || ''} ${orientation || ''}  ${onClick ? 'hasAction' : ''} ${className || ''}`}
         style={style}
+        onClick={onClick}
+        onKeyPress={onClick}
+        role={onClick ? 'menuitem' : undefined}
+        tabIndex={onClick ? 0 : -1}
       >
         <div className='header'>
           {title ? <span className='title'>{title}</span> : null}
           {actions}
         </div>
         <div className='content'>
+          { icon ? <span className={`icon symbolicon ${icon}`} /> : null}
           { this.props.children }
         </div>
         <div className='footer'>{footer}</div>
