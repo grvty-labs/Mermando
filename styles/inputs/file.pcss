@@ -1,33 +1,41 @@
-.input {
-  > .file {
-    align-items: center;
-    cursor: pointer;
-    display: flex;
-    height: 4em;
-    padding-left: 3em;
-    padding-right: 1.3125em;
+.file-input {
+  align-items: center;
+  cursor: pointer;
+  display: flex;
+  min-height: 4em;
+
+  > .placeholder {
+    font-size: 0.875em;
+    transition: color var(--input-transition-time, 0.4s) ease-in-out;
+  }
+
+  > .attachment {
+    &.multiple {
+      > a {
+        margin-right: 0.5em;
+      }
+    }
+  }
+
+  &.accept,
+  &.reject {
+    > .placeholder {
+      color: var(--file-reject-font-color, #0c0033);
+    }
+  }
+
+  &.reject {
+    background-color: var(--file-reject-background-color, #ffd5e1);
+    border-color: var(--file-reject-border-color, #ff0048);
 
     ~ .icon {
       &:first-of-type {
-        font-size: 1.75em;
-        height: 1em;
-        width: 1em;
+        color: var(--file-reject-border-color, #ff0048);
       }
     }
+  }
 
-    > .placeholder {
-      font-size: 0.875em;
-      transition: color var(--input-transition-time, 0.4s) ease-in-out;
-    }
-
-    > .attachment {
-      &.multiple {
-        > a {
-          margin-right: 0.5em;
-        }
-      }
-    }
-
+  &.free {
     &.read-only,
     &.blocked,
     &:--disabled {
@@ -44,7 +52,6 @@
     &.blocked {
       height: auto;
       min-height: 1.3125em;
-      padding-left: 2.0625em;
 
       ~ .icon {
         &:first-of-type {
@@ -55,28 +62,20 @@
         }
       }
     }
+  }
+}
 
-    &.accept,
-    &.reject {
-      > .placeholder {
-        color: var(--file-reject-font-color, #0c0033);
-      }
-    }
-
-    &.reject {
-      background-color: var(--file-reject-background-color, #ffd5e1);
-      border-color: var(--file-reject-border-color, #ff0048);
-
-      ~ .icon {
-        &:first-of-type {
-          color: var(--file-reject-border-color, #ff0048);
-        }
-      }
+.file-sham {
+  > .symbolicon {
+    &:first-child {
+      font-size: 1.75em;
+      height: 1em;
+      width: 1em;
     }
   }
 
   ~ .footer,
-  > .file {
+  > .file-input {
     > .attachment {
       width: 100%;
 
@@ -94,26 +93,6 @@
           font-size: var(--file-values-font-size, 0.75em);
           margin-right: 0.666em;
           padding: 0.333em 0.666em;
-
-          &::after {
-            align-items: center;
-            content: "\e95b";
-            cursor: pointer;
-            display: inherit;
-            font-family: var(--icons-font-family) !important;
-            font-size: 0.6em;
-            font-smoothing: antialiased;
-            font-style: normal;
-            font-variant: normal;
-            font-weight: normal;
-            height: 2.222em;
-            justify-content: center;
-            line-height: 1;
-            margin-left: 1.111em;
-            speak: none;
-            text-transform: none;
-            width: 2.222em;
-          }
         }
 
         &.grid {
@@ -152,33 +131,22 @@
             }
           }
 
-          .remove {
-            align-items: center;
+          .remove-btn {
             background-color: var(--file-values-background, #5969e1);
             border-radius: 3em;
-            cursor: pointer;
+            color: var(--file-values-font-color, #fff);
             display: flex;
-            font-size: 0.5em;
-            height: 2em;
-            justify-content: center;
+            height: 1em;
             position: absolute;
-            right: 1em;
+            right: 0.5em;
             text-align: center;
-            top: 1em;
-            width: 2em;
+            top: 0.5em;
+            visibility: visible;
+            width: 1em;
 
             &::after {
-              color: var(--file-values-font-color, #fff);
-              content: "\e95b";
-              cursor: pointer;
-              font-family: var(--icons-font-family) !important;
-              font-smoothing: antialiased;
-              font-style: normal;
-              font-variant: normal;
-              font-weight: normal;
-              line-height: 1;
-              speak: none;
-              text-transform: none;
+              margin-left: 0;
+              position: static;
             }
 
             &.disabled {

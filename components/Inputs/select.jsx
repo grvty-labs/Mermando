@@ -105,8 +105,10 @@ export default class Select extends React.PureComponent<Props, State> {
     if (type === 'multiple' && editable && !disabled) {
       const casted = (value: Array<string | number>);
       if (index >= 0) {
-        casted.splice(index, 1);
-        this.props.onChange(casted);
+        this.props.onChange([
+          ...casted.slice(0, index),
+          ...casted.slice(index + 1),
+        ]);
       }
     }
   }
@@ -182,14 +184,16 @@ export default class Select extends React.PureComponent<Props, State> {
       return (
         <div className='value multiple'>
           {optsFiltered.map((opt, i) => (
-            <span
-              key={i}
-              onClick={() => this.onRemoveIndex(i)}
-              onKeyPress={() => this.onRemoveIndex(i)}
-              tabIndex={!disabled && editable ? 0 : -1}
-              role='menuitem'
-            >
+            <span key={i}>
               {opt.display}
+              <span
+                className='remove-btn'
+                onClick={() => this.onRemoveIndex(i)}
+                onKeyPress={() => this.onRemoveIndex(i)}
+                tabIndex={!disabled && editable ? 0 : -1}
+                role='button'
+                title='Remove from selection'
+              />
             </span>
           ))}
         </div>
@@ -213,6 +217,7 @@ export default class Select extends React.PureComponent<Props, State> {
       leftIcon,
       editable,
       disabled,
+      value,
     } = this.props;
 
     // TODO: Change for react-autocomplete
@@ -225,13 +230,16 @@ export default class Select extends React.PureComponent<Props, State> {
         className={className}
         leftIcon={leftIcon}
         required={required}
-        rightIcon='angle'
+        type='select'
+        readOnly={!editable}
+        disabled={disabled}
+        empty={!value || (value.constructor === Array && value.length === 0)}
+        invalid={messageType === 'error'}
+        onClick={this.handleClick}
       >
         <div
           id={id}
-          className={`select ${disabled ? 'disabled' : ''} ${!editable ? 'blocked' : ''}`}
-          onClick={this.handleClick}
-          onKeyPress={this.handleClick}
+          className={`select-input ${disabled ? 'disabled' : ''} ${!editable ? 'blocked' : ''}`}
           tabIndex={!disabled && editable ? 0 : -1}
           role='button'
         >

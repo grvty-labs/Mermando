@@ -16,7 +16,7 @@ type Props = {
   messageType?: $Keys<typeof messageTypes>,
   forceMessageBeneath?: boolean,
   className?: string,
-  value?: string | number | Date | moment | Array<TagType>,
+  +value?: string | number | Date | moment | Array<TagType>,
 
   leftIcon?: string,
   rightIcon?: string,
@@ -128,10 +128,15 @@ export default class Input extends React.PureComponent<Props, void> {
           ? (value: Array<TagType>)
           : [];
         if (index === 0 || index) {
-          casted.splice(index, 1);
-          onChange(casted);
+          onChange([
+            ...casted.slice(0, index),
+            ...casted.slice(index + 1),
+          ]);
         } else {
-          onChange(casted.concat({ id: this.counter, text: newValue }));
+          onChange([
+            ...casted,
+            { id: this.counter, text: newValue },
+          ]);
           this.counter += 1;
         }
         break;
@@ -142,6 +147,7 @@ export default class Input extends React.PureComponent<Props, void> {
   }
 
   counter: number = 0;
+  inputElement: ?any;
 
   @autobind
   renderInput(otherProps: { [key: string]: string }) {
@@ -158,6 +164,7 @@ export default class Input extends React.PureComponent<Props, void> {
         return (
           <textarea
             {...otherProps}
+            ref={(input) => { this.inputElement = input; }}
             id={id}
             className={newClassName}
             value={value || ''}
@@ -172,13 +179,14 @@ export default class Input extends React.PureComponent<Props, void> {
         return (
           <Datetime
             value={value}
-            className='datetime'
+            className='datetime-input'
             onChange={this.onCustomInputChange}
             dateFormat='DD-MMM-YYYY'
             timeFormat='hh:mm A'
             inputProps={{
               ...otherProps,
               id,
+              ref: (input) => { this.inputElement = input; },
               className: newClassName,
               required,
               disabled: disabled || !editable,
@@ -191,13 +199,14 @@ export default class Input extends React.PureComponent<Props, void> {
         return (
           <Datetime
             value={value}
-            className='datetime'
+            className='datetime-input'
             onChange={this.onCustomInputChange}
             dateFormat='DD-MMM-YYYY'
             timeFormat={false}
             inputProps={{
               ...otherProps,
               id,
+              ref: (input) => { this.inputElement = input; },
               className: newClassName,
               required,
               disabled: disabled || !editable,
@@ -209,9 +218,10 @@ export default class Input extends React.PureComponent<Props, void> {
       case 'tags':
         return (
           <ReactTags
+            ref={(input) => { this.inputElement = input; }}
             id={id}
             readOnly={disabled || !editable}
-            tags={value}
+            tags={value || []}
             suggestions={autoCompleteOptions}
             autofocus={false}
             delimiters={[
@@ -229,7 +239,7 @@ export default class Input extends React.PureComponent<Props, void> {
               tagInputField: 'inputField',
               selected: 'inputEmul',
               tag: 'tag',
-              remove: 'remove',
+              remove: 'remove-btn',
               suggestions: 'suggestions',
               activeSuggestion: 'active',
             }}
@@ -249,6 +259,7 @@ export default class Input extends React.PureComponent<Props, void> {
         return (
           <input
             {...otherProps}
+            ref={(input) => { this.inputElement = input; }}
             type={
               type === 'float' ? 'number' : type
             } id={id}
@@ -287,7 +298,6 @@ export default class Input extends React.PureComponent<Props, void> {
       ...otherProps
     } = this.props;
 
-
     return (
       <InputAtom
         id={id} label={label}
@@ -300,6 +310,15 @@ export default class Input extends React.PureComponent<Props, void> {
         rightIcon={rightIcon}
         required={required}
         type={type}
+        readOnly={!editable}
+        disabled={disabled}
+        empty={!value && value !== 0}
+        invalid={messageType === 'error'}
+        onClick={() => {
+          if (this.inputElement) {
+            this.inputElement.focus();
+          }
+        }}
       >
         {this.renderInput(otherProps)}
       </InputAtom>

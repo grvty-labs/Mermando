@@ -7,6 +7,7 @@ import { inputTypes, messageTypes } from '../../js/inputs';
 type Props = {
   id: string,
   label?: string,
+
   message?: string,
   messageType?: $Keys<typeof messageTypes>,
   forceMessageBeneath?: boolean,
@@ -21,6 +22,16 @@ type Props = {
 
   children: React.Node | Array<React.Node>,
   footer?: React.Node | Array<React.Node>,
+
+  readOnly?: boolean,
+  disabled?: boolean,
+  empty?: boolean,
+  invalid?: boolean,
+  onClick?: Function,
+};
+
+type State = {
+  focused: boolean,
 };
 
 type Default = {
@@ -37,9 +48,14 @@ type Default = {
   required: boolean,
   forceInlineRequired: boolean,
   type: $Keys<typeof inputTypes>,
+
+  readOnly: boolean,
+  disabled: boolean,
+  empty: boolean,
+  invalid: boolean,
 };
 
-export default class InputAtom extends React.PureComponent<Props, void> {
+export default class InputAtom extends React.PureComponent<Props, State> {
   static defaultProps: Default = {
     label: '',
     className: '',
@@ -54,7 +70,16 @@ export default class InputAtom extends React.PureComponent<Props, void> {
     required: false,
     forceInlineRequired: false,
     type: 'text',
+
+    readOnly: false,
+    disabled: false,
+    empty: false,
+    invalid: false,
   };
+
+  state: State = {
+    focused: false,
+  }
 
   @autobind
   renderLeftIcon() {
@@ -71,6 +96,10 @@ export default class InputAtom extends React.PureComponent<Props, void> {
 
       case 'datetime':
         className = 'symbolicon calendar-check';
+        break;
+
+      case 'file':
+        className = 'symbolicon cloud-upload';
         break;
 
       default:
@@ -96,17 +125,23 @@ export default class InputAtom extends React.PureComponent<Props, void> {
       message,
       messageType,
       rightIcon,
+      type,
     } = this.props;
 
-    let className = required && (!label || forceInlineRequired)
-      ? 'symbolicon required'
-      : '';
-    className = message && !label && !forceMessageBeneath
-      ? `symbolicon ${messageType || ''}`
-      : className;
-    className = rightIcon
-      ? `symbolicon ${rightIcon}`
-      : className;
+    let className = '';
+    switch (type) {
+      case 'select':
+        className = 'symbolicon angle';
+        break;
+      default:
+        className = rightIcon
+          ? `symbolicon ${rightIcon}`
+          : message && !label && !forceMessageBeneath
+            ? `symbolicon ${messageType || ''}`
+            : required && (!label || forceInlineRequired)
+              ? 'symbolicon required'
+              : '';
+    }
 
     const title = !label && message
       ? message
@@ -152,26 +187,28 @@ export default class InputAtom extends React.PureComponent<Props, void> {
 
   render() {
     const {
-      id, label, forceInlineRequired,
-      required, type, className, message, messageType,
-      leftIcon, rightIcon, children, footer,
+      id, label, required, className, children, footer,
+      readOnly, disabled, empty, invalid, type, onClick,
     } = this.props;
+    const { focused } = this.state;
 
+    const newClassName = `input-atom ${className || ''} ${empty ? 'empty ' : ''}${disabled ? 'disabled ' : ''}
+      ${readOnly ? 'readOnly ' : ''}${required ? 'required ' : ''}${invalid ? 'invalid ' : ''}${focused ? 'focused ' : ''}`;
 
     return (
-      <div className={`input-atom ${className || ''}`}>
+      <div
+        className={newClassName}
+        onBlur={() => { this.setState({ focused: false }); }}
+        onFocus={() => { this.setState({ focused: true }); }}
+      >
         { label ? <Label htmlFor={id}>{label}</Label> : null}
         <div
-          className={
-            `input ${
-              leftIcon || type === 'date' || type === 'datetime' ? 'prefix' : ''
-            } ${
-              ((!label || forceInlineRequired) && required) || rightIcon || (!label && message) ? 'suffix' : ''
-            } ${messageType === 'error' ? 'error' : ''}`
-          }
+          className={`input-sham ${type || ''}-sham`}
+          onClick={onClick}
+          onKeyPress={onClick}
         >
-          {children}
           {this.renderLeftIcon()}
+          {children}
           {this.renderRightIcon()}
         </div>
         <div className='msgs'>{this.renderMessages()}</div>

@@ -22,7 +22,7 @@ type Props = {
   messageType?: $Keys<typeof messageTypes>,
   forceMessageBeneath?: boolean,
   className?: string,
-  value?: FileType | Array<FileType>,
+  +value?: FileType | Array<FileType>,
 
   rightIcon?: string,
 
@@ -57,7 +57,7 @@ type Default = {
   disabled: boolean,
 };
 
-export default class Input extends React.PureComponent<Props, void> {
+export default class FileInput extends React.PureComponent<Props, void> {
   static defaultProps: Default = {
     label: '',
     className: '',
@@ -103,8 +103,10 @@ export default class Input extends React.PureComponent<Props, void> {
       if (type === 'multiple') {
         const casted = (value: Array<FileType>);
         if (index >= 0 && index < casted.length) {
-          casted.splice(index, 1);
-          onChange(casted);
+          onChange([
+            ...casted.slice(0, index),
+            ...casted.slice(index + 1),
+          ]);
         }
       } else {
         onChange(undefined);
@@ -157,24 +159,27 @@ export default class Input extends React.PureComponent<Props, void> {
           />
           <span className='tag'>{index === 0 ? 'Main Image' : null}</span>
           <span
-            className={`remove ${disabled ? 'disabled' : ''}`}
+            className={`remove-btn ${disabled ? 'disabled' : ''}`}
             onClick={() => this.onRemoveIndex(index)}
             onKeyPress={() => this.onRemoveIndex(index)}
-            tabIndex={0}
+            tabIndex={!disabled && editable ? 0 : -1}
             role='button'
+            title='Remove from selection'
           />
         </div>
       );
     }
     return (
-      <span
-        key={index}
-        onClick={() => this.onRemoveIndex(index)}
-        onKeyPress={() => this.onRemoveIndex(index)}
-        tabIndex={0}
-        role='menuitem'
-      >
+      <span key={index}>
         {file.name}
+        <span
+          className='remove-btn'
+          onClick={() => this.onRemoveIndex(index)}
+          onKeyPress={() => this.onRemoveIndex(index)}
+          tabIndex={!disabled && editable ? 0 : -1}
+          role='button'
+          title='Remove from selection'
+        />
       </span>
     );
   }
@@ -182,20 +187,22 @@ export default class Input extends React.PureComponent<Props, void> {
   @autobind
   renderValues() {
     const { previewType, type, value } = this.props;
-    if (type === 'single' && value && value.constructor !== Array) {
-      const casted = (value: FileType);
-      return (
-        <div className={`attachment single ${previewType === 'image' ? 'grid' : ''}`}>
-          { this.renderSinglePreview(casted) }
-        </div>
-      );
-    } else if (type === 'multiple' && value && value.constructor === Array && value.length > 0) {
-      const casted = (value: Array<FileType>);
-      return (
-        <div className={`attachment multiple ${previewType === 'image' ? 'grid' : ''}`}>
-          { casted.map(this.renderSinglePreview) }
-        </div>
-      );
+    if (value) {
+      if (type === 'single' && value && value.constructor !== Array) {
+        const casted = (value: FileType);
+        return (
+          <div className={`attachment single ${previewType === 'image' ? 'grid' : ''}`}>
+            { this.renderSinglePreview(casted) }
+          </div>
+        );
+      } else if (type === 'multiple' && value && value.constructor === Array && value.length > 0) {
+        const casted = (value: Array<FileType>);
+        return (
+          <div className={`attachment multiple ${previewType === 'image' ? 'grid' : ''}`}>
+            { casted.map(this.renderSinglePreview) }
+          </div>
+        );
+      }
     }
 
     return null;
@@ -224,25 +231,34 @@ export default class Input extends React.PureComponent<Props, void> {
       id, label, forceInlineRequired,
       required, type, acceptedExtensions,
       className, forceMessageBeneath, message, messageType,
-      rightIcon, editable, disabled,
+      rightIcon, editable, disabled, value,
     } = this.props;
 
 
     return (
       <InputAtom
-        id={id} label={label}
+        id={id}
+        label={label}
         message={message}
         messageType={messageType}
         forceInlineRequired={forceInlineRequired}
         forceMessageBeneath={forceMessageBeneath}
         className={className}
-        leftIcon='cloud-upload'
+        type='file'
         rightIcon={rightIcon}
         required={required}
-        footer={editable ? this.renderValues() : undefined}
+        readOnly={!editable}
+        disabled={disabled}
+        empty={!value || (value.constructor === Array && value.length === 0)}
+        invalid={messageType === 'error'}
+        footer={
+          editable
+            ? this.renderValues()
+            : undefined
+        }
       >
         <Dropzone
-          className={`file ${!editable ? 'blocked' : ''}`}
+          className='file-input'
           disabled={disabled || !editable}
           multiple={type === 'multiple'}
           activeClassName='active'
@@ -252,7 +268,10 @@ export default class Input extends React.PureComponent<Props, void> {
           accept={acceptedExtensions}
           onDrop={this.onSelectValue}
         >
-          {!editable ? this.renderValues() : this.renderPlaceholder}
+          {!editable
+            ? this.renderValues()
+            : this.renderPlaceholder
+          }
         </Dropzone>
       </InputAtom>
     );

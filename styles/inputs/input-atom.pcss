@@ -1,0 +1,327 @@
+:--inputs {
+  background-color: transparent;
+  border: none;
+  border-color: var(--input-border-color);
+  border-radius: var(--input-border-radius);
+  border-style: solid;
+  border-width: 0;
+  color: var(--input-font-color);
+  outline: none;
+  padding: 0;
+  resize: none;
+  width: 100%;
+
+  &::placeholder,
+  .placeholder {
+    color: var(--input-placeholder-font-color);
+    user-select: none;
+  }
+
+  &.free {
+    border-width: var(--input-border-sizes);
+    padding: var(--input-padding);
+    transition:
+      border var(--input-transition-time) ease-in-out,
+      font-size var(--input-transition-time) ease-in-out,
+      padding var(--input-transition-time) ease-in-out,
+      background var(--input-transition-time) ease-in-out;
+    width: auto;
+
+    &:hover,
+    &:--enter-action {
+      background-color: var(--input-action-background);
+    }
+
+    &:hover {
+      border-color: var(--input-hover-border-color);
+    }
+
+    &:--enter-action {
+      border-color: var(--input-focus-border-color);
+    }
+
+    &:--disabled {
+      background-color: var(--input-disabled-background);
+      border-color: var(--input-disabled-border-color);
+    }
+
+    &.read-only,
+    &.blocked {
+      background-color: transparent;
+      border-color: transparent;
+      font-size: 1.1428em;
+      padding: 0;
+    }
+
+    & + :--inputs {
+      margin-left: calc(var(--input-padding) * 2);
+    }
+  }
+}
+
+.input-atom {
+  align-items: baseline;
+  display: flex;
+  flex-direction: column;
+
+  > label {
+    display: none;
+
+    &:not(:empty) {
+      display: initial;
+      font-size: 0.875em;
+      line-height: 1.43;
+      margin-bottom: 0.5em;
+    }
+  }
+
+  .remove-btn {
+    align-items: center;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    position: relative;
+    visibility: hidden;
+
+    &::after {
+      align-items: center;
+      background-color: transparent;
+      border-radius: 3em;
+      color: currentColor;
+      content: "\e95b";
+      display: flex;
+      font-family: var(--icons-font-family);
+      font-size: 0.5em;
+      font-smoothing: antialiased;
+      font-style: normal;
+      font-variant: normal;
+      font-weight: normal;
+      height: 2em;
+      justify-content: center;
+      line-height: 1;
+      margin-left: 1.111em;
+      speak: none;
+      text-align: center;
+      text-transform: none;
+      visibility: visible;
+      width: 2em;
+    }
+  }
+
+  > .input-sham {
+    align-items: center;
+    border-width: var(--input-border-sizes);
+    display: flex;
+    padding: var(--input-padding);
+    transition:
+      border var(--input-transition-time) ease-in-out,
+      font-size var(--input-transition-time) ease-in-out,
+      padding var(--input-transition-time) ease-in-out,
+      background var(--input-transition-time) ease-in-out;
+    width: 100%;
+  }
+
+  &.empty {
+    > .input-sham {
+      > .icon {
+        color: var(--input-placeholder-font-color);
+      }
+    }
+
+    &:hover {
+      > .input-sham {
+        > .icon {
+          color: var(--input-hover-border-color);
+        }
+      }
+    }
+  }
+
+  &:hover {
+    > .input-sham {
+      background-color: var(--input-action-background);
+      border-color: var(--input-hover-border-color);
+    }
+  }
+
+  &.required {
+    > .input {
+      > .icon {
+        &:last-child {
+          color: var(--input-required-symbol-color);
+        }
+      }
+    }
+  }
+
+  &.invalid {
+    > .input-sham {
+      > .icon {
+        color: var(--input-error-border-color);
+      }
+    }
+  }
+
+  &.focused {
+    > .input-sham {
+      background-color: var(--input-action-background);
+      border-color: var(--input-focus-border-color);
+
+      > .icon {
+        color: var(--input-focus-border-color);
+      }
+    }
+  }
+
+  &.disabled {
+    > .input-sham {
+      background-color: var(--input-disabled-background);
+      border-color: var(--input-disabled-border-color);
+
+      > .icon {
+        color: var(--input-border-color);
+      }
+
+      &.date-sham,
+      &.datetime-sham {
+        cursor: default;
+      }
+    }
+  }
+
+  &.readOnly {
+    > .input-sham {
+      background-color: transparent;
+      border-color: transparent;
+      font-size: 1.1428em;
+      padding: 0;
+
+      > .icon {
+        display: none;
+      }
+
+      &.date-sham,
+      &.datetime-sham {
+        cursor: default;
+      }
+    }
+  }
+
+  > .input-sham {
+    > .icon {
+      align-items: center;
+      display: flex;
+      height: var(--input-inline-symbols-size);
+      justify-content: center;
+      pointer-events: none;
+      transition: color var(--input-transition-time) ease-in-out;
+      visibility: hidden;
+      width: 0;
+
+      &.symbolicon {
+        visibility: visible;
+        width: var(--input-inline-symbols-size);
+
+        &:first-child {
+          margin-right: 0.5em;
+        }
+
+        &:last-child {
+          margin-left: 0.5em;
+        }
+      }
+
+      &.subtle,
+      &.info,
+      &.error,
+      &.success,
+      &.required {
+        cursor: help;
+        pointer-events: auto;
+      }
+
+      &.angle {
+        color: var(--select-angle-font-color);
+
+        &::before {
+          font-size: 0.8em;
+        }
+      }
+
+      &.subtle {
+        color: var(--input-small-font-color-subtle);
+      }
+
+      &.info {
+        color: var(--input-small-font-color-info);
+      }
+
+      &.error {
+        color: var(--input-small-font-color-error);
+      }
+
+      &.success {
+        color: var(--input-small-font-color-success);
+      }
+
+      &.required {
+        color: var(--input-required-symbol-color) !important;
+
+        &::before {
+          font-size: 0.65em;
+          font-weight: 900;
+        }
+      }
+    }
+  }
+
+  > .msgs {
+    width: 100%;
+
+    small {
+      color: var(--input-small-font-color-base);
+      font-size: 0.75em;
+      position: relative;
+
+      &::before {
+        font-size: 1.2em;
+        left: 0;
+        position: absolute;
+      }
+
+      &.symbolicon {
+        padding-left: 1.5em;
+      }
+
+      &.subtle {
+        color: var(--input-small-font-color-subtle);
+      }
+
+      &.info {
+        color: var(--input-small-font-color-info);
+      }
+
+      &.error {
+        color: var(--input-small-font-color-error);
+      }
+
+      &.success {
+        color: var(--input-small-font-color-success);
+      }
+
+      &.required::before {
+        color: var(--input-required-symbol-color);
+      }
+    }
+  }
+
+  > .footer {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+
+    &:not(:empty) {
+      margin-top: 0.25em;
+    }
+  }
+}
