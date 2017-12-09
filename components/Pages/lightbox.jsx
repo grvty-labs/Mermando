@@ -31,7 +31,6 @@ export default class Lightbox extends React.PureComponent<Props, State> {
   };
 
   componentWillReceiveProps(nextProps: Props) {
-    console.log(nextProps);
     if (this.props.show !== nextProps.show) {
       if (this.state.show) {
         setTimeout(
@@ -41,7 +40,6 @@ export default class Lightbox extends React.PureComponent<Props, State> {
           ),
           300,
         );
-        console.log('done');
       } else {
         this.setState({ show: nextProps.show });
         this.props.onToggleLightbox(nextProps.show);
