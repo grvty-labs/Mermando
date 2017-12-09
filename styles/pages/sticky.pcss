@@ -1,0 +1,119 @@
+.sticky-wrapper {
+  min-width: 331px;
+  position: sticky;
+
+  > .show-btn {
+    align-items: center;
+    appearance: none;
+    background-color: var(--sticky-showbtn-background);
+    border: 0;
+    border-radius: var(--sticky-border-radius);
+    cursor: pointer;
+    display: flex;
+    font-size: 1em;
+    height: 2em;
+    justify-content: center;
+    left: calc(100% - 2em);
+    opacity: 1;
+    position: absolute;
+    top: 0.5em;
+    transition:
+      border-radius var(--sticky-transition-time) ease-in-out,
+      left var(--sticky-transition-time) ease-in-out;
+    width: 2em;
+
+    > .symbolicon {
+      color: var(--sticky-showbtn-color);
+      font-size: 0.875em;
+      height: 1em;
+      width: 1em;
+    }
+  }
+
+  > .sticky {
+    animation: fade-out var(--sticky-transition-time) ease-in-out;
+    background-color: var(--sticky-background);
+    border-radius: var(--sticky-border-radius);
+    box-shadow: var(--sticky-box-shadow);
+    left: 100%;
+    padding-bottom: 0.5625em;
+    position: relative;
+    top: 0;
+    transition: left var(--sticky-transition-time) ease-in-out;
+    visibility: hidden;
+    width: 100%;
+
+    > .ribbon {
+      border-radius: var(--sticky-border-radius) var(--sticky-border-radius) 0 0;
+      height: 5px;
+
+      &.brand {
+        background-color: var(--card-colors-brand);
+      }
+
+      &.accent {
+        background-color: var(--card-colors-accent);
+      }
+
+      &.success {
+        background-color: var(--card-colors-success);
+      }
+
+      &.warning {
+        background-color: var(--card-colors-warning);
+      }
+
+      &.error {
+        background-color: var(--card-colors-error);
+      }
+
+      &.info {
+        background-color: var(--card-colors-info);
+      }
+
+      &.disabled {
+        background-color: var(--card-colors-disabled);
+      }
+    }
+
+    > .header {
+      border-bottom: solid 1px var(--sticky-header-border-color);
+      padding: 0.5em 1em;
+
+      > .title {
+        font-size: 0.75em;
+        font-weight: bold;
+      }
+    }
+
+    > .content {
+      display: flex;
+      flex-direction: column;
+      font-size: 0.875em;
+      padding: 0.8571em 1.1428em;
+
+      > .label {
+        color: var(--light-grey);
+        font-size: 0.7142em;
+        margin-bottom: 0.5714em;
+      }
+
+      > .value {
+        color: var(--black);
+      }
+    }
+  }
+
+  &.open {
+    > .show-btn {
+      border-radius: var(--sticky-border-radius) 0 0 var(--sticky-border-radius);
+      left: -2em;
+    }
+
+    > .sticky {
+      animation: fade-in var(--sticky-transition-time) ease-in-out;
+      left: 0;
+      visibility: visible;
+    }
+  }
+}
