@@ -12,9 +12,9 @@
     "|     |     |                   ↑                    |     |     |     "
     "|     |     +----------------------------------------+     |     | ----"
     "|     |     +----------------------------------------+     |     | ----"
-    "|     |     |                   ↓                    |     |     |     "
+    "|     |     |                                        |     |     |     "
     "|     |     |             ← >.middle →               |     |     | auto"
-    "|     |     |                   ↑                    |     |     |     "
+    "|     |     |                                        |     |     |     "
     "|     |     +----------------------------------------+     |     | ----"
     "|     |     +----------------------------------------+     |     | ----"
     "|     |     |                                        |     |     |     "
@@ -74,7 +74,7 @@
   > .header {
     align-items: center;
     display: flex;
-    padding: 0 2.6875em 1.625em;
+    padding: 0 2.75em 1.5em;
 
     > .title {
       font-size: 1.5em;
@@ -86,8 +86,10 @@
     border-bottom: 1px solid var(--gainsboro);
     display: flex;
     font-size: 0.875em;
+    height: 2px;
 
     &:not(:empty) {
+      height: auto;
       padding: 0 2.6875em;
     }
 
@@ -152,27 +154,6 @@
 
   &.close {
     animation: push-out var(--page-enter-time, 0.3s) ease-out;
-    right: -100vw;
-  }
-}
-
-@keyframes push-in {
-  0% {
-    right: -100vw;
-  }
-
-  100% {
-    right: 0;
-  }
-}
-
-@keyframes push-out {
-  0% {
-    overflow: hidden;
-    right: 0;
-  }
-
-  100% {
     right: -100vw;
   }
 }

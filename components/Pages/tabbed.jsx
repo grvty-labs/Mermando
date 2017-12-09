@@ -5,11 +5,13 @@ import Page from './page';
 
 export type Zone = {
   id: string | number,
+  mainTitle?: string,
   title: string,
   className?: string,
   statusClassName?: string,
   legend?: string,
   renderComponent: Function,
+  topComponent?: React.Node | Array<React.Node>,
   type: 'separated-rows' | 'split' | 'none',
 }
 
@@ -20,6 +22,7 @@ export type StoreProps = {
   topComponent?: React.Node | Array<React.Node>,
   children?: React.Node | Array<React.Node>,
   zones: Array<Zone>,
+  hideTabs?: boolean,
 };
 
 export type Actions = {
@@ -33,12 +36,14 @@ type State = {
 type Default = {
   className: string,
   backText: string,
+  hideTabs: boolean,
 };
 
-export default class TabbedPage extends React.PureComponent<Props, State> {
+export default class TabbedPage extends React.Component<Props, State> {
   static defaultProps: Default = {
     className: '',
     backText: 'go back',
+    hideTabs: false,
   };
 
   state: State = {
@@ -58,47 +63,56 @@ export default class TabbedPage extends React.PureComponent<Props, State> {
 
   @autobind
   renderTabs() {
-    const { zoneSelected } = this.state;
-    const renderedZones = this.props.zones.map(z => (
-      <div
-        key={z.id}
-        className={`tab ${z.id === zoneSelected ? 'selected' : ''} ${z.statusClassName || ''}`}
-        onClick={() => this.onZoneClick(z.id)}
-        onKeyPress={() => this.onZoneClick(z.id)}
-        role='menuitemradio'
-        aria-checked={z.id === zoneSelected}
-        tabIndex={0}
-      >
-        {z.title}
-      </div>
-    ));
-    return renderedZones;
+    const { hideTabs } = this.props;
+    if (!hideTabs) {
+      const { zoneSelected } = this.state;
+      const renderedZones = this.props.zones.map(z => (
+        <div
+          key={z.id}
+          className={`tab ${z.id === zoneSelected ? 'selected' : ''} ${z.statusClassName || ''}`}
+          onClick={() => this.onZoneClick(z.id)}
+          onKeyPress={() => this.onZoneClick(z.id)}
+          role='menuitemradio'
+          aria-checked={z.id === zoneSelected}
+          tabIndex={0}
+        >
+          {z.title}
+        </div>
+      ));
+      return renderedZones;
+    }
+    return null;
   }
 
   render() {
     const {
-      backText, className, title, topComponent, zones,
-      children, onBackClick,
+      backText, className, title, topComponent,
+      zones, children, onBackClick,
     } = this.props;
     const { zoneSelected } = this.state;
 
-    let zoneToRender = zones.find(z => z.id === zoneSelected);
-    zoneToRender = zoneToRender || {
-      renderComponent: () => (<div />),
+    let zoneRender = zones.find(z => z.id === zoneSelected);
+    zoneRender = zoneRender || {
+      renderComponent: (onZoneClick: Function) => (<div />),
       type: 'none',
     };
     return (
       <Page
-        className={`tabbed ${className || ''} ${zoneToRender.className || ''}`}
-        title={title}
-        topComponent={topComponent}
+        className={`tabbed ${className || ''} ${zoneRender.className || ''}`}
+        title={zoneRender.mainTitle || title}
+        topComponent={
+          zoneRender.topComponent ||
+          zoneRender.renderTopComponent
+            ? zoneRender.renderTopComponent(this.onZoneClick)
+            : topComponent
+        }
         backText={backText}
         onBackClick={onBackClick}
         middleComponent={this.renderTabs()}
-        legend={zoneToRender.legend || ''}
-        type={zoneToRender.type}
+        legend={zoneRender.legend || ''}
+        type={zoneRender.type}
       >
-        { zoneToRender.renderComponent() }
+        { zoneRender.renderComponent(this.onZoneClick) }
         { children }
       </Page>
     );

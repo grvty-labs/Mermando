@@ -7,7 +7,7 @@ export type StoreProps = {
   topComponent?: React.Node | Array<React.Node>,
   middleComponent?: React.Node | Array<React.Node>,
   children: React.Node | Array<React.Node>,
-  type?: 'cards-panel' | 'none' | 'separated-rows',
+  type?: 'cards-panel' | 'none' | 'separated-rows' | 'split',
 };
 export type Actions = {};
 
@@ -15,7 +15,7 @@ type Props = StoreProps & Actions;
 type State = {};
 type Default = {
   className: string,
-  type: 'cards-panel' | 'none' | 'separated-rows',
+  type: 'cards-panel' | 'none' | 'separated-rows' | 'split',
 };
 
 export default class Section extends React.PureComponent<Props, State> {
