@@ -3,6 +3,7 @@ import * as React from 'react';
 import autobind from 'autobind-decorator';
 import moment from 'moment';
 import Datetime from 'react-datetime';
+import { BlockPicker } from 'react-color';
 import { WithContext as ReactTags } from 'react-tag-input';
 import InputAtom from './input-atom';
 import { inputTypes, messageTypes, keyCodes } from '../../js/inputs';
@@ -122,6 +123,7 @@ export default class Input extends React.PureComponent<Props, void> {
     switch (type) {
       case 'datetime':
       case 'date':
+      case 'color':
         onChange(newValue);
         break;
 
@@ -205,6 +207,24 @@ export default class Input extends React.PureComponent<Props, void> {
             onChange={this.onCustomInputChange}
             dateFormat='DD-MMM-YYYY'
             timeFormat={false}
+            inputProps={{
+              ...otherProps,
+              id,
+              ref: (input) => { this.inputElement = input; },
+              className: newClassName,
+              required,
+              disabled: disabled || !editable,
+              readOnly: true,
+            }}
+          />
+        );
+
+      case 'color':
+        return (
+          <BlockPicker
+            onChange={this.onCustomInputChange}
+            color={value}
+            className='color-input'
             inputProps={{
               ...otherProps,
               id,
