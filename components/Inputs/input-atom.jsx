@@ -28,6 +28,8 @@ type Props = {
   empty?: boolean,
   invalid?: boolean,
   onClick?: Function,
+  onFocus?: Function,
+  onBlur?: Function,
 };
 
 type State = {
@@ -189,6 +191,7 @@ export default class InputAtom extends React.PureComponent<Props, State> {
     const {
       id, label, required, className, children, footer,
       readOnly, disabled, empty, invalid, type, onClick,
+      onFocus, onBlur,
     } = this.props;
     const { focused } = this.state;
 
@@ -198,14 +201,26 @@ export default class InputAtom extends React.PureComponent<Props, State> {
     return (
       <div
         className={newClassName}
-        onBlur={() => { this.setState({ focused: false }); }}
-        onFocus={() => { this.setState({ focused: true }); }}
+        onBlur={() => {
+          if (onBlur) {
+            onBlur();
+          }
+          this.setState({ focused: false });
+        }}
+        onFocus={() => {
+          if (onFocus) {
+            onFocus();
+          }
+          this.setState({ focused: true });
+        }}
       >
         { label ? <Label htmlFor={id}>{label}</Label> : null}
         <div
           className={`input-sham ${type || ''}-sham`}
           onClick={onClick}
           onKeyPress={onClick}
+          role='textbox'
+          tabIndex={0}
         >
           {this.renderLeftIcon()}
           {children}

@@ -32,6 +32,8 @@ type Props = {
   disabled?: boolean,
 
   onChange?: Function,
+  onFocus?: Function,
+  onBlur?: Function,
 };
 
 type Default = {
@@ -293,7 +295,7 @@ export default class Input extends React.PureComponent<Props, void> {
 
       leftIcon, rightIcon, editable,
       disabled, onChange, autoComplete,
-      autoCompleteOptions,
+      autoCompleteOptions, onFocus, onBlur,
 
       ...otherProps
     } = this.props;
@@ -319,6 +321,8 @@ export default class Input extends React.PureComponent<Props, void> {
             this.inputElement.focus();
           }
         }}
+        onFocus={onFocus}
+        onBlur={onBlur}
       >
         {this.renderInput(otherProps)}
       </InputAtom>
