@@ -109,6 +109,7 @@ export default class Input extends React.PureComponent<Props, void> {
       case 'text':
       case 'textarea':
       case 'url':
+      case 'color':
       default:
         clean = value;
         onChange(clean);
@@ -123,7 +124,6 @@ export default class Input extends React.PureComponent<Props, void> {
     switch (type) {
       case 'datetime':
       case 'date':
-      case 'color':
         onChange(newValue);
         break;
 
@@ -221,20 +221,21 @@ export default class Input extends React.PureComponent<Props, void> {
 
       case 'color':
         return (
-          <BlockPicker
-            onChange={this.onCustomInputChange}
-            color={value}
-            className='color-input'
-            inputProps={{
-              ...otherProps,
-              id,
-              ref: (input) => { this.inputElement = input; },
-              className: newClassName,
-              required,
-              disabled: disabled || !editable,
-              readOnly: true,
-            }}
-          />
+          /* TODO Fix color picker */
+          <div className='color-container'>
+            <input
+              {...otherProps}
+              ref={(input) => { this.inputElement = input; }}
+              id={id}
+              type='text'
+              className={newClassName}
+              value={value || ''}
+              onChange={this.onHTMLInputChange}
+              required={required}
+              disabled={disabled || !editable}
+            />
+            <div className='color' style={{ backgroundColor: `#${value}` }} />
+          </div>
         );
 
       case 'tags':

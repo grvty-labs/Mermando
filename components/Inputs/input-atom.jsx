@@ -92,6 +92,10 @@ export default class InputAtom extends React.PureComponent<Props, State> {
 
     let className;
     switch (type) {
+      case 'color':
+        className = 'symbolicon hashtag';
+        break;
+
       case 'date':
         className = 'symbolicon calendar';
         break;
