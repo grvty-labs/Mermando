@@ -109,6 +109,7 @@ export default class Input extends React.PureComponent<Props, void> {
       case 'text':
       case 'textarea':
       case 'url':
+      case 'color':
       default:
         clean = value;
         onChange(clean);
@@ -123,7 +124,6 @@ export default class Input extends React.PureComponent<Props, void> {
     switch (type) {
       case 'datetime':
       case 'date':
-      case 'color':
         onChange(newValue);
         break;
 
@@ -227,13 +227,14 @@ export default class Input extends React.PureComponent<Props, void> {
               {...otherProps}
               ref={(input) => { this.inputElement = input; }}
               id={id}
+              type='text'
               className={newClassName}
               value={value || ''}
               onChange={this.onHTMLInputChange}
               required={required}
               disabled={disabled || !editable}
             />
-            <div className='color' style={{ backgroundColor: `${value}` }} />
+            <div className='color' style={{ backgroundColor: `#${value}` }} />
           </div>
         );
 
