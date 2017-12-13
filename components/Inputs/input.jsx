@@ -232,6 +232,7 @@ export default class Input extends React.PureComponent<Props, void> {
               onChange={this.onHTMLInputChange}
               required={required}
               disabled={disabled || !editable}
+              pattern='[0-9A-Fa-f]{6}'
             />
             <div className='color' style={{ backgroundColor: `#${value}` }} />
           </div>
