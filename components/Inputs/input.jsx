@@ -3,7 +3,6 @@ import * as React from 'react';
 import autobind from 'autobind-decorator';
 import moment from 'moment';
 import Datetime from 'react-datetime';
-import { BlockPicker } from 'react-color';
 import { WithContext as ReactTags } from 'react-tag-input';
 import InputAtom from './input-atom';
 import { inputTypes, messageTypes, keyCodes } from '../../js/inputs';
