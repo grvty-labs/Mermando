@@ -5,7 +5,7 @@ import Label from './label';
 
 export type RadioType = {
   label: string,
-  option: string,
+  option: string | number,
   legend?: string,
 };
 

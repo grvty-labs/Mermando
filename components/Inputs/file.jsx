@@ -35,7 +35,7 @@ type Props = {
   editable?: boolean,
   disabled?: boolean,
 
-  onChange: Function,
+  onChange?: Function,
   onZoomClick?: Function,
 };
 
@@ -55,6 +55,8 @@ type Default = {
   forceInlineRequired: boolean,
   editable: boolean,
   disabled: boolean,
+
+  onChange: Function,
 };
 
 export default class FileInput extends React.PureComponent<Props, void> {
@@ -74,6 +76,8 @@ export default class FileInput extends React.PureComponent<Props, void> {
     forceInlineRequired: false,
     disabled: false,
     editable: true,
+
+    onChange: () => {},
   };
 
   @autobind
