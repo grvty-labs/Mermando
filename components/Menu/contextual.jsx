@@ -31,7 +31,6 @@ export default class Notifications extends React.PureComponent<Props, State> {
         <Button
           type='icon'
           icon={icon}
-          onClick={(e) => { e.stopPropagation(); }}
         />
         <div className='contextual'>
           {children}

@@ -60,7 +60,6 @@ export default class Notifications extends React.PureComponent<Props, State> {
           iconSide='right'
           icon={icon}
           size={buttonSize}
-          onClick={(e) => { e.stopPropagation(); }}
         >
           {text}
         </Button>

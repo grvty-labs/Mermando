@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
-import { types, sizes } from '../../js/buttons';
+import autobind from 'autobind-decorator';
+import { types, sizes, linkColors } from '../../js/buttons';
 
 type Props = {
   className?: string,
@@ -10,6 +11,7 @@ type Props = {
   size?: $Keys<typeof sizes>,
   icon?: React.Node | string,
   iconSide?: 'left' | 'right',
+  linkColor?: $Keys<typeof linkColors>,
   disabled?: boolean,
 
   onClick?: Function,
@@ -43,10 +45,18 @@ export default class Button extends React.PureComponent<Props, void> {
     disabled: false,
   };
 
+  @autobind
+  onClick(event: SyntheticEvent<*>) {
+    event.stopPropagation();
+    if (this.props.onClick) {
+      this.props.onClick();
+    }
+  }
+
   render() {
     const {
-      aria, className, type, size, icon, iconSide, disabled,
-      onClick, children,
+      aria, className, type, size, icon, iconSide, disabled, linkColor,
+      children,
     } = this.props;
 
     const iconRender = typeof icon === 'string'
@@ -55,10 +65,13 @@ export default class Button extends React.PureComponent<Props, void> {
 
     return (
       <button
-        onClick={onClick}
+        onClick={this.onClick}
         disabled={disabled}
         className={
-          `button ${type || ''} ${size || ''} ${iconRender && type !== 'icon' ? 'iconned' : ''} ${iconSide === 'right' ? 'inverted' : ''} ${className || ''}`
+          `button ${type || ''} ${size || ''} ${
+            iconRender && type !== 'icon' ? 'iconned' : ''} ${
+            iconSide === 'right' ? 'inverted' : ''} ${className || ''} ${
+            type === 'link' ? linkColor || '' : ''}`
         }
         aria-label={aria || null}
         aria-hidden={children && type !== 'icon'}

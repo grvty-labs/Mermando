@@ -8,6 +8,13 @@ export const types = {
   icon: 'icon',
 };
 
+export const linkColors = {
+  subtle: 'subtle',
+  info: 'info',
+  danger: 'danger',
+  success: 'success',
+};
+
 export const sizes = {
   small: 'small',
   regular: 'regular',
