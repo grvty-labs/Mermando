@@ -1,6 +1,7 @@
 // @flow
 
 export const inputTypes = {
+  color: 'color',
   date: 'date',
   datetime: 'datetime',
   email: 'email',
