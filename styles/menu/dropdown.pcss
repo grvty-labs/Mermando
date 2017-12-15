@@ -26,7 +26,7 @@
       + .dropdown {
         opacity: 1;
         transition:
-          opacity var(--dropdown-transition-appear-time, 0.3s) ease-in-out,
+          opacity var(--dropdown-transition-appear-time) ease-in-out,
           visibility 0s 0s ease-in-out;
         visibility: visible;
       }
@@ -36,26 +36,26 @@
     &:--enter-action {
       &.angled {
         &::after {
-          border-color: var(--dropdown-icon-hover-color, #5969e1);
+          border-color: var(--dropdown-icon-hover-color);
         }
       }
     }
   }
 
   > .dropdown {
-    background-color: var(--dropdown-background, #fafafa);
+    background-color: var(--dropdown-background);
     box-shadow: var(--dropdown-box-shadow);
     display: flex;
     flex-direction: column;
-    font-size: var(--dropdown-dropdown-font-size, 0.75rem);
+    font-size: var(--dropdown-dropdown-font-size);
     min-width: 10.6em;
     opacity: 0;
     position: absolute;
     right: 0;
     top: 105%;
     transition:
-      opacity var(--dropdown-transition-appear-time, 0.3s) ease-in-out,
-      visibility 0s var(--dropdown-transition-appear-time, 0.3s) ease-in-out;
+      opacity var(--dropdown-transition-appear-time) ease-in-out,
+      visibility 0s var(--dropdown-transition-appear-time) ease-in-out;
     visibility: hidden;
 
     > :--button,
@@ -101,16 +101,16 @@
         text-align: left;
 
         &:hover {
-          background-color: var(--dropdown-item-hover-background, #f2f2f2);
+          background-color: var(--dropdown-item-hover-background);
         }
 
         &:--disabled {
-          background-color: var(--button-link-background, transparent);
+          background-color: var(--button-link-background);
         }
       }
 
       &:not(:last-of-type) {
-        border-bottom: solid 1px var(--dropdown-item-border-color, #e9e9e9);
+        border-bottom: solid 1px var(--dropdown-item-border-color);
         /*position: relative;*/
 
         /*&::after {
@@ -127,7 +127,7 @@
     &:--enter-action {
       opacity: 1;
       transition:
-        opacity var(--dropdown-transition-appear-time, 0.3s) ease-in-out,
+        opacity var(--dropdown-transition-appear-time) ease-in-out,
         visibility 0s 0s ease-in-out;
       visibility: visible;
     }

@@ -16,7 +16,7 @@ export type Zone = {
 }
 
 export type StoreProps = {
-  title: string,
+  title?: string,
   className?: string,
   backText?: string,
   topComponent?: React.Node | Array<React.Node>,

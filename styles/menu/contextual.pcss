@@ -1,4 +1,5 @@
 .contextual-wrapper {
+  outline: none;
   position: relative;
 
   > :--button {
@@ -51,6 +52,13 @@
       &:--disabled {
         background-color: var(--button-link-background, transparent);
       }
+    }
+
+    hr {
+      border: solid 1px transparent;
+      border-bottom: solid 1px var(--contextual-item-line-color);
+      height: 1px;
+      margin: 0.333em 0;
     }
 
     &:hover,

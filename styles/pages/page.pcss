@@ -94,26 +94,31 @@
     }
 
     > .tab {
-      border-bottom: 3px solid transparent;
-      color: var(--nero);
+      border-bottom: var(--page-tab-border-width) solid transparent;
+      color: var(--page-tab-color);
       cursor: pointer;
       margin-right: 0.6428em;
       min-width: 5.782em;
-      opacity: 0.25;
       outline: none;
       padding: 0.5em;
       text-align: center;
       text-transform: uppercase;
       transition: opacity 0.3s;
 
-      &.selected {
-        border-bottom: 3px solid var(--nero);
-        font-weight: bold;
-        opacity: 1;
-      }
-
       &:not(:first-of-type) {
         margin-left: 0.6428em;
+      }
+
+      &:hover,
+      &:--enter-action {
+        border-bottom-color: var(--page-tab-hover-color);
+        color: var(--page-tab-hover-color);
+      }
+
+      &.selected {
+        border-bottom-color: var(--page-tab-selected-color);
+        color: var(--page-tab-selected-color);
+        font-weight: bold;
       }
     }
   }
@@ -129,7 +134,7 @@
 
     &.separated-rows {
       > div {
-        border-bottom: 1px solid var(--whisper-3, #ededed);
+        border-bottom: 1px solid var(--whisper-3);
         padding-bottom: 1.5em;
         padding-top: 1.5em;
 
@@ -148,12 +153,12 @@
   }
 
   &.open {
-    animation: push-in var(--page-enter-time, 0.3s) ease-out;
+    animation: push-in var(--page-enter-time) ease-out;
     right: 0;
   }
 
   &.close {
-    animation: push-out var(--page-enter-time, 0.3s) ease-out;
+    animation: push-out var(--page-enter-time) ease-out;
     right: -100vw;
   }
 }

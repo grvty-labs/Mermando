@@ -2,7 +2,7 @@
   > .value {
     &.single {
       > span {
-        color: var(--input-font-color, #0c0033);
+        color: var(--input-font-color);
       }
     }
 
@@ -12,9 +12,9 @@
 
       > span {
         align-items: center;
-        background-color: var(--select-values-background, #4000ff);
+        background-color: var(--select-values-background);
         border-radius: 5em;
-        color: var(--select-values-font-color, #e5e5e5);
+        color: var(--select-values-font-color);
         display: inherit;
         font-size: 0.75em;
         margin-right: 0.25em;
@@ -24,9 +24,9 @@
   }
 
   > .options {
-    background-color: var(--select-menu-background-color, #fff);
-    border-radius: var(--select-options-border-radius, 3px);
-    box-shadow: var(--select-options-box-shadow, none);
+    background-color: var(--select-menu-background);
+    border-radius: var(--select-options-border-radius);
+    box-shadow: var(--select-options-box-shadow);
     left: -1px;
     margin: 0 1em 1em 0;
     opacity: 0;
@@ -49,8 +49,14 @@
     > span {
       display: block;
       font-size: inherit;
+      outline: none;
       padding: 0.5em 1em;
       width: 100%;
+
+      &:hover,
+      &:--enter-action {
+        background-color: var(--select-options-hover-background);
+      }
     }
   }
 
@@ -62,7 +68,7 @@
     &.read-only,
     &.blocked {
       cursor: default;
-      padding-right: var(--input-padding, 0.5em);
+      padding-right: var(--input-padding);
 
       > .value {
         &.multiple {

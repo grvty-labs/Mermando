@@ -18,26 +18,31 @@
     padding: 0 2.6875em;
 
     > .tab {
-      border-bottom: 3px solid transparent;
-      color: var(--nero);
+      border-bottom: var(--section-tab-border-width) solid transparent;
+      color: var(--section-tab-color);
       cursor: pointer;
       margin-right: 0.5625em;
       min-width: 5.06em;
-      opacity: 0.25;
       outline: none;
       padding: 0.4375em;
       text-align: center;
       text-transform: uppercase;
       transition: opacity 0.3s;
 
-      &.selected {
-        border-bottom: 3px solid var(--nero);
-        font-weight: bold;
-        opacity: 1;
-      }
-
       &:not(:first-of-type) {
         margin-left: 0.5625em;
+      }
+
+      &:hover,
+      &:--enter-action {
+        border-bottom-color: var(--section-tab-hover-color);
+        color: var(--section-tab-hover-color);
+      }
+
+      &.selected {
+        border-bottom-color: var(--section-selected-tab-color);
+        color: var(--section-selected-tab-color);
+        font-weight: bold;
       }
     }
   }
@@ -63,7 +68,7 @@
 
     &.separated-rows {
       > div {
-        border-bottom: 1px solid var(--whisper-3, #ededed);
+        border-bottom: 1px solid var(--whisper-3);
         padding-bottom: 1.5em;
         padding-top: 1.5em;
 

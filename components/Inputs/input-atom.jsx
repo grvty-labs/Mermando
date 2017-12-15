@@ -224,7 +224,7 @@ export default class InputAtom extends React.PureComponent<Props, State> {
           onClick={onClick}
           onKeyPress={onClick}
           role='textbox'
-          tabIndex={0}
+          tabIndex={-1}
         >
           {this.renderLeftIcon()}
           {children}
