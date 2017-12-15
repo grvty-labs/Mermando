@@ -6,7 +6,7 @@ import type { RadioType } from './radio';
 
 export type StoreProps = {
   id: string,
-  value: string,
+  value: string | number,
   options: Array<RadioType>,
 };
 export type Actions = {
@@ -16,7 +16,7 @@ type Props = StoreProps & Actions;
 type State = {};
 type Default = {};
 
-export default class RadioInputGroup extends React.PureComponent<Props, State> {
+export default class RadioInputGroup extends React.Component<Props, State> {
   static defaultProps: Default = {};
   state: State = {};
 

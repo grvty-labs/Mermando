@@ -11,7 +11,7 @@ export type RadioType = {
 
 export type StoreProps = {
   id: string,
-  value: string,
+  value: string | number,
   name?: string,
 } & RadioType;
 export type Actions = {
@@ -30,10 +30,9 @@ export default class RadioInput extends React.PureComponent<Props, State> {
   state: State = {};
 
   @autobind
-  onChange(event: SyntheticInputEvent<*>) {
-    const { onChange } = this.props;
-    const { value } = event.target;
-    onChange(value);
+  onChange() {
+    const { onChange, option } = this.props;
+    onChange(option);
   }
 
   render() {
