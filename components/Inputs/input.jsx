@@ -102,16 +102,27 @@ export default class Input extends React.PureComponent<Props, void> {
         }
         break;
 
+      case 'textarea':
+        clean = value;
+        onChange(clean);
+        setTimeout(() => {
+          if (this.inputElement) {
+            this.inputElement.style.cssText = 'height:auto; padding: 0';
+            this.inputElement.style.cssText = `height: ${this.inputElement.scrollHeight}px`;
+          }
+        }, 0);
+        break;
+
       case 'email':
       case 'password':
       case 'tel':
       case 'text':
-      case 'textarea':
       case 'url':
       case 'color':
       default:
         clean = value;
         onChange(clean);
+        break;
     }
   }
 
