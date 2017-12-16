@@ -27,9 +27,11 @@ type Props = {
   rightIcon?: string,
 
   type?: 'single' | 'multiple',
+  hidePreviewTag?: boolean,
   previewType?: 'filename' | 'image',
-  placeholder?: string,
   acceptedExtensions?: string,
+
+  placeholder?: string,
   required?: boolean,
   forceInlineRequired?: boolean,
   editable?: boolean,
@@ -51,6 +53,8 @@ type Default = {
 
   type: 'single' | 'multiple',
   previewType: 'filename' | 'image',
+  hidePreviewTag: boolean,
+
   required: boolean,
   forceInlineRequired: boolean,
   editable: boolean,
@@ -72,6 +76,8 @@ export default class FileInput extends React.PureComponent<Props, void> {
 
     type: 'single',
     previewType: 'filename',
+    hidePreviewTag: false,
+
     required: false,
     forceInlineRequired: false,
     disabled: false,
@@ -121,7 +127,7 @@ export default class FileInput extends React.PureComponent<Props, void> {
   @autobind
   renderSinglePreview(file: FileType, index: number = 0) {
     const {
-      disabled, editable, onZoomClick, previewType,
+      disabled, editable, onZoomClick, previewType, hidePreviewTag,
     } = this.props;
     if (!editable) {
       if (previewType === 'image') {
@@ -131,7 +137,7 @@ export default class FileInput extends React.PureComponent<Props, void> {
               src={file.preview}
               alt={file.name}
             />
-            <span className='tag'>{index === 0 ? 'Main Image' : ''}</span>
+            <span className='tag'>{index === 0 && !hidePreviewTag ? 'Main Image' : ''}</span>
             <div
               className='overlay'
               onClick={onZoomClick ? onZoomClick : () => {}} // eslint-disable-line

@@ -35,26 +35,29 @@ export default class Chat extends React.PureComponent<Props, State> {
     const { channels } = this.props;
     return (
       <div className='chat-wrapper'>
-        <div className='channels-wrapper'>
-          <span className='legend'>Channels</span>
-          { channels.map(this.renderChannel) }
-        </div>
+        <div className='chat'>
 
-        <div className='content'>
-          <span className='legend'>{channels[0].legend}</span>
-          <div className='messages-wrapper'>
-            {/* Empty */}
+          <div className='channels-wrapper'>
+            <span className='legend'>Channels</span>
+            { channels.map(this.renderChannel) }
           </div>
-          <Input
-            id='message'
-            placeholder='Write your message…'
-            type='textarea'
-            value=''
-            onChange={() => {}}
-          />
-          <div className='footer'>
-            <Button type='link' size='regular'>Attach File</Button>
-            <Button type='main' size='big'>Send</Button>
+
+          <div className='content'>
+            <span className='legend'>{channels[0].legend}</span>
+            <div className='messages-wrapper'>
+              {/* Empty */}
+            </div>
+            <Input
+              id='message'
+              placeholder='Write your message…'
+              type='textarea'
+              value=''
+              onChange={() => {}}
+            />
+            <div className='footer'>
+              <Button type='link' size='regular'>Attach File</Button>
+              <Button type='main' size='big'>Send</Button>
+            </div>
           </div>
         </div>
       </div>

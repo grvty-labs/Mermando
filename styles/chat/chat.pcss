@@ -1,57 +1,65 @@
 .chat-wrapper {
-  border-radius: 3px;
-  box-shadow:
-    0 12px 20px 0 rgba(26, 26, 26, 0.07),
-    0 0 6px 2px rgba(0, 0, 0, 0.05);
-  overflow: hidden;
   width: 34.22%;
 
-  > .channels-wrapper {
-    background-color: var(--royal-blue-2);
-    display: flex;
-    flex-wrap: wrap;
-    font-size: 0.75em;
-    padding: 0.8333em 1em 1em;
+  > .chat {
+    border-radius: 3px;
+    box-shadow:
+      0 12px 20px 0 rgba(26, 26, 26, 0.07),
+      0 0 6px 2px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    position: sticky;
+    top: 1em;
 
-    > .legend {
-      color: var(--white);
-      font-size: 0.8333em;
-      margin-bottom: 0.8em;
-      opacity: 0.75;
-      width: 100%;
-    }
+    > .channels-wrapper {
+      background-color: var(--royal-blue-2);
+      display: flex;
+      flex-wrap: wrap;
+      font-size: 0.75em;
+      padding: 0.8333em 1em 1em;
 
-    :--button {
-      color: var(--white);
-      font-size: 1em;
-      text-transform: uppercase;
-
-      &:not(.selected) {
-        background-color: transparent;
+      > .legend {
+        color: var(--white);
+        font-size: 0.8333em;
+        margin-bottom: 0.8em;
         opacity: 0.75;
+        width: 100%;
+      }
+
+      :--button {
+        color: var(--white);
+        font-size: 1em;
+        text-transform: uppercase;
+
+        &:not(.selected) {
+          background-color: transparent;
+          opacity: 0.75;
+        }
       }
     }
-  }
 
-  > .content {
-    font-size: 0.75em;
-    padding: 1.333em 1em 1.5em 1.333em;
+    > .content {
+      font-size: 0.75em;
+      padding: 1.333em 1em 1.5em 1.333em;
 
-    > .legend {
-      color: var(--nero);
-      font-size: 0.8333em;
-      opacity: 0.5;
-    }
+      > .legend {
+        color: var(--nero);
+        font-size: 0.8333em;
+        opacity: 0.5;
+      }
 
-    > .messages-wrapper {
-      min-height: 47.25em;
-    }
+      > .messages-wrapper {
+        margin: 0.5em 0;
+        max-height: calc(100vh - 23.1em);
+        min-height: 27.25em;
+        overflow-x: auto;
+      }
 
-    > .footer {
-      align-items: center;
-      display: flex;
-      justify-content: space-between;
-      margin-top: 0.8333em;
+      > .footer {
+        align-items: center;
+        display: flex;
+        justify-content: space-between;
+        margin-top: 0.8333em;
+      }
     }
   }
 }
