@@ -1,0 +1,35 @@
+.users-list {
+  display: flex;
+  flex-direction: column;
+
+  > div {
+    display: inherit;
+
+    > .avatar {
+      font-size: 1.333em;
+    }
+
+    > .data {
+      display: inherit;
+      flex-direction: column;
+      padding: 0 0.875em;
+
+      > .name {
+        color: var(--nero);
+      }
+
+      .email {
+        color: var(--light-grey);
+        font-size: 0.625em;
+      }
+    }
+
+    > .actions {
+      /* font-size: */
+    }
+
+    &:not(:last-of-type) {
+      margin-bottom: 0.25em;
+    }
+  }
+}

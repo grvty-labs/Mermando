@@ -1,0 +1,23 @@
+.avatars-list {
+  display: flex;
+  font-size: 1.111em;
+
+  > .avatar {
+    border: var(--white) solid 1px;
+    margin-right: 0;
+    z-index: 0;
+  }
+
+  &.overlap {
+    padding-left: 0.4166em;
+
+    > .avatar {
+      margin-left: -0.4166em;
+
+      &:hover,
+      &:--enter-action {
+        z-index: 1;
+      }
+    }
+  }
+}
