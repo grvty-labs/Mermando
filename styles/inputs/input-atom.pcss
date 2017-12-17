@@ -96,7 +96,7 @@ textarea {
       background-color: transparent;
       border-radius: 3em;
       color: currentColor;
-      content: "\e95b";
+      content: var(--icons-remove-unicode);
       display: flex;
       font-family: var(--icons-font-family);
       font-size: 0.5em;
@@ -241,7 +241,7 @@ textarea {
       visibility: hidden;
       width: 0;
 
-      &.symbolicon {
+      &:--icons-class {
         visibility: visible;
         width: var(--input-inline-symbols-size);
 
@@ -312,7 +312,7 @@ textarea {
         position: absolute;
       }
 
-      &.symbolicon {
+      &:--icons-class {
         padding-left: 1.5em;
       }
 
