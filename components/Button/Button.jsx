@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import autobind from 'autobind-decorator';
+import Config from 'Config';
 import { types, sizes, linkColors } from '../../js/buttons';
 
 type Props = {
@@ -60,7 +61,7 @@ export default class Button extends React.PureComponent<Props, void> {
     } = this.props;
 
     const iconRender = typeof icon === 'string'
-      ? <span className={`symbolicon ${icon}`} />
+      ? <span className={`${Config.mermando.icons.classPrefix}${icon}`} />
       : icon;
 
     return (

@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import autobind from 'autobind-decorator';
+import Config from 'Config';
 import { Button } from '../Button';
 
 type StoreProps = {
@@ -12,7 +13,7 @@ type StoreProps = {
 };
 type Actions = {
   onCloseClick: Function,
-  onToggleLightbox: Function,
+  onToggleLightbox?: Function,
 };
 type Props = StoreProps & Actions;
 type State = {
@@ -20,11 +21,13 @@ type State = {
 };
 type Default = {
   className: string,
+  onToggleLightbox: Function,
 };
 
 export default class Lightbox extends React.PureComponent<Props, State> {
   static defaultProps: Default = {
     className: '',
+    onToggleLightbox: () => {},
   };
   state: State = {
     show: false,
@@ -69,7 +72,8 @@ export default class Lightbox extends React.PureComponent<Props, State> {
               <div>
                 <Button
                   type='icon'
-                  icon='close'
+                  iconSide='right'
+                  icon={Config.mermando.icons.close}
                   onClick={onCloseClick}
                 />
               </div>

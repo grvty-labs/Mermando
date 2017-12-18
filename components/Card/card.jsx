@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import Config from 'Config';
 
 export type CardProps = {
   className?: string,
@@ -50,7 +51,7 @@ export default class Card extends React.PureComponent<CardProps, void> {
           {actions}
         </div>
         <div className='content'>
-          { icon ? <span className={`icon symbolicon ${icon}`} /> : null}
+          { icon ? <span className={`icon ${Config.mermando.icons.classPrefix}${icon}`} /> : null}
           { this.props.children }
         </div>
         <div className='footer'>{footer}</div>

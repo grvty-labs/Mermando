@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import autobind from 'autobind-decorator';
+import Config from 'Config';
 import colours from '../../js/theme';
 
 export type StoreProps = {
@@ -45,7 +46,7 @@ export default class Sticky extends React.PureComponent<Props, State> {
           className='show-btn'
           onClick={() => { this.setState({ show: !this.state.show }); }}
         >
-          <span className='symbolicon eye' />
+          <span className={`${Config.mermando.icons.classPrefix}${Config.mermando.icons.showButton}`} />
         </button>
         <div className='sticky'>
           <div
