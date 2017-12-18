@@ -2,6 +2,7 @@
 import * as React from 'react';
 import autobind from 'autobind-decorator';
 import Dropzone from 'react-dropzone';
+import Config from 'Config';
 import InputAtom from './input-atom';
 import { messageTypes } from '../../js/inputs';
 
@@ -145,7 +146,7 @@ export default class FileInput extends React.PureComponent<Props, void> {
               role='button'
               tabIndex={0}
             >
-              <span className='symbolicon zoom' />
+              <span className={`${Config.mermando.icons.classPrefix}${Config.mermando.icons.zoom}`} />
             </div>
           </div>
         );

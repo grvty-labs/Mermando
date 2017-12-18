@@ -6,6 +6,7 @@
   border-style: solid;
   border-width: 0;
   color: var(--input-font-color);
+  font-family: var(--main-font);
   outline: none;
   overflow: visible;
   padding: 0;
@@ -16,6 +17,7 @@
   .placeholder {
     animation: fade-in var(--input-transition-time) ease;
     color: var(--input-placeholder-font-color);
+    font-family: var(--main-font);
     user-select: none;
   }
 
@@ -258,7 +260,7 @@ textarea {
       &.info,
       &.error,
       &.success,
-      &.required {
+      &:--icons-required-class {
         cursor: help;
         pointer-events: auto;
       }
@@ -287,7 +289,7 @@ textarea {
         color: var(--input-small-font-color-success);
       }
 
-      &.required {
+      &:--icons-required-class {
         color: var(--input-required-symbol-color) !important;
 
         &::before {
@@ -303,17 +305,12 @@ textarea {
 
     small {
       color: var(--input-small-font-color-base);
+      font-family: var(--main-font);
       font-size: 0.75em;
-      position: relative;
 
-      &::before {
+      > :--icons-class {
         font-size: 1.2em;
-        left: 0;
-        position: absolute;
-      }
-
-      &:--icons-class {
-        padding-left: 1.5em;
+        margin: 0 0.5em;
       }
 
       &.subtle {
@@ -332,8 +329,9 @@ textarea {
         color: var(--input-small-font-color-success);
       }
 
-      &.required::before {
+      &:--icons-required-class::before {
         color: var(--input-required-symbol-color);
+        font-size: var(--input-required-symbol-font-size);
       }
     }
   }

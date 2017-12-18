@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import autobind from 'autobind-decorator';
+import Config from 'Config';
 import Label from './label';
 import { inputTypes, messageTypes } from '../../js/inputs';
 
@@ -93,19 +94,19 @@ export default class InputAtom extends React.PureComponent<Props, State> {
     let className;
     switch (type) {
       case 'color':
-        className = 'symbolicon hashtag';
+        className = `${Config.mermando.icons.classPrefix}${Config.mermando.icons.colorInput}`;
         break;
 
       case 'date':
-        className = 'symbolicon calendar';
+        className = `${Config.mermando.icons.classPrefix}${Config.mermando.icons.dateInput}`;
         break;
 
       case 'datetime':
-        className = 'symbolicon calendar-check';
+        className = `${Config.mermando.icons.classPrefix}${Config.mermando.icons.datetimeInput}`;
         break;
 
       case 'file':
-        className = 'symbolicon cloud-upload';
+        className = `${Config.mermando.icons.classPrefix}${Config.mermando.icons.fileInput}`;
         break;
 
       default:
@@ -113,7 +114,7 @@ export default class InputAtom extends React.PureComponent<Props, State> {
     }
 
     className = leftIcon
-      ? `symbolicon ${leftIcon}`
+      ? `${Config.mermando.icons.classPrefix}${leftIcon}`
       : className;
 
     return (
@@ -137,15 +138,15 @@ export default class InputAtom extends React.PureComponent<Props, State> {
     let className = '';
     switch (type) {
       case 'select':
-        className = 'symbolicon angle';
+        className = `${Config.mermando.icons.classPrefix}${Config.mermando.icons.selectInput}`;
         break;
       default:
         className = rightIcon
-          ? `symbolicon ${rightIcon}`
+          ? `${Config.mermando.icons.classPrefix}${rightIcon}`
           : message && !label && !forceMessageBeneath
-            ? `symbolicon ${messageType || ''}`
+            ? `${Config.mermando.icons.classPrefix}${messageType || ''}`
             : required && (!label || forceInlineRequired)
-              ? 'symbolicon required'
+              ? `${Config.mermando.icons.classPrefix}${Config.mermando.icons.requiredInput}`
               : '';
     }
 
@@ -171,19 +172,23 @@ export default class InputAtom extends React.PureComponent<Props, State> {
       messageType,
     } = this.props;
 
-    const className = messageType !== 'text' || (required && !forceInlineRequired)
-      ? `symbolicon ${required ? 'info' : messageType || ''}`
-      : '';
+    const className = required && !forceInlineRequired
+      ? 'info'
+      : messageType !== 'text'
+        ? messageType || ''
+        : '';
 
     if (label && (message || (required && !forceInlineRequired))) {
       return (
         <small className={className}>
+          <span className={`${Config.mermando.icons.classPrefix}${required && !forceInlineRequired ? 'info' : messageType || ''}`} />
           {message || 'Required field'}
         </small>
       );
     } else if (!label && message && forceMessageBeneath) {
       return (
         <small className={className}>
+          <span className={`${Config.mermando.icons.classPrefix}${messageType || ''}`} />
           {message}
         </small>
       );

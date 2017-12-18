@@ -31,6 +31,8 @@ type Props = {
   disabled?: boolean,
 
   onChange: Function,
+  onFocus?: Function,
+  onBlur?: Function,
 };
 
 type Default = {
@@ -218,6 +220,8 @@ export default class Select extends React.PureComponent<Props, State> {
       editable,
       disabled,
       value,
+      onFocus,
+      onBlur,
     } = this.props;
 
     // TODO: Change for react-autocomplete
@@ -236,6 +240,8 @@ export default class Select extends React.PureComponent<Props, State> {
         empty={!value || (value.constructor === Array && value.length === 0)}
         invalid={messageType === 'error'}
         onClick={this.handleClick}
+        onFocus={onFocus}
+        onBlur={onBlur}
       >
         <div
           id={id}
