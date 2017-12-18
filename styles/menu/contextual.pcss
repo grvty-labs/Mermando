@@ -3,17 +3,17 @@
   position: relative;
 
   > :--button {
-    color: var(--contextual-icon-color, #c3bfcc);
+    color: var(--contextual-icon-color);
     font-size: 1.3em;
 
     /* &:hover, */
     &:--enter-action {
-      color: var(--contextual-icon-hover-color, #5969e1);
+      color: var(--contextual-icon-hover-color);
 
       + .contextual {
         opacity: 1;
         transition:
-          opacity var(--contextual-transition-appear-time, 0.3s) ease-in-out,
+          opacity var(--contextual-transition-appear-time) ease-in-out,
           visibility 0s 0s ease-in-out;
         visibility: visible;
       }
@@ -21,7 +21,7 @@
   }
 
   > .contextual {
-    background-color: var(--contextual-background, #fafafa);
+    background-color: var(--contextual-background);
     border-radius: 3px;
     box-shadow: var(--contextual-box-shadow);
     display: flex;
@@ -33,8 +33,8 @@
     right: 90%;
     top: 10%;
     transition:
-      opacity var(--contextual-transition-appear-time, 0.3s) ease-in-out,
-      visibility 0s var(--contextual-transition-appear-time, 0.3s) ease-in-out;
+      opacity var(--contextual-transition-appear-time) ease-in-out,
+      visibility 0s var(--contextual-transition-appear-time) ease-in-out;
     visibility: hidden;
     z-index: 1;
 
@@ -46,11 +46,11 @@
       text-align: left;
 
       &:hover {
-        background-color: var(--contextual-item-hover-background, #f2f2f2);
+        background-color: var(--contextual-item-hover-background);
       }
 
       &:--disabled {
-        background-color: var(--button-link-background, transparent);
+        background-color: var(--button-link-background);
       }
     }
 
@@ -65,7 +65,7 @@
     &:--enter-action {
       opacity: 1;
       transition:
-        opacity var(--contextual-transition-appear-time, 0.3s) ease-in-out,
+        opacity var(--contextual-transition-appear-time) ease-in-out,
         visibility 0s 0s ease-in-out;
       visibility: visible;
     }

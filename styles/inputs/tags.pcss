@@ -1,6 +1,6 @@
 .input-sham {
   &.tags-sham {
-    padding: calc(var(--input-padding, 0.5em) - 0.25em) var(--input-padding, 0.5em);
+    padding: calc(var(--input-padding) - 0.25em) var(--input-padding);
     position: relative;
 
     > .tags {
@@ -15,9 +15,9 @@
 
         > .tag {
           align-items: center;
-          background-color: var(--tag-background-color, #5969e1);
+          background-color: var(--tag-background-color);
           border-radius: 3em;
-          color: var(--tag-font-color, #fff);
+          color: var(--tag-font-color);
           content: '';
           display: flex;
           font-size: 0.75em;
@@ -44,10 +44,10 @@
           }
 
           > .suggestions {
-            animation: fade-in var(--tag-transition-time, 0.2s) ease-in-out;
-            background-color: var(--tag-suggestion-background, #fafafa);
-            border-radius: var(--tag-suggestion-border-radius, 3px);
-            box-shadow: var(--tag-suggestion-box-shadow, none);
+            animation: fade-in var(--tag-transition-time) ease-in-out;
+            background-color: var(--tag-suggestion-background);
+            border-radius: var(--tag-suggestion-border-radius);
+            box-shadow: var(--tag-suggestion-box-shadow);
             left: 0;
             min-width: 100%;
             overflow: hidden;
@@ -65,7 +65,7 @@
                 padding: 0.666em 0.75em;
 
                 &:hover {
-                  background-color: var(--tag-suggestion-hover-background, #f2f2f2);
+                  background-color: var(--tag-suggestion-hover-background);
                 }
               }
             }

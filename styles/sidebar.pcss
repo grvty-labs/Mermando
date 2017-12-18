@@ -1,15 +1,15 @@
 .sidebar {
-  background-color: var(--sidebar-body-background, #2b0076);
+  background-color: var(--sidebar-body-background);
   height: 100vh;
   position: fixed;
   top: 0;
   transition: all 0.6s ease-in-out;
-  width: var(--sidebar-full-width, 320px);
+  width: var(--sidebar-full-width);
   z-index: var(--sidebar-zindex);
 
   > .head {
     align-items: center;
-    background-color: var(--sidebar-head-background, #2b0076);
+    background-color: var(--sidebar-head-background);
     display: flex;
     height: 60px;
     justify-content: space-around;
@@ -40,9 +40,9 @@
     margin-top: 65px;
 
     > .anchor {
-      color: var(--sidebar-link-font-color, #fff);
+      color: var(--sidebar-link-font-color);
       cursor: pointer;
-      font-family: var(--sidebar-link-font, 'sans-serif');
+      font-family: var(--sidebar-link-font);
       font-size: 1.25rem;
       font-weight: 700;
       letter-spacing: 0.1rem;
@@ -55,7 +55,7 @@
   }
 
   &.hidden {
-    left: calc(var(--sidebar-sm-width, 0) - var(--sidebar-full-width, 320px));
+    left: calc(var(--sidebar-sm-width) - var(--sidebar-full-width));
   }
 
   &.show {

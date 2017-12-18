@@ -6,7 +6,7 @@
 
   > .placeholder {
     font-size: 0.875em;
-    transition: color var(--input-transition-time, 0.4s) ease-in-out;
+    transition: color var(--input-transition-time) ease-in-out;
   }
 
   > .attachment {
@@ -20,17 +20,17 @@
   &.accept,
   &.reject {
     > .placeholder {
-      color: var(--file-reject-font-color, #0c0033);
+      color: var(--file-reject-font-color);
     }
   }
 
   &.reject {
-    background-color: var(--file-reject-background-color, #ffd5e1);
-    border-color: var(--file-reject-border-color, #ff0048);
+    background-color: var(--file-reject-background-color);
+    border-color: var(--file-reject-border-color);
 
     ~ .icon {
       &:first-of-type {
-        color: var(--file-reject-border-color, #ff0048);
+        color: var(--file-reject-border-color);
       }
     }
   }
@@ -43,7 +43,7 @@
 
       ~ .icon {
         &:first-of-type {
-          color: var(--input-placeholder-font-color, #c2beca);
+          color: var(--input-placeholder-font-color);
         }
       }
     }
@@ -55,7 +55,7 @@
 
       ~ .icon {
         &:first-of-type {
-          color: var(--file-readonly-font-color, #5969e1);
+          color: var(--file-readonly-font-color);
           font-size: 1.3125em;
           height: 1em;
           width: 1em;
@@ -86,11 +86,11 @@
 
         > span {
           align-items: center;
-          background-color: var(--file-values-background, #5969e1);
+          background-color: var(--file-values-background);
           border-radius: 5em;
-          color: var(--file-values-font-color, #fff);
+          color: var(--file-values-font-color);
           display: inherit;
-          font-size: var(--file-values-font-size, 0.75em);
+          font-size: var(--file-values-font-size);
           margin-right: 0.666em;
           padding: 0.333em 0.666em;
         }
@@ -105,7 +105,7 @@
 
         > .img {
           align-items: center;
-          background-color: var(--file-images-background, #f3ede8);
+          background-color: var(--file-images-background);
           display: flex;
           max-height: 14.375em;
           overflow: hidden;
@@ -117,9 +117,9 @@
           }
 
           .tag {
-            background-color: var(--file-values-background, #5969e1);
+            background-color: var(--file-values-background);
             border-radius: 0 0 6px;
-            color: var(--file-values-font-color, #fff);
+            color: var(--file-values-font-color);
             font-size: 0.625em;
             left: 0;
             position: absolute;
@@ -132,9 +132,9 @@
           }
 
           .remove-btn {
-            background-color: var(--file-values-background, #5969e1);
+            background-color: var(--file-values-background);
             border-radius: 3em;
-            color: var(--file-values-font-color, #fff);
+            color: var(--file-values-font-color);
             display: flex;
             height: 1em;
             position: absolute;
@@ -156,8 +156,8 @@
 
           .overlay {
             align-items: center;
-            background-color: var(--file-overlay-background, #2a2a2a);
-            color: var(--file-overlay-font-color, #fff);
+            background-color: var(--file-overlay-background);
+            color: var(--file-overlay-font-color);
             cursor: pointer;
             display: flex;
             font-size: 1.9em;
@@ -168,8 +168,8 @@
             position: absolute;
             top: 0;
             transition:
-              opacity var(--file-transition-time, 0.3s) ease-in-out,
-              visibility 0s var(--file-transition-time, 0.3s) ease-in-out;
+              opacity var(--file-transition-time) ease-in-out,
+              visibility 0s var(--file-transition-time) ease-in-out;
             width: 100%;
 
             > span {
@@ -178,8 +178,8 @@
             }
 
             &:hover {
-              opacity: var(--file-overlay-opacity, 0.9);
-              transition: opacity var(--file-transition-time, 0.3s) ease-in-out;
+              opacity: var(--file-overlay-opacity);
+              transition: opacity var(--file-transition-time) ease-in-out;
             }
           }
         }

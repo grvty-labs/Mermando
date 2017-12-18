@@ -1,9 +1,9 @@
 .datetime-input {
   > .rdtPicker {
     animation: fade-out var(--datetime-transition-time) ease-in-out;
-    background-color: var(--datetime-background, #fafafa);
-    border-radius: var(--datetime-border-radius, 3px);
-    box-shadow: var(--datetime-box-shadow, none);
+    background-color: var(--datetime-background);
+    border-radius: var(--datetime-border-radius);
+    box-shadow: var(--datetime-box-shadow);
     left: 0;
     min-width: 100%;
     opacity: 0;
@@ -18,8 +18,8 @@
       width: 100%;
 
       thead {
-        background: var(--datetime-header-background, #5969e1);
-        color: var(--datetime-header-font-color, #fff);
+        background: var(--datetime-header-background);
+        color: var(--datetime-header-font-color);
 
         th {
           cursor: pointer;
@@ -57,8 +57,8 @@
       }
 
       tfoot {
-        background: var(--datetime-header-background, #5969e1);
-        color: var(--datetime-header-font-color, #fff);
+        background: var(--datetime-header-background);
+        color: var(--datetime-header-font-color);
         text-align: center;
 
         td {
@@ -73,14 +73,14 @@
         tbody {
           td {
             transition:
-              background var(--datetime-transition-time, 0.2s) ease-in-out,
-              border-radius var(--datetime-transition-time, 0.2s) ease-in-out;
+              background var(--datetime-transition-time) ease-in-out,
+              border-radius var(--datetime-transition-time) ease-in-out;
           }
 
           .rdtActive {
-            background: var(--datetime-selected-background, #5969e1);
+            background: var(--datetime-selected-background);
             border-radius: 3.125em;
-            color: var(--datetime-selected-font-color, #fff);
+            color: var(--datetime-selected-font-color);
           }
         }
       }
@@ -96,7 +96,7 @@
 
   &.rdtOpen {
     > .rdtPicker {
-      animation: fade-in var(--datetime-transition-time, 0.2s) ease-in-out;
+      animation: fade-in var(--datetime-transition-time) ease-in-out;
       opacity: 1;
       visibility: visible;
     }

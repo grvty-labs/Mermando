@@ -32,10 +32,10 @@
     "| 1px | 1fr |              300px - 1326px            | 1fr | 1px |     "
     "                                                                       "
     "                                                                       ";
-  max-height: var(--page-max-height, 100vh);
-  max-width: var(--page-max-width, 90vw);
+  max-height: var(--page-max-height);
+  max-width: var(--page-max-width);
   min-height: 100vh;
-  min-width: var(--page-max-width, 90vw);
+  min-width: var(--page-max-width);
   overflow: auto;
   position: absolute;
   right: 0;
@@ -49,7 +49,7 @@
 
     > :--button {
       align-items: center;
-      color: var(--page-back-button-font-color, #5969e1);
+      color: var(--page-back-button-font-color);
       display: flex;
       font-size: 0.75em;
       padding-left: 0;
