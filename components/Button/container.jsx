@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import ButtonComponent from './Button';
+import ButtonComponent from './button';
 
 type Props = {
   className?: string,
