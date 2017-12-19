@@ -23,10 +23,6 @@ export default class Section extends React.PureComponent<Props, State> {
     className: '',
     type: 'none',
   };
-  // constructor(props: Props) {
-  //   super(props);
-  // }
-
   state: State = {};
 
   render() {

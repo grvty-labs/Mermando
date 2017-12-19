@@ -1,6 +1,5 @@
 // @flow
 import * as React from 'react';
-import autobind from 'autobind-decorator';
 import Config from 'Config';
 import { Button } from '../Button';
 

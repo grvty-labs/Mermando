@@ -79,7 +79,7 @@ export default class TabbedSection extends React.PureComponent<Props, State> {
     };
     return (
       <Section
-        className={`tabbed ${className || ''}`}
+        className={`tabbed ${className || ''} ${zoneToRender.className || ''}`}
         title={title}
         topComponent={topComponent}
         middleComponent={this.renderTabs()}

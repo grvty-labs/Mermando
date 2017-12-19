@@ -178,17 +178,23 @@ export default class InputAtom extends React.PureComponent<Props, State> {
         ? messageType || ''
         : '';
 
+    const iconClassName = required && !forceInlineRequired
+      ? `${Config.mermando.icons.classPrefix}info`
+      : messageType !== 'text'
+        ? `${Config.mermando.icons.classPrefix}${messageType || ''}`
+        : '';
+
     if (label && (message || (required && !forceInlineRequired))) {
       return (
         <small className={className}>
-          <span className={`${Config.mermando.icons.classPrefix}${required && !forceInlineRequired ? 'info' : messageType || ''}`} />
+          <span className={iconClassName} />
           {message || 'Required field'}
         </small>
       );
     } else if (!label && message && forceMessageBeneath) {
       return (
         <small className={className}>
-          <span className={`${Config.mermando.icons.classPrefix}${messageType || ''}`} />
+          <span className={iconClassName} />
           {message}
         </small>
       );

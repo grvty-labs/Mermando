@@ -5,24 +5,34 @@ import RadioInput from './radio';
 import type { RadioType } from './radio';
 
 export type StoreProps = {
-  id: string,
+  id: string | number,
   value: string | number,
   options: Array<RadioType>,
+  className?: string,
+  type?: 'column' | 'inline',
 };
 export type Actions = {
   onChange: Function,
 };
 type Props = StoreProps & Actions;
 type State = {};
-type Default = {};
+type Default = {
+  className: string,
+  type?: 'column' | 'inline',
+};
 
 export default class RadioInputGroup extends React.Component<Props, State> {
-  static defaultProps: Default = {};
+  static defaultProps: Default = {
+    type: 'column',
+    className: '',
+  };
   state: State = {};
 
   @autobind
   renderRadio(radioData: RadioType, index: number) {
-    const { id, onChange, value } = this.props;
+    const {
+      id, onChange, value,
+    } = this.props;
     const newId = `${id}-${index}`;
     return (
       <RadioInput
@@ -37,9 +47,9 @@ export default class RadioInputGroup extends React.Component<Props, State> {
   }
 
   render() {
-    const { options } = this.props;
+    const { options, type, className } = this.props;
     return (
-      <div className='radio-group'>
+      <div className={`radio-group ${type || ''} ${className || ''}`}>
         { options.map(this.renderRadio) }
       </div>
     );
