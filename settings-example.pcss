@@ -1,0 +1,355 @@
+:root {
+  /* ==================== TEXTS ============================= */
+  --main-font: 'Inter-UI', sans-serif;
+  --titles-font: 'Inter-UI', sans-serif;
+  --secondary-font: none;
+  --global-font-size: 16px;
+  --global-lineheight: 1.5em;
+  --global-border-radius: 3px;
+
+  /* Action colours */
+  --success: var(--pigment-green);
+  --warning: var(--orange);
+  --alert: var(--trinidad);
+  --dunno: var(--white);
+
+  /* Specific uses colours */
+  /* Specify the color used for each UI component */
+  /* Use only variable, if not defined define it on custom pallette */
+  --body-font-color: var(--nero);
+  --body-background-color: var(--white);
+  --headers-font-color: var(--tolopea);
+  --headers-font-size-base: 2.303rem;
+  --headers-line-height-base: 1.2em;
+
+  /* Topbar */
+  --topbar-anchors-color: var(--han-purple);
+  --topbar-menu-font-size: 0.875rem;
+
+  /* Sidebar */
+  --sidebar-animation-open: 0.5s;
+  --sidebar-animation-close: 0.3s;
+  --sidebar-animation-text-show: 0.5s;
+  --sidebar-animation-text-show-delay: 0.3s;
+  --sidebar-animation-text-hide: 0.3s;
+  --sidebar-animation-text-hide-delay: 0.5s;
+  --sidebar-animation-overlay: 0.4s;
+  --sidebar-animation-overlay-delay: 0.4s;
+  --sidebar-head-background: var(--yellow);
+  --sidebar-body-background: var(--white-smoke);
+  --sidebar-link-font-color: var(--nero);
+  --sidebar-link-font: 'Inter-UI', sans-serif;
+  --sidebar-sm-width: 113px;
+  --sidebar-full-width: 113px;
+
+  /* --main-pane-background: var(--azure); */
+  /* --main-pane-content-background: var(--white); */
+  /* --overlay-background: var(--tundora); */
+  /* --overlapped-sections-background: var(--white); */
+
+  /* Links and anchors */
+  --links-main-font-color: var(--royal-blue);
+  --links-secondary-font-color: var(--mine-shaft);
+  --button-link-font-color-subtle: var(--dim-grey);
+  --button-link-font-color-info: var(--royal-blue);
+  --button-link-font-color-error: var(--torch-red);
+  --button-link-font-color-success: var(--ocean-green);
+
+  /* ==================== BUTTONS ============================= */
+  --button-boder-radius: 4px;
+  --button-font: 'Inter-UI', sans-serif;
+  --button-font-weight: normal;
+  --button-disabled-background: color(var(--tundora) alpha(-20%));
+  --button-disabled-font-color: color(var(--pale-sky) alpha(-20%));
+  --button-discrete-background: var(--chambray);
+  --button-discrete-font-color: var(--white);
+  --button-icon-hover-font-color: var(--royal-blue);
+  --button-link-background: transparent;
+  --button-link-font-color: var(--tolopea);
+  --button-main-background: var(--paris-daisy);
+  --button-main-font-color: var(--nero);
+  --button-secondary-background: var(--ocean-green);
+  --button-secondary-font-color: var(--white);
+  --button-small-font-size: 0.875em;
+  --button-small-padding: 0.571em 1.1428em;
+  --button-small-iconned-padding: 0.571em 1.1428em 0.571em 2.5714em;
+  --button-small-iconned-inverted-padding: 0.571em 2.5714em 0.571em 1.1428em;
+  --button-regular-font-size: 1em;
+  --button-regular-padding: 0.5em 1.5em;
+  --button-regular-iconned-padding: 0.5em 1.5em 0.5em 2.5em;
+  --button-regular-iconned-inverted-padding: 0.5em 2.5em 0.5em 1.5em;
+  --button-big-font-size: 1.25em;
+  --button-big-padding: 0.4em 1.2em;
+  --button-big-iconned-padding: 0.4em 0.666em 0.4em 2.8em;
+  --button-big-iconned-inverted-padding: 0.4em 2.8em 0.4em 0.666em;
+  --button-huge-font-size: 1.5em;
+  --button-huge-padding: 0.333em 1.0833em;
+  --button-huge-iconned-padding: 0.333em 0.666em 0.333em 2.7em;
+  --button-huge-iconned-inverted-padding: 0.333em 2.7em 0.333em 0.666em;
+  --button-transition: 0.3s;
+
+  /* ==================== CARDS ============================= */
+  --card-colors-brand: var(--han-purple);
+  --card-colors-accent: var(--han-purple);
+  --card-colors-success: var(--han-purple);
+  --card-colors-warning: var(--han-purple);
+  --card-colors-error: var(--han-purple);
+  --card-colors-info: var(--han-purple);
+  --card-colors-disabled: var(--han-purple);
+  --card-background: var(--white);
+  --card-border-color: var(--white-smoke);
+  --card-box-shadow: 0 2px 4px 0 rgba(12, 0, 51, 0.1);
+  --card-header-border-color: transparent;
+  --card-content-font-color: var(--pink-swan);
+  --card-footer-font-color: var(--pink-swan);
+  --card-hover-box-shadow:
+    0 12px 20px 0 rgba(26, 26, 26, 0.07),
+    0 0 6px 2px rgba(0, 0, 0, 0.05);
+  --card-transitions-time: 0.2s;
+  --card-ribbon-width: 4px;
+
+  /* ==================== TIMELINE ============================= */
+  --timeline-events-gap-size: 2em;
+  --event-background: var(--white);
+  --event-border-color: var(--white-smoke);
+  --event-date-font-color: var(--suva-grey);
+  --event-status-line-color: var(--whisper-2);
+  --event-status-pending-background: var(--white);
+  --event-status-pending-icon: '';
+  --event-status-pending-font-color: var(--white);
+  --event-status-pending-border-color: var(--ocean-green);
+  --event-status-completed-background: var(--ocean-green);
+  --event-status-completed-icon: '\e950';
+  --event-status-completed-font-color: var(--white);
+  --event-status-completed-border-color: var(--ocean-green);
+
+  /* ==================== FORMS ============================= */
+  /* Labels */
+  --label-font-color: var(--dim-grey);
+
+  /* Inputs (text, number, password) */
+  --input-action-background: var(--snow);
+  --input-border-color: var(--nobel);
+  --input-border-radius: 3px;
+  --input-border-sizes: 1px;
+  --input-disabled-background: var(--white-liliac);
+  --input-disabled-border-color: var(--white-liliac);
+  --input-error-border-color: var(--torch-red);
+  --input-focus-border-color: var(--han-purple);
+  --input-font-color: var(--tolopea);
+  --input-hover-border-color: var(--spun-pearl);
+  --input-inline-symbols-size: 1.5em;
+  --input-padding: 0.5em;
+  --input-placeholder-font-color: var(--light-grey);
+  --input-required-symbol-color: var(--royal-blue);
+  --input-required-symbol-font-size: 1em;
+  --input-transition-time: 0.4s;
+
+  /* Input messages */
+  --input-small-font-color-base: var(--french-grey);
+  --input-small-font-color-subtle: var(--french-grey);
+  --input-small-font-color-info: var(--han-purple);
+  --input-small-font-color-error: var(--torch-red);
+  --input-small-font-color-success: var(--caribbean-green);
+
+  /* Select */
+  --select-angle-font-color: var(--han-purple);
+  --select-menu-background: var(--azure);
+  --select-options-border-radius: 3px;
+  --select-options-box-shadow: 0 8px 16px 0 rgba(82, 97, 115, 0.18);
+  --select-options-hover-background: var(--zircon);
+  --select-values-background: var(--han-purple);
+  --select-values-font-color: var(--whisper);
+  --select-transition-time: 0.2s;
+
+  /* Checkboxes - TODO */
+  --checkbox-border-color: var(--blue-haze);
+  --checkbox-border-sizes: 2px;
+  --checkbox-border-radius: 4px;
+  --checkbox-checked-base-width: 3px;
+  --checkbox-checked-color: var(--han-purple);
+  --checkbox-size: 1.35em;
+
+  /* Radio */
+  --radio-border-color: var(--han-purple);
+  --radio-border-sizes: 0.125em;
+  --radio-checked-border-width: 0.5em;
+  --radio-checked-color: var(--han-purple);
+  --radio-size: 1.35em;
+
+  /* Datetime Pickers */
+  --datetime-background: var(--snow);
+  --datetime-border-radius: 3px;
+  --datetime-box-shadow: 0 8px 16px 0 rgba(82, 97, 115, 0.18);
+  --datetime-header-background: var(--royal-blue);
+  --datetime-header-font-color: var(--white);
+  --datetime-selected-background: var(--royal-blue);
+  --datetime-selected-font-color: var(--white);
+  --datetime-transition-time: 0.2s;
+
+  /* File Uploader */
+  --file-images-background: var(--hint-of-red);
+  --file-values-background: var(--royal-blue);
+  --file-values-font-color: var(--white);
+  --file-values-font-size: 0.75em;
+  --file-readonly-font-color: var(--royal-blue);
+  --file-overlay-background: var(--mine-shaft);
+  --file-overlay-font-color: var(--white);
+  --file-overlay-opacity: 0.9;
+  --file-reject-base-color: var(--torch-red);
+  --file-reject-font-color: var(--tolopea);
+  --file-reject-background-color: var(--pig-pink);
+  --file-reject-border-color: var(--torch-red);
+  --file-transition-time: 0.3s;
+
+  /* Tags */
+  --tag-background-color: var(--paris-daisy);
+  --tag-font-color: var(--nero);
+  --tag-remove-background-color: var(--paris-daisy);
+  --tag-remove-font-color: var(--nero);
+  --tag-suggestion-background: var(--snow);
+  --tag-suggestion-border-radius: 3px;
+  --tag-suggestion-box-shadow:
+    0 12px 20px 0 rgba(26, 26, 26, 0.07),
+    0 0 6px 2px rgba(0, 0, 0, 0.05);
+  --tag-suggestion-hover-background: var(--white-smoke);
+  --tag-transition-time: 0.2s;
+
+  /* ==================== SECTION ============================ */
+  --section-tab-border-width: 3px;
+  --section-tab-color: var(--light-grey);
+  --section-tab-hover-color: var(--french-grey);
+  --section-tab-selected-color: var(--nero);
+
+  /* ==================== PAGES ============================ */
+  --page-back-button-font-color: var(--royal-blue);
+  --page-tab-border-width: 3px;
+  --page-tab-color: var(--light-grey);
+  --page-tab-hover-color: var(--french-grey);
+  --page-tab-selected-color: var(--nero);
+  --page-enter-time: 0.3s;
+  --page-max-height: 100vh;
+  --page-max-width: 100vw;
+
+  /* --- Lightboxes ----- */
+  --lightbox-overlay-background: color(var(--mine-shaft) alpha(75%));
+  --lightbox-background: var(--white);
+  --lightbox-title-color: var(--nero);
+  --lightbox-header-border-color: var(--gainsboro);
+  --lightbox-transition-time: 0.3s;
+
+  /* --- Sticky ----- */
+  --sticky-showbtn-background: rgba(74, 74, 74, 0.8);
+  --sticky-showbtn-color: var(--white);
+  --sticky-border-radius: 3px;
+  --sticky-background: var(--white);
+  --sticky-box-shadow:
+    0 12px 20px 0 rgba(26, 26, 26, 0.07),
+    0 0 6px 2px rgba(0, 0, 0, 0.05);
+  --sticky-header-border-color: var(--whisper-3);
+  --sticky-transition-time: 0.2s;
+
+  /* ==================== MENUS ============================ */
+  /* --- Contextual ----- */
+  --contextual-background: var(--snow);
+  --contextual-box-shadow: 0 8px 16px 0 rgba(82, 97, 115, 0.18);
+  --contextual-dropdown-font-size: 0.75em;
+  --contextual-icon-color: var(--blue-haze);
+  --contextual-icon-hover-color: var(--royal-blue);
+  --contextual-item-hover-background: var(--white-smoke);
+  --contextual-item-border-color: var(--whisper-2);
+  --contextual-item-line-color: var(--whisper-3);
+  --contextual-title-font-color: var(--nero);
+  --contextual-transition-appear-time: 0.3s;
+
+  /* --- Dropdowns ----- */
+  --dropdown-background: var(--snow);
+  --dropdown-icon-color: var(--blue-haze);
+  --dropdown-icon-hover-color: var(--royal-blue);
+  --dropdown-item-hover-background: var(--white-smoke);
+  --dropdown-item-border-color: var(--whisper-2);
+  --dropdown-title-font-color: var(--nero);
+  --dropdown-dropdown-font-size: 0.75em;
+  --dropdown-transition-appear-time: 0.3s;
+  --dropdown-box-shadow:
+    0 12px 20px 0 rgba(26, 26, 26, 0.07),
+    0 0 6px 2px rgba(0, 0, 0, 0.05);
+
+  /* ==================== TABLES ============================ */
+  --table-header-background: transparent;
+  --table-header-font-color: var(--light-grey);
+  --table-header-font-size: 0.875em;
+  --table-body-background: transparent;
+  --table-body-font-color: var(--nero);
+  --table-body-font-size: 1em;
+  --table-row-border-color: var(--geyser);
+  --table-row-hover-background: var(--white-smoke-2);
+  --table-row-border-width: 0;
+  --table-row-padding: 0.75em 1em;
+
+  /* Pagination */
+  --pagination-action-color: var(--white);
+  --pagination-action-background: color(var(--boston-blue) l(+10%));
+  --pagination-active-color: var(--white);
+  --pagination-active-background: var(--boston-blue);
+  --pagination-disabled-color: color(var(--white) shade(15%));
+  --pagination-disabled-background: var(--gray);
+  --pagination-li-color: var(--boston-blue);
+  --pagination-li-background: var(--white);
+
+  /* ==================== ICONS ============================ */
+  @custom-selector :--icons-class .symbolicon;
+  @custom-selector :--icons-required-class .required;
+
+  --icons-font-family: 'SymboliconAir';
+  --icons-remove-unicode: "\e95b";
+  --icons-angle-left-unicode: "\ea08";
+
+  /* ==================== TOASTR ============================ */
+  --toastr-shadow: color(var(--mine-shaft) alpha(-80%));
+  --toastr-success-color: var(--success);
+  --toastr-warning-color: var(--warning);
+  --toastr-alert-color: var(--alert);
+  --toastr-info-color: var(--boston-blue);
+  --toastr-default-color: var(--pale-sky);
+  --toastr-top: 2rem;
+  --toastr-width: 50vw;
+  --toastr-opacity: 85;
+
+  /* ==================== ZINDEX =========================== */
+  --lightbox-zindex: 7;
+  --modals-zindex: 7;
+  --page-zindex: 6;
+  --sidebar-zindex: 5;
+  --toastr-zindex: 10;
+
+  /* ==================== GRID ============================ */
+  --hd-grid: 19;
+  --desktop-grid: 15;
+  --tablet-grid: 13;
+  --mobile-grid: 7;
+
+  /* ==================== GUTTERS ============================ */
+  --hd-gutter: 24px;
+  --desktop-gutter: 24px;
+  --tablet-gutter: 12px;
+  --mobile-gutter: 12px;
+  --box-shadow-side:
+    0 8px 38px rgba(0, 0, 0, 0.25),
+    0 6px 12px rgba(0, 0, 0, 0.22);
+}
+
+/* Custom selectors */
+@custom-selector :--any-link :link, :visited;
+@custom-selector :--button .button;
+@custom-selector :--disabled .disabled, :disabled;
+@custom-selector :--enter-action :focus, :active, .active, .focus;
+@custom-selector :--headers h1,h2,h3,h4,h5,h6;
+@custom-selector :--inputs input, textarea, select, .select-input, .file-input, .tags-input, .input-sham;
+@custom-selector :--text-container span, p, a;
+
+/* Media Queries */
+@custom-media --hd-screens (width >= 1440px);
+@custom-media --desktop-screens (width >= 1024px) and (width < 1440px);
+@custom-media --tablet-screens (width >= 768px) and (width < 1024px);
+@custom-media --mobile-screens (width < 768px);
