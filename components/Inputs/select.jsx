@@ -6,10 +6,11 @@ import InputAtom from './input-atom';
 
 export type Value = string | number | Array<string | number>;
 
-type Options = {
+export type Option = {
   display: string | number,
   value: string | number,
-  options?: Array<Options>,
+  options?: Array<Option>,
+  [key: string]: any,
 };
 
 type Props = {
@@ -23,13 +24,15 @@ type Props = {
   leftIcon?: string,
 
   type?: 'single' | 'multiple',
-  options: Array<Options>,
+  options: Array<Option>,
   placeholder?: string,
   required?: boolean,
   editable?: boolean,
   disabled?: boolean,
 
   onChange: Function,
+  onFocus?: Function,
+  onBlur?: Function,
 };
 
 type Default = {
@@ -104,8 +107,10 @@ export default class Select extends React.PureComponent<Props, State> {
     if (type === 'multiple' && editable && !disabled) {
       const casted = (value: Array<string | number>);
       if (index >= 0) {
-        casted.splice(index, 1);
-        this.props.onChange(casted);
+        this.props.onChange([
+          ...casted.slice(0, index),
+          ...casted.slice(index + 1),
+        ]);
       }
     }
   }
@@ -144,7 +149,7 @@ export default class Select extends React.PureComponent<Props, State> {
         className={`options ${showOptionsLevel > 0 ? 'open' : ''}`}
         ref={(node) => { this.node = node; }}
       >
-        {options.map((option: Options, index: number) => (
+        {options.map((option: Option, index: number) => (
           <span
             key={index}
             onClick={option.options
@@ -181,14 +186,16 @@ export default class Select extends React.PureComponent<Props, State> {
       return (
         <div className='value multiple'>
           {optsFiltered.map((opt, i) => (
-            <span
-              key={i}
-              onClick={() => this.onRemoveIndex(i)}
-              onKeyPress={() => this.onRemoveIndex(i)}
-              tabIndex={!disabled && editable ? 0 : -1}
-              role='menuitem'
-            >
+            <span key={i}>
               {opt.display}
+              <span
+                className='remove-btn'
+                onClick={() => this.onRemoveIndex(i)}
+                onKeyPress={() => this.onRemoveIndex(i)}
+                tabIndex={!disabled && editable ? 0 : -1}
+                role='button'
+                title='Remove from selection'
+              />
             </span>
           ))}
         </div>
@@ -212,6 +219,9 @@ export default class Select extends React.PureComponent<Props, State> {
       leftIcon,
       editable,
       disabled,
+      value,
+      onFocus,
+      onBlur,
     } = this.props;
 
     // TODO: Change for react-autocomplete
@@ -224,13 +234,18 @@ export default class Select extends React.PureComponent<Props, State> {
         className={className}
         leftIcon={leftIcon}
         required={required}
-        rightIcon='angle'
+        type='select'
+        readOnly={!editable}
+        disabled={disabled}
+        empty={!value || (value.constructor === Array && value.length === 0)}
+        invalid={messageType === 'error'}
+        onClick={this.handleClick}
+        onFocus={onFocus}
+        onBlur={onBlur}
       >
         <div
           id={id}
-          className={`select ${disabled ? 'disabled' : ''} ${!editable ? 'blocked' : ''}`}
-          onClick={this.handleClick}
-          onKeyPress={this.handleClick}
+          className={`select-input ${disabled ? 'disabled' : ''} ${!editable ? 'blocked' : ''}`}
           tabIndex={!disabled && editable ? 0 : -1}
           role='button'
         >

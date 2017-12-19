@@ -13,13 +13,18 @@
     "|     |     +----------------------------------------+     |     | ----"
     "|     |     +----------------------------------------+     |     | ----"
     "|     |     |                                        |     |     |     "
+    "|     |     |             ← >.middle →               |     |     | auto"
+    "|     |     |                                        |     |     |     "
+    "|     |     +----------------------------------------+     |     | ----"
+    "|     |     +----------------------------------------+     |     | ----"
+    "|     |     |                                        |     |     |     "
     "|     |     |                                        |     |     |     "
     "|     |     |             ← >.content →              |     |     | auto"
     "|     |     |                   ↑                    |     |     |     "
     "|     |     |                                        |     |     |     "
     "+-----+     +----------------------------------------+     +-----+ ----"
     "                                                                       "
-    "                                                                    1fr"
+    "                                                                   30vh"
     "                                                                       "
     "+----------------------------------------------------------------+ ----"
     "|                                                                | 10fr"
@@ -27,37 +32,39 @@
     "| 1px | 1fr |              300px - 1326px            | 1fr | 1px |     "
     "                                                                       "
     "                                                                       ";
-  max-height: 100vh;
-  max-width: var(--page-max-width, 90vw);
+  max-height: var(--page-max-height);
+  max-width: var(--page-max-width);
   min-height: 100vh;
-  min-width: var(--page-max-width, 90vw);
+  min-width: var(--page-max-width);
   overflow: auto;
   position: absolute;
   right: 0;
   top: 0;
-  z-index: 6;
+  z-index: var(--page-zindex);
 
   > .top {
     align-items: center;
     display: flex;
-    margin: 0 2.6875rem;
+    margin: 0 2.6875em;
 
-    > button {
+    > :--button {
       align-items: center;
-      color: var(--page-back-button-font-color, #5969e1);
+      color: var(--page-back-button-font-color);
       display: flex;
+      font-size: 0.75em;
       padding-left: 0;
+      width: auto;
 
       &::before {
-        content: "\ea08";
-        font-family: 'SymboliconAir' !important;
-        font-size: 0.7em;
+        content: var(--icons-angle-left-unicode);
+        font-family: var(--icons-font-family) !important;
+        font-size: 0.75em;
         font-smoothing: antialiased;
         font-style: normal;
         font-variant: normal;
         font-weight: normal;
         line-height: 1;
-        margin-right: 0.5rem;
+        margin-right: 0.75em;
         speak: none;
         text-transform: none;
       }
@@ -66,68 +73,92 @@
 
   > .header {
     align-items: center;
-    border-bottom: 1px solid var(--gainsboro, #dcdcdc);
     display: flex;
-    padding: 0 2.6875rem 1.625rem;
+    padding: 0 2.75em 1.5em;
 
-    h3 {
-      font-weight: normal;
-      margin: 0 1.5rem 0 0;
-    }
-
-    > .button-container {
-      margin-left: auto;
+    > .title {
+      font-size: 1.5em;
+      margin: 0 1.5em 0 0;
     }
   }
 
-  > .content {
-    margin: 1.5rem 2.6875rem;
+  > .middle {
+    border-bottom: 1px solid var(--gainsboro);
+    display: flex;
+    font-size: 0.875em;
+    height: 2px;
 
-    > .legend {
-      margin-bottom: 1.5rem;
+    &:not(:empty) {
+      height: auto;
+      padding: 0 2.6875em;
     }
 
-    &.separated-rows {
-      > div {
-        padding-top: 1.5rem;
+    > .tab {
+      border-bottom: var(--page-tab-border-width) solid transparent;
+      color: var(--page-tab-color);
+      cursor: pointer;
+      margin-right: 0.6428em;
+      min-width: 5.782em;
+      outline: none;
+      padding: 0.5em;
+      text-align: center;
+      text-transform: uppercase;
+      transition: opacity 0.3s;
 
-        &:not(:empty),
-        &:not(:last-of-type) {
-          border-bottom: 1px solid var(--whisper-3, #ededed);
-          padding-bottom: 1.5rem;
-        }
+      &:not(:first-of-type) {
+        margin-left: 0.6428em;
+      }
+
+      &:hover,
+      &:--enter-action {
+        border-bottom-color: var(--page-tab-hover-color);
+        color: var(--page-tab-hover-color);
+      }
+
+      &.selected {
+        border-bottom-color: var(--page-tab-selected-color);
+        color: var(--page-tab-selected-color);
+        font-weight: bold;
       }
     }
   }
 
+  > .content {
+    margin: 1.5em 2.6875em;
+
+    > .legend {
+      &:not(:empty) {
+        margin-bottom: 1.5em;
+      }
+    }
+
+    &.separated-rows {
+      > div {
+        border-bottom: 1px solid var(--whisper-3);
+        padding-bottom: 1.5em;
+        padding-top: 1.5em;
+
+        &:empty,
+        &:last-of-type {
+          border-width: 0;
+          padding-bottom: 0;
+        }
+      }
+    }
+
+    &.split {
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+
   &.open {
-    animation: push-in var(--page-enter-time, 0.3s) ease-out;
+    animation: push-in var(--page-enter-time) ease-out;
     right: 0;
   }
 
   &.close {
-    animation: push-out var(--page-enter-time, 0.3s) ease-out;
-    right: -100vw;
-  }
-}
-
-@keyframes push-in {
-  0% {
-    right: -100vw;
-  }
-
-  100% {
-    right: 0;
-  }
-}
-
-@keyframes push-out {
-  0% {
-    overflow: hidden;
-    right: 0;
-  }
-
-  100% {
+    animation: push-out var(--page-enter-time) ease-out;
     right: -100vw;
   }
 }

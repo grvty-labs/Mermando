@@ -1,16 +1,17 @@
 // @flow
 import * as React from 'react';
 import autobind from 'autobind-decorator';
-import Button from '../Button';
+import { Button } from '../Button';
 
 export type StoreProps = {
   className?: string,
-  title: string,
+  title?: string,
+  legend?: string,
   backText?: string,
-  type?: string,
   topComponent?: React.Node | Array<React.Node>,
+  middleComponent?: React.Node | Array<React.Node>,
   children: React.Node | Array<React.Node>,
-  type?: 'separated-rows',
+  type?: 'separated-rows' | 'split' | 'none',
 };
 export type Actions = {
   onBackClick: Function,
@@ -22,7 +23,7 @@ type State = {
 };
 type Default = {
   className: string,
-  type: string,
+  type?: 'separated-rows' | 'split' | 'none',
   backText: string,
 };
 
@@ -45,7 +46,8 @@ export default class Page extends React.PureComponent<Props, State> {
 
   render() {
     const {
-      backText, className, children, title, topComponent, type,
+      backText, className, children, legend, title, topComponent, type,
+      middleComponent,
     } = this.props;
     const { close } = this.state;
 
@@ -57,10 +59,22 @@ export default class Page extends React.PureComponent<Props, State> {
           </Button>
         </div>
         <div className='header'>
-          <h3>{title}</h3>
+          {
+            title
+              ? <span className='title'>{title}</span>
+              : null
+          }
           {topComponent}
         </div>
+        <div className='middle'>
+          {middleComponent}
+        </div>
         <div className={`content ${type || ''}`}>
+          {
+            legend
+              ? <span className='legend'>{legend}</span>
+              : null
+          }
           {children}
         </div>
       </div>

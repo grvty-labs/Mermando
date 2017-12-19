@@ -1,4 +1,4 @@
-button {
+:--button {
   &.main,
   &.secondary,
   &.discrete {
@@ -10,7 +10,7 @@ button {
     text-transform: none;
   }
 
-  & + button {
+  & + :--button {
     margin-left: 26px;
   }
 }
@@ -18,13 +18,15 @@ button {
 table {
   thead {
     text-transform: uppercase;
+
+    th {
+      font-weight: normal;
+    }
   }
 
   tbody {
-    font-weight: 700;
-
     .checkbox {
-      font-size: 1rem;
+      font-size: 1em;
     }
   }
 }

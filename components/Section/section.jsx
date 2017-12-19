@@ -7,7 +7,7 @@ export type StoreProps = {
   topComponent?: React.Node | Array<React.Node>,
   middleComponent?: React.Node | Array<React.Node>,
   children: React.Node | Array<React.Node>,
-  type?: 'cards-panel' | 'none' | 'separated-rows',
+  type?: 'cards-panel' | 'none' | 'separated-rows' | 'split',
 };
 export type Actions = {};
 
@@ -15,7 +15,7 @@ type Props = StoreProps & Actions;
 type State = {};
 type Default = {
   className: string,
-  type: 'cards-panel' | 'none' | 'separated-rows',
+  type: 'cards-panel' | 'none' | 'separated-rows' | 'split',
 };
 
 export default class Section extends React.PureComponent<Props, State> {
@@ -23,10 +23,6 @@ export default class Section extends React.PureComponent<Props, State> {
     className: '',
     type: 'none',
   };
-  // constructor(props: Props) {
-  //   super(props);
-  // }
-
   state: State = {};
 
   render() {
@@ -37,7 +33,7 @@ export default class Section extends React.PureComponent<Props, State> {
     return (
       <div className={`section ${className || ''}`}>
         <div className='header'>
-          <h3>{title}</h3>
+          <span className='title'>{title}</span>
           {topComponent}
         </div>
         <div className='middle'>

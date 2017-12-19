@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
-import autobind from 'autobind-decorator';
-import Button from '../Button';
+import Config from 'Config';
+import { Button } from '../Button';
 
 export type Props = {
   className?: string,
@@ -18,7 +18,7 @@ type Default = {
 export default class Notifications extends React.PureComponent<Props, State> {
   static defaultProps: Default = {
     className: '',
-    icon: 'overflow',
+    icon: `${Config.mermando.icons.contextualButton}`,
   };
 
   render() {

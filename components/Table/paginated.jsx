@@ -17,7 +17,7 @@ export default class PaginatedTable extends React.PureComponent<Props, void> {
   render() {
     const { paginationNode, ...pureTable } = this.props;
     return (
-      <div>
+      <div className='paginated-table'>
         <Table {...pureTable} />
         { paginationNode }
       </div>

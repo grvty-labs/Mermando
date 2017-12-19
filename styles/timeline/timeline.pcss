@@ -1,0 +1,10 @@
+.timeline {
+  display: flex;
+  flex-direction: column;
+
+  > .event {
+    &:not(:last-of-type) {
+      margin-bottom: var(--timeline-events-gap-size);
+    }
+  }
+}

@@ -1,99 +1,79 @@
-.input {
-  > .tags {
-    padding-bottom: 0;
+.input-sham {
+  &.tags-sham {
+    padding: calc(var(--input-padding) - 0.25em) var(--input-padding);
     position: relative;
 
-    > .inputEmul {
-      align-items: center;
-      display: flex;
-      flex-wrap: wrap;
-      min-height: 2em;
+    > .tags {
+      padding-bottom: 0;
+      width: 100%;
 
-      > .tag {
+      > .inputEmul {
         align-items: center;
-        background-color: var(--tag-background-color, #5969e1);
-        border-radius: 3em;
-        color: var(--tag-font-color, #fff);
-        content: '';
         display: flex;
-        font-size: 0.75em;
-        font-weight: bold;
-        justify-content: center;
-        margin-bottom: 0.666em;
-        margin-right: 1em;
-        padding: 0.333em 0.666em;
+        flex-wrap: wrap;
+        min-height: 2em;
 
-        > .remove {
+        > .tag {
           align-items: center;
-          color: transparent;
-          cursor: pointer;
+          background-color: var(--tag-background-color);
+          border-radius: 3em;
+          color: var(--tag-font-color);
+          content: '';
           display: flex;
+          font-size: 0.75em;
+          font-weight: bold;
           justify-content: center;
-          position: relative;
+          margin: 0.333em 1em 0.333em 0;
+          padding: 0.333em 0.666em;
 
-          &::after {
-            align-items: center;
-            background-color: var(--tag-remove-background-color, #5969e1);
-            border-radius: 3em;
-            color: var(--tag-remove-font-color, #fff);
-            content: "\e95b";
-            display: flex;
-            font-family: 'SymboliconAir' !important;
-            font-size: 0.5em;
-            font-smoothing: antialiased;
-            font-style: normal;
-            font-variant: normal;
-            font-weight: normal;
-            height: 2em;
-            justify-content: center;
-            line-height: 1;
-            speak: none;
-            text-align: center;
-            text-transform: none;
-            width: 2em;
+          > .remove-btn::after {
+            margin-left: 0;
           }
         }
-      }
 
-      > .inputLine {
-        > .inputField {
-          background-color: transparent;
-          border: 0;
-          margin-bottom: 0.5em;
-          padding: 0;
-          width: auto;
-        }
+        > .inputLine {
+          flex: 1;
+          margin: 0.25em 0;
+          min-width: 12em;
 
-        > .suggestions {
-          animation: fade-in var(--tag-transition-time, 0.2s) ease-in-out;
-          background-color: var(--tag-suggestion-background, #fafafa);
-          border-radius: var(--tag-suggestion-border-radius, 3px);
-          box-shadow: var(--tag-suggestion-box-shadow, none);
-          left: 0;
-          min-width: 100%;
-          overflow: hidden;
-          position: absolute;
-          top: 100%;
-          z-index: 1;
-
-          > ul {
-            list-style: none;
-            margin: 0;
+          > .inputField {
+            background-color: transparent;
+            border: 0;
             padding: 0;
+            width: 100%;
+          }
 
-            > li {
-              cursor: pointer;
-              padding: 0.666em 0.75em;
+          > .suggestions {
+            animation: fade-in var(--tag-transition-time) ease-in-out;
+            background-color: var(--tag-suggestion-background);
+            border-radius: var(--tag-suggestion-border-radius);
+            box-shadow: var(--tag-suggestion-box-shadow);
+            left: 0;
+            min-width: 100%;
+            overflow: hidden;
+            position: absolute;
+            top: 100%;
+            z-index: 1;
 
-              &:hover {
-                background-color: var(--tag-suggestion-hover-background, #f2f2f2);
+            > ul {
+              list-style: none;
+              margin: 0;
+              padding: 0;
+
+              > li {
+                cursor: pointer;
+                padding: 0.666em 0.75em;
+
+                &:hover {
+                  background-color: var(--tag-suggestion-hover-background);
+                }
               }
             }
-          }
 
-          /*.active {
-            background: var(--royal-blue);
-          }*/
+            /*.active {
+              background: var(--royal-blue);
+            }*/
+          }
         }
       }
     }

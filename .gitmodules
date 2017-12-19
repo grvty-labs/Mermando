@@ -1,6 +1,3 @@
 [submodule "styles/waddles"]
 	path = styles/waddles
 	url = https://github.com/grvty-labs/Waddles
-[submodule "components/grunkle"]
-	path = components/grunkle
-	url = https://github.com/grvty-labs/Grunkle

@@ -1,0 +1,17 @@
+{
+  "mermando": {
+    "icons": {
+      "classPrefix": "symbolicon ",
+      "close": "close",
+      "colorInput": "hashtag",
+      "contextualButton": "overflow",
+      "dateInput": "calendar",
+      "datetimeInput": "calendar-check",
+      "fileInput": "cloud-upload",
+      "requiredInput": "required",
+      "selectInput": "angle",
+      "showButton": "eye",
+      "zoom": "zoom"
+    }
+  }
+}

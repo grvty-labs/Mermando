@@ -2,6 +2,7 @@
 /* eslint react/no-unused-prop-types: [0] */
 /* eslint consistent-return: [0] */
 import * as React from 'react';
+import autobind from 'autobind-decorator';
 import { CheckboxInput } from '../Inputs';
 import { Contextual } from '../Menu';
 import type {
@@ -19,7 +20,7 @@ export type PureTableProps = {
   // Posible componente de react para mostrar el botón de hotdog que va en cada row
   hotdogIcon?: React.Node,
   // Puedes seleccionar 1 o más elementos de la tabla
-  selectable: boolean,
+  selectable?: boolean,
 
   singleItemActionIcon?: React.Node,
 };
@@ -51,26 +52,18 @@ type State = {
 /**
  * Componente responsable solamente de desplegar la tabla de datos
  */
-export default class Table extends React.PureComponent<Props, State> {
+export default class Table extends React.Component<Props, State> {
   static defaultProps: Default = {
     selectable: false,
     className: 'pure-table',
   };
-
-  constructor(props: Props) {
-    super(props);
-    (this: any).toggleItemHotdog = this.toggleItemHotdog.bind(this);
-    (this: any).renderActions = this.renderActions.bind(this);
-    (this: any).renderHeader = this.renderHeader.bind(this);
-    (this: any).renderItem = this.renderItem.bind(this);
-    (this: any).rowCheckClick = this.rowCheckClick.bind(this);
-  }
 
   state: State = {
     itemHotdogActive: -1,
     selected: {},
   };
 
+  @autobind
   toggleItemHotdog(itemIndex: number) {
     this.setState({
       itemHotdogActive: itemIndex !== this.state.itemHotdogActive
@@ -79,12 +72,14 @@ export default class Table extends React.PureComponent<Props, State> {
     });
   }
 
+  @autobind
   rowCheckClick(id: string, value: boolean) {
     const { selected } = this.state;
     selected[id] = value;
     this.setState({ selected });
   }
 
+  @autobind
   renderActions(id: number | string, actions: Array<ItemAvailableAction>) {
     const { onSingleItemActions } = this.props;
     const actionsRender = actions.map((action, index) => {
@@ -106,13 +101,16 @@ export default class Table extends React.PureComponent<Props, State> {
     return actionsRender;
   }
 
+  @autobind
   renderHeader(element: Header) {
     return (
       <th key={element.key}>{ element.text }</th>
     );
   }
 
+  @autobind
   renderItem(element: Item, index: number) {
+    const { onSingleItemActions } = this.props;
     const { headers, selectable } = this.props;
     const { selected } = this.state;
     const key = `checkbox-${index}`;
@@ -131,14 +129,19 @@ export default class Table extends React.PureComponent<Props, State> {
         }
         { headers.map((header, ind) => (
           <td key={ind}>
-            <span>{ element[header.key] }</span>
+            <span>{element[header.key]}</span>
           </td>))
         }
-        <td>
-          <Contextual>
-            { this.renderActions(element.id, element.actions)}
-          </Contextual>
-        </td>
+        { onSingleItemActions
+          ? (
+            <td>
+              <Contextual>
+                { this.renderActions(element.id, element.actions)}
+              </Contextual>
+            </td>
+          )
+          : null
+        }
       </tr>
     );
   }
@@ -161,7 +164,10 @@ export default class Table extends React.PureComponent<Props, State> {
           <tr>
             { !selectable ? null : <th />}
             { headersRender }
-            <th />
+            { onSingleItemActions
+              ? <th />
+              : null
+            }
           </tr>
         </thead>
         <tbody>

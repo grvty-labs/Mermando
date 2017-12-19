@@ -1,11 +1,19 @@
 .card {
   align-items: baseline;
-  background-color: var(--white, #fff);
-  box-shadow: 0 2px 4px 0 rgba(12, 0, 51, 0.1);
+  background-color: var(--card-background);
+  border: 1px solid var(--card-border-color);
+  box-shadow: var(--card-box-shadow);
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  margin-bottom: 1.25rem;
+  outline: none;
+  padding: 0;
+  text-align: start;
+  transition: box-shadow var(--card-transitions-time) ease-in-out;
+
+  &.hasAction {
+    cursor: pointer;
+  }
 
   > .header {
     align-items: center;
@@ -13,7 +21,7 @@
     justify-content: space-between;
     width: 100%;
 
-    h5 {
+    > .title {
       margin-bottom: 0;
     }
 
@@ -22,18 +30,26 @@
     }
 
     &:not(:empty) {
-      border-bottom: 2px solid var(--whisper, #e5e5e5);
-      padding-bottom: 5px;
+      border-bottom: 2px solid var(--card-header-border-color);
+      padding-bottom: 0.3125em;
     }
   }
 
   > .content {
-    color: var(--blue-haze);
+    color: var(--card-content-font-color);
     width: 100%;
 
-    &:not(:empty) {
-      padding-top: 35px;
+    > .icon {
+      font-size: 4.625em;
+      height: 1em;
+      margin-bottom: 0.16em;
+      width: 1em;
     }
+  }
+
+  > .footer {
+    color: var(--card-footer-font-color);
+    width: 100%;
   }
 
   &.normal {
@@ -52,7 +68,8 @@
     align-items: center;
     justify-content: center;
 
-    > .content {
+    > .content,
+    > .footer {
       align-items: center;
       display: flex;
       flex-direction: column;
@@ -61,17 +78,9 @@
     }
   }
 
-  > .footer {
-    width: 100%;
-
-    &:not(:empty) {
-      padding-top: 30px;
-    }
-  }
-
   &.ribbon {
     border-style: solid;
-    border-width: 0 0 0 4px;
+    border-width: 0 0 0 var(--card-ribbon-width);
 
     &.brand {
       border-color: var(--card-colors-brand);
@@ -103,29 +112,50 @@
   }
 
   &.small {
-    font-size: 0.75rem;
-    padding: 1rem 0.75rem;
+    padding: 1em 0.75em;
 
     > .header {
       border: none;
     }
 
     > .content {
-      padding-top: 0;
+      font-size: 0.75em;
+    }
+
+    > .footer {
+      font-size: 0.75em;
+
+      &:not(:empty) {
+        padding-top: 0.5em;
+      }
     }
   }
 
   &.medium {
-    font-size: 1rem;
+    font-size: 1em;
+    padding: 1em 0.75em;
+
+    > .footer {
+      font-size: 0.875em;
+
+      &:not(:empty) {
+        padding-top: 0.3em;
+      }
+    }
   }
 
   &.large {
-    padding: 1.25rem 1.1875rem;
+    padding: 1.25em 1.1875em;
 
     > .content {
       > table {
         width: 100%;
       }
     }
+  }
+
+  &:--enter-action,
+  &:hover {
+    box-shadow: var(--card-hover-box-shadow);
   }
 }

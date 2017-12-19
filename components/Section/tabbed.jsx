@@ -14,6 +14,7 @@ export type StoreProps = {
   title: string,
   className?: string,
   topComponent?: React.Node | Array<React.Node>,
+  children?: React.Node | Array<React.Node>,
   zones: Array<Zone>,
 };
 export type Actions = {};
@@ -67,7 +68,7 @@ export default class TabbedSection extends React.PureComponent<Props, State> {
 
   render() {
     const {
-      className, title, topComponent, zones,
+      className, children, title, topComponent, zones,
     } = this.props;
     const { zoneSelected } = this.state;
 
@@ -78,13 +79,14 @@ export default class TabbedSection extends React.PureComponent<Props, State> {
     };
     return (
       <Section
-        className={`tabbed ${className || ''}`}
+        className={`tabbed ${className || ''} ${zoneToRender.className || ''}`}
         title={title}
         topComponent={topComponent}
         middleComponent={this.renderTabs()}
         type={zoneToRender.type}
       >
         { zoneToRender.renderComponent() }
+        { children }
       </Section>
     );
   }

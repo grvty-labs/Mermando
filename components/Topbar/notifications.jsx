@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import Button from '../Button';
+import { Button } from '../Button';
 import { Dropdown } from '../Menu';
 
 export type StoreProps = {
@@ -36,6 +36,7 @@ export default class Notifications extends React.PureComponent<Props, State> {
       <Dropdown
         className='notifications'
         icon={icon}
+        buttonSize='huge'
         showHead
         headTitle={title}
         headLeftElement={leftElement}

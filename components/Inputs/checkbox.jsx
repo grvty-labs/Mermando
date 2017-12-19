@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import autobind from 'autobind-decorator';
 import Label from './label';
 
 type Props = {
@@ -10,12 +11,8 @@ type Props = {
 };
 
 export default class Checkbox extends React.PureComponent<Props, void> {
-  constructor(props: Props) {
-    super(props);
-    (this: any).onValueChange = this.onValueChange.bind(this);
-  }
-
-  onValueChange(event: SyntheticEvent<*>) {
+  @autobind
+  onValueChange(event: SyntheticInputEvent<*>) {
     this.props.onChange(event.target.checked);
   }
 

@@ -1,12 +1,15 @@
 // @flow
 
 export const inputTypes = {
+  color: 'color',
   date: 'date',
   datetime: 'datetime',
   email: 'email',
+  file: 'file',
   float: 'float',
   number: 'number',
   password: 'password',
+  select: 'select',
   tags: 'tags',
   tel: 'tel',
   text: 'text',
