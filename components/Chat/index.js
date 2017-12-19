@@ -1,6 +1,6 @@
 // @flow
-import Chat from './Chat';
-import type { StoreProps as ChatProps, Actions as ChatActions } from './Chat';
+import Chat from './chat';
+import type { StoreProps as ChatProps, Actions as ChatActions } from './chat';
 
 export {
   Chat,

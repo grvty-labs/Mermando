@@ -1,6 +1,6 @@
 // @flow
-import Button from './Button';
-import ButtonContainer from './Container';
+import Button from './button';
+import ButtonContainer from './container';
 
 export {
   Button,

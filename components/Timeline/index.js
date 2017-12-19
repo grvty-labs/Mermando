@@ -1,9 +1,9 @@
 // @flow
-import Event from './Event';
-import Timeline from './Timeline';
+import Event from './event';
+import Timeline from './timeline';
 
-import type { Props as EventValue } from './Event';
-import type { Props as TimelineValue } from './Timeline';
+import type { Props as EventValue } from './event';
+import type { Props as TimelineValue } from './timeline';
 
 export {
   Event,
