@@ -12,6 +12,7 @@ export type Zone = {
   legend?: string,
   renderComponent: Function,
   topComponent?: React.Node | Array<React.Node>,
+  renderTopComponent?: Function,
   type: 'separated-rows' | 'split' | 'none',
 }
 
@@ -93,7 +94,7 @@ export default class TabbedPage extends React.Component<Props, State> {
 
     let zoneRender = zones.find(z => z.id === zoneSelected);
     zoneRender = zoneRender || {
-      renderComponent: (onZoneClick: Function) => (<div />),
+      renderComponent: () => (<div />),
       type: 'none',
     };
     return (

@@ -90,7 +90,7 @@ export default class Select extends React.PureComponent<Props, State> {
         document.removeEventListener('click', this.handleOutsideClick);
       });
     } else {
-      const casted = value && value.length > 0
+      const casted = value && value.length
         ? (value: Array<string | number>)
         : [];
       if (casted.indexOf(newValue) < 0) {
@@ -105,7 +105,9 @@ export default class Select extends React.PureComponent<Props, State> {
       editable, disabled, type, value,
     } = this.props;
     if (type === 'multiple' && editable && !disabled) {
-      const casted = (value: Array<string | number>);
+      const casted = value && value.length
+        ? (value: Array<string | number>)
+        : [];
       if (index >= 0) {
         this.props.onChange([
           ...casted.slice(0, index),
@@ -130,7 +132,7 @@ export default class Select extends React.PureComponent<Props, State> {
   }
 
   @autobind
-  handleOutsideClick(e) {
+  handleOutsideClick(e: Event) {
     // ignore clicks on the component itself
     if (this.node && this.node.contains(e.target)) {
       return;
@@ -180,8 +182,10 @@ export default class Select extends React.PureComponent<Props, State> {
       return (
         <div className='value single'><span>{option ? option.display : value}</span></div>
       );
-    } else if (value && value.constructor === Array && value.length > 0) {
-      const casted = (value: Array<string | number>);
+    } else if (value && value.constructor === Array && value.length) {
+      const casted = value && value.length
+        ? (value: Array<string | number>)
+        : [];
       const optsFiltered = options.filter(opt => casted.indexOf(opt.value) > -1);
       return (
         <div className='value multiple'>
@@ -208,20 +212,12 @@ export default class Select extends React.PureComponent<Props, State> {
 
   render() {
     const {
-      id,
-      label,
-      className,
-      required,
+      id, label, className, required,
 
-      message,
-      messageType,
+      message, messageType,
 
-      leftIcon,
-      editable,
-      disabled,
-      value,
-      onFocus,
-      onBlur,
+      leftIcon, editable, disabled, value,
+      onFocus, onBlur,
     } = this.props;
 
     // TODO: Change for react-autocomplete
@@ -237,7 +233,7 @@ export default class Select extends React.PureComponent<Props, State> {
         type='select'
         readOnly={!editable}
         disabled={disabled}
-        empty={!value || (value.constructor === Array && value.length === 0)}
+        empty={!value || (value.constructor === Array && !value.length)}
         invalid={messageType === 'error'}
         onClick={this.handleClick}
         onFocus={onFocus}

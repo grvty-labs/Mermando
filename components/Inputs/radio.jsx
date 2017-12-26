@@ -10,7 +10,7 @@ export type RadioType = {
 };
 
 export type StoreProps = {
-  id: string,
+  id: string | number,
   value: string | number,
   name?: string,
 } & RadioType;
@@ -49,8 +49,8 @@ export default class RadioInput extends React.PureComponent<Props, State> {
           checked={value === option}
           onChange={this.onChange}
         />
-        <Label htmlFor={id} />
-        <Label htmlFor={id}>{label}</Label>
+        <Label htmlFor={`${id}`} />
+        <Label htmlFor={`${id}`}>{label}</Label>
         <span className='legend'>{legend}</span>
       </div>
     );

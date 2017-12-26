@@ -60,8 +60,6 @@ type Default = {
   forceInlineRequired: boolean,
   editable: boolean,
   disabled: boolean,
-
-  onChange: Function,
 };
 
 export default class FileInput extends React.PureComponent<Props, void> {
@@ -83,24 +81,24 @@ export default class FileInput extends React.PureComponent<Props, void> {
     forceInlineRequired: false,
     disabled: false,
     editable: true,
-
-    onChange: () => {},
   };
 
   @autobind
-  onSelectValue(acceptedFiles: Array<FileType>, rejectedFiles: Array<FileType>) {
+  onSelectValue(acceptedFiles: Array<FileType>) {
     const {
       disabled, editable, type, value, onChange,
     } = this.props;
 
-    if (!disabled && editable) {
-      if (type === 'single' && acceptedFiles.length >= 1) {
+    if (onChange && !disabled && editable) {
+      if (type === 'single' && acceptedFiles && acceptedFiles.length && acceptedFiles[0]) {
         onChange(acceptedFiles[0]);
-      } else if (type === 'multiple' && acceptedFiles.length >= 1) {
-        const casted = value && value.length > 0
+      } else if (type === 'multiple' && acceptedFiles && acceptedFiles.length) {
+        const casted = value && value.constructor === Array && value.length
           ? (value: Array<FileType>)
           : [];
-        onChange(casted.concat(acceptedFiles));
+        if (acceptedFiles && acceptedFiles.length && acceptedFiles[0]) {
+          onChange(casted.concat(acceptedFiles));
+        }
       }
     }
   }
@@ -110,9 +108,11 @@ export default class FileInput extends React.PureComponent<Props, void> {
     const {
       disabled, editable, type, value, onChange,
     } = this.props;
-    if (!disabled && editable) {
+    if (onChange && !disabled && editable) {
       if (type === 'multiple') {
-        const casted = (value: Array<FileType>);
+        const casted = value && value.constructor === Array && value.length
+          ? (value: Array<FileType>)
+          : [];
         if (index >= 0 && index < casted.length) {
           onChange([
             ...casted.slice(0, index),
@@ -206,7 +206,7 @@ export default class FileInput extends React.PureComponent<Props, void> {
             { this.renderSinglePreview(casted) }
           </div>
         );
-      } else if (type === 'multiple' && value && value.constructor === Array && value.length > 0) {
+      } else if (type === 'multiple' && value && value.constructor === Array && value.length) {
         const casted = (value: Array<FileType>);
         return (
           <div className={`attachment multiple ${previewType === 'image' ? 'grid' : ''}`}>

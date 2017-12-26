@@ -9,6 +9,8 @@ import { inputTypes, messageTypes, keyCodes } from '../../js/inputs';
 
 export type TagType = { id: number, text: string };
 
+export type Value = string | number | moment | Array<TagType>;
+
 type Props = {
   id: string,
   label?: string,
@@ -16,7 +18,7 @@ type Props = {
   messageType?: $Keys<typeof messageTypes>,
   forceMessageBeneath?: boolean,
   className?: string,
-  +value?: string | number | Date | moment | Array<TagType>,
+  +value?: Value,
 
   leftIcon?: string,
   rightIcon?: string,
@@ -52,7 +54,6 @@ type Default = {
   editable: boolean,
   disabled: boolean,
   type: $Keys<typeof inputTypes>,
-  onChange: Function,
 };
 
 export default class Input extends React.PureComponent<Props, void> {
@@ -73,7 +74,6 @@ export default class Input extends React.PureComponent<Props, void> {
     disabled: false,
     editable: true,
     type: 'text',
-    onChange: () => {},
   };
 
   @autobind
@@ -82,81 +82,85 @@ export default class Input extends React.PureComponent<Props, void> {
     const { value } = event.target;
     let clean;
 
-    if (!value) {
-      onChange(value);
-      return;
-    }
+    if (onChange) {
+      if (!value) {
+        onChange(value);
+        return;
+      }
 
-    switch (type) {
-      case 'number':
-        clean = Number.parseInt(value, 10);
-        if (!Number.isNaN(clean)) {
-          onChange(clean);
-        }
-        break;
-
-      case 'float':
-        clean = Number.parseFloat(value);
-        if (!Number.isNaN(clean)) {
-          onChange(clean);
-        }
-        break;
-
-      case 'textarea':
-        clean = value;
-        onChange(clean);
-        setTimeout(() => {
-          if (this.inputElement) {
-            this.inputElement.style.cssText = 'height:auto; padding: 0';
-            this.inputElement.style.cssText = `height: ${this.inputElement.scrollHeight}px`;
+      switch (type) {
+        case 'number':
+          clean = Number.parseInt(value, 10);
+          if (!Number.isNaN(clean)) {
+            onChange(clean);
           }
-        }, 0);
-        break;
+          break;
 
-      case 'email':
-      case 'password':
-      case 'tel':
-      case 'text':
-      case 'url':
-      case 'color':
-      default:
-        clean = value;
-        onChange(clean);
-        break;
+        case 'float':
+          clean = Number.parseFloat(value);
+          if (!Number.isNaN(clean)) {
+            onChange(clean);
+          }
+          break;
+
+        case 'textarea':
+          clean = value;
+          onChange(clean);
+          setTimeout(() => {
+            if (this.inputElement) {
+              this.inputElement.style.cssText = 'height:auto; padding: 0';
+              this.inputElement.style.cssText = `height: ${this.inputElement.scrollHeight}px`;
+            }
+          }, 0);
+          break;
+
+        case 'email':
+        case 'password':
+        case 'tel':
+        case 'text':
+        case 'url':
+        case 'color':
+        default:
+          clean = value;
+          onChange(clean);
+          break;
+      }
     }
   }
 
   @autobind
-  onCustomInputChange(newValue: any, index?: number) {
+  onCustomInputChange(newValue: ?Value, index?: number) {
     const { type, onChange, value } = this.props;
     let casted;
 
-    switch (type) {
-      case 'datetime':
-      case 'date':
-        onChange(newValue);
-        break;
+    if (onChange) {
+      switch (type) {
+        case 'datetime':
+        case 'date':
+          onChange(newValue);
+          break;
 
-      case 'tags':
-        casted = value && value.length > 0
-          ? (value: Array<TagType>)
-          : [];
-        if (index === 0 || index) {
-          onChange([
-            ...casted.slice(0, index),
-            ...casted.slice(index + 1),
-          ]);
-        } else {
-          onChange([
-            ...casted,
-            { id: this.counter, text: newValue },
-          ]);
-          this.counter += 1;
-        }
-        break;
+        case 'tags':
+          casted = value && value.length > 0
+            ? (value: Array<TagType>)
+            : [];
+          if (index === 0 || index) {
+            onChange([
+              ...casted.slice(0, index),
+              ...casted.slice(index + 1),
+            ]);
+          } else {
+            onChange([
+              ...casted,
+              { id: this.counter, text: newValue },
+            ]);
+            this.counter += 1;
+          }
+          break;
 
-      default:
-        break;
+        default:
+          break;
+      }
     }
   }
 

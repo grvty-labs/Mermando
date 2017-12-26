@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import autobind from 'autobind-decorator';
 import Config from 'Config';
 import { Button } from '../Button';
 
@@ -49,6 +50,12 @@ export default class Lightbox extends React.PureComponent<Props, State> {
     }
   }
 
+  @autobind
+  onCloseClick(event: SyntheticEvent<*>) {
+    event.stopPropagation();
+    this.props.onCloseClick();
+  }
+
   render() {
     const {
       children, className, onCloseClick, show,
@@ -60,8 +67,8 @@ export default class Lightbox extends React.PureComponent<Props, State> {
         <div className={`lightbox-wrapper ${show ? '' : 'close'}`}>
           <div
             className='overlay'
-            onClick={onCloseClick}
-            onKeyPress={onCloseClick}
+            onClick={this.onCloseClick}
+            onKeyPress={this.onCloseClick}
             role='button'
             tabIndex={-1}
           />

@@ -37,13 +37,18 @@ export default class Card extends React.PureComponent<CardProps, void> {
       className, title, actions, footer, orientation, style,
       size, onClick, icon,
     } = this.props;
+
+    const newClassName = `card ${
+      size || ''} ${orientation || ''} ${
+      onClick ? 'hasAction' : ''} ${className || ''}`;
+
     return (
       <div
-        className={`card ${size || ''} ${orientation || ''}  ${onClick ? 'hasAction' : ''} ${className || ''}`}
+        className={newClassName}
         style={style}
         onClick={onClick}
         onKeyPress={onClick}
-        role={onClick ? 'menuitem' : undefined}
+        role='menuitem'
         tabIndex={onClick ? 0 : -1}
       >
         <div className='header'>
