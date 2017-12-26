@@ -12,7 +12,9 @@ type Default = {
 };
 
 export default class Container extends React.PureComponent<Props, void> {
-  static defaultProps: Default = {};
+  static defaultProps: Default = {
+    className: '',
+  };
 
   render(): React.Element<*> {
     const { className, children } = this.props;

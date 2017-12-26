@@ -22,7 +22,11 @@ export default class FormSection extends React.PureComponent<Props, State> {
     return (
       <div className={`form-section ${className || ''}`}>
         <div className='top'>
-          <span className='legend'>{legend}</span>
+          {
+            legend
+              ? <span className='legend'>{legend}</span>
+              : null
+          }
           {topComponent}
         </div>
         {children}
