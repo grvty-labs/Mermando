@@ -5,12 +5,11 @@ import Config from 'Config';
 import { colors } from '../../js/toastrs';
 
 export type StoreProps = {
-  id: string,
   color?: $Keys<typeof colors>,
   time: number,
   transitionsTime?: number,
   title?: string,
-  legend?: string,
+  legend: string,
   icon?: React.Node | string,
 
   className?: string,
@@ -44,7 +43,10 @@ export default class Toastr extends React.Component<Props, State> {
     const { transitionsTime, time, onCloseCallback } = this.props;
     const cleanTransTime = transitionsTime || 0;
     setTimeout(
-      () => this.setState({ show: false }, setTimeout(onCloseCallback, cleanTransTime)),
+      () => this.setState(
+        { show: false },
+        () => { setTimeout(onCloseCallback, cleanTransTime); },
+      ),
       cleanTransTime + time,
     );
   }
