@@ -1,19 +1,22 @@
 // @flow
 import * as React from 'react';
 import autobind from 'autobind-decorator';
+import Config from 'Config';
 import Page from './page';
 
 export type Zone = {
   id: string | number,
-  mainTitle?: string,
-  title: string,
   className?: string,
-  statusClassName?: string,
   legend?: string,
-  renderComponent: Function,
+  icon?: string,
+  iconTitle?: string,
+  mainTitle?: string,
+  statusClassName?: string,
+  title: string,
   topComponent?: React.Node | Array<React.Node>,
-  renderTopComponent?: Function,
   type: 'separated-rows' | 'split' | 'none',
+  renderComponent: Function,
+  renderTopComponent?: Function,
 }
 
 export type StoreProps = {
@@ -65,6 +68,7 @@ export default class TabbedPage extends React.Component<Props, State> {
   @autobind
   renderTabs() {
     const { hideTabs } = this.props;
+    const { classPrefix } = Config.mermando.icons;
     if (!hideTabs) {
       const { zoneSelected } = this.state;
       const renderedZones = this.props.zones.map(z => (
@@ -77,7 +81,12 @@ export default class TabbedPage extends React.Component<Props, State> {
           aria-checked={z.id === zoneSelected}
           tabIndex={0}
         >
-          {z.title}
+          <span>{z.title}</span>
+          {
+            z.icon
+              ? <span className={`tabIcon ${classPrefix}${z.icon}`} title={z.iconTitle} />
+              : null
+          }
         </div>
       ));
       return renderedZones;

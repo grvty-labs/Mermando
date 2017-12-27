@@ -62,6 +62,16 @@
     > .content {
       padding: 1.5em 1em 1em 0.875em;
     }
+
+    > .footer {
+      &:not(:empty) {
+        padding: 0.5em 1em 1.5em;
+      }
+
+      > .button-container {
+        justify-content: flex-end;
+      }
+    }
   }
 
   &.close {
