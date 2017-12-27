@@ -4,14 +4,15 @@ import autobind from 'autobind-decorator';
 import Config from 'Config';
 import { Button } from '../Button';
 
-type StoreProps = {
+export type StoreProps = {
   children: React.Node | Array<React.Node>,
   className?: string,
   show: boolean,
   title: string,
   topComponent?: React.Node | Array<React.Node>,
+  footerComponent?: React.Node | Array<React.Node>,
 };
-type Actions = {
+export type Actions = {
   onCloseClick: Function,
   onToggleLightbox?: Function,
 };
@@ -58,7 +59,7 @@ export default class Lightbox extends React.PureComponent<Props, State> {
 
   render() {
     const {
-      children, className, onCloseClick, show,
+      children, className, footerComponent, onCloseClick, show,
       title, topComponent,
     } = this.props;
     const { show: definitivelyShow } = this.state;
@@ -88,6 +89,9 @@ export default class Lightbox extends React.PureComponent<Props, State> {
             </div>
             <div className='content'>
               { children }
+            </div>
+            <div className='footer'>
+              { footerComponent }
             </div>
           </div>
         </div>

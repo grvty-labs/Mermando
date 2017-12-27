@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import autobind from 'autobind-decorator';
-import { Button } from '../Button';
+import { Button, ButtonContainer } from '../Button';
 import Lightbox from './lightbox';
 
 export type Zone = {
@@ -14,7 +14,7 @@ export type StoreProps = {
   className?: string,
   show: boolean,
   title: string,
-  lastBottomComponent?: React.Node | Array<React.Node>,
+  lastBottomComponent?: React.Element<typeof Button>,
   zones: Array<Zone>,
 };
 export type Actions = {
@@ -48,7 +48,7 @@ export default class LightboxTabbed extends React.PureComponent<Props, State> {
       ? (
         <Button
           size='small'
-          type='discrete'
+          type='link'
           onClick={() => this.onZoneClick(this.state.zoneSelected - 1)}
         >
           Previous
@@ -66,10 +66,10 @@ export default class LightboxTabbed extends React.PureComponent<Props, State> {
         </Button>)
       : this.props.lastBottomComponent;
     return (
-      <div className='footer'>
+      <ButtonContainer>
         {leftComponent}
         {rightComponent}
-      </div>
+      </ButtonContainer>
     );
   }
 
@@ -92,10 +92,10 @@ export default class LightboxTabbed extends React.PureComponent<Props, State> {
         title={title}
         onCloseClick={onCloseClick}
         onToggleLightbox={onToggleLightbox}
+        footerComponent={this.renderBottomComponent()}
       >
         <span>{zoneToRender.title}</span>
         { zoneToRender.renderComponent() }
-        { this.renderBottomComponent() }
       </Lightbox>
     );
   }
