@@ -11,6 +11,7 @@ export type ToastType = {
 export type StoreProps = {
   toasts: Array<ToastType>,
   clickToCloseToasts?: boolean,
+  time?: number,
 };
 export type Actions = {
   onToastsClose: Function,
@@ -19,23 +20,26 @@ export type Actions = {
 type Props = StoreProps & Actions;
 type State = {};
 type Default = {
+  time: number,
   clickToCloseToasts: boolean,
 };
 
 export default class ToastrManager extends React.Component<Props, State> {
   static defaultProps: Default = {
+    time: 5000,
     clickToCloseToasts: false,
   };
   state: State = {};
 
   @autobind
   renderToast(toast: ToastType) {
-    const { clickToCloseToasts, onToastsClose } = this.props;
+    const { clickToCloseToasts, time, onToastsClose } = this.props;
     return (
       <Toast
         key={toast.id}
         color={toast.color}
         title={toast.title}
+        time={toast.time || time}
         legend={toast.legend}
         clickToClose={toast.clickToClose || clickToCloseToasts || false}
         onCloseCallback={() => onToastsClose(toast.id)}
