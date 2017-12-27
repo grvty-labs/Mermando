@@ -1,6 +1,12 @@
 // @flow
 
 export const types = {
+  button: 'button',
+  submit: 'submit',
+  reset: 'reset',
+};
+
+export const strains = {
   main: 'main',
   secondary: 'secondary',
   discrete: 'discrete',

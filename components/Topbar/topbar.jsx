@@ -127,7 +127,7 @@ export default class Topbar extends React.PureComponent<Props, void> {
               {profileAnchors.map(anchor => (
                 <Button
                   key={anchor.id}
-                  type='link'
+                  strain='link'
                   onClick={
                     anchor.url
                       ? () => onAnchorClick(anchor.url)

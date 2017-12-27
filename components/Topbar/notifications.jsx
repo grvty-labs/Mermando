@@ -45,7 +45,7 @@ export default class Notifications extends React.PureComponent<Props, State> {
         {anchors.map(anchor => (
           <Button
             key={anchor.id}
-            type={anchor.title || anchor.text ? 'link' : 'icon'}
+            strain={anchor.title || anchor.text ? 'link' : 'icon'}
             icon={anchor.icon}
             onClick={() => onAnchorClick(anchor.url)}
           >

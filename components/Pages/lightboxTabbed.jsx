@@ -48,7 +48,7 @@ export default class LightboxTabbed extends React.PureComponent<Props, State> {
       ? (
         <Button
           size='small'
-          type='link'
+          strain='link'
           onClick={() => this.onZoneClick(this.state.zoneSelected - 1)}
         >
           Previous
@@ -59,7 +59,7 @@ export default class LightboxTabbed extends React.PureComponent<Props, State> {
       ? (
         <Button
           size='small'
-          type='main'
+          strain='main'
           onClick={() => this.onZoneClick(this.state.zoneSelected + 1)}
         >
           Next

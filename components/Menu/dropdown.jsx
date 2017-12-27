@@ -56,7 +56,7 @@ export default class Notifications extends React.PureComponent<Props, State> {
       <div className={`dropdown-wrapper ${className || ''}`}>
         <Button
           className={showAngle ? 'angled' : ''}
-          type={text ? 'link' : 'icon'}
+          strain={text ? 'link' : 'icon'}
           iconSide='right'
           icon={icon}
           size={buttonSize}

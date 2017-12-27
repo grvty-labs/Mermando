@@ -78,7 +78,7 @@ export default class Lightbox extends React.PureComponent<Props, State> {
             <div className='header'>
               <div>
                 <Button
-                  type='icon'
+                  strain='icon'
                   iconSide='right'
                   icon={Config.mermando.icons.close}
                   onClick={onCloseClick}

@@ -2,10 +2,11 @@
 import * as React from 'react';
 import autobind from 'autobind-decorator';
 import Config from 'Config';
-import { types, sizes, linkColors } from '../../js/buttons';
+import { strains, types, sizes, linkColors } from '../../js/buttons';
 
 type Props = {
   className?: string,
+  strain?: $Keys<typeof strains>,
   type?: $Keys<typeof types>,
   aria?: string,
 
@@ -22,6 +23,7 @@ type Props = {
 
 type Default = {
   className: string,
+  strain: $Keys<typeof strains>,
   type: $Keys<typeof types>,
   size: $Keys<typeof sizes>,
   iconSide: 'left' | 'right',
@@ -37,7 +39,8 @@ type Default = {
 export default class Button extends React.PureComponent<Props, void> {
   static defaultProps: Default = {
     className: '',
-    type: 'discrete',
+    type: 'button',
+    strain: 'discrete',
     size: 'regular',
     iconSide: 'left',
     aria: '',
@@ -57,7 +60,7 @@ export default class Button extends React.PureComponent<Props, void> {
   render() {
     const {
       aria, className, type, size, icon, iconSide, disabled, linkColor,
-      children,
+      children, strain,
     } = this.props;
 
     const iconRender = typeof icon === 'string'
@@ -67,18 +70,19 @@ export default class Button extends React.PureComponent<Props, void> {
     return (
       <button
         onClick={this.onClick}
+        type={type || ''}
         disabled={disabled}
         className={
-          `button ${type || ''} ${size || ''} ${
-            iconRender && type !== 'icon' ? 'iconned' : ''} ${
+          `button ${strain || ''} ${size || ''} ${
+            iconRender && strain !== 'icon' ? 'iconned' : ''} ${
             iconSide === 'right' ? 'inverted' : ''} ${className || ''} ${
-            type === 'link' ? linkColor || '' : ''}`
+            strain === 'link' ? linkColor || '' : ''}`
         }
         aria-label={aria || null}
-        aria-hidden={children && type !== 'icon'}
+        aria-hidden={children && strain !== 'icon'}
       >
         {iconRender}
-        {type !== 'icon' ? children : null}
+        {strain !== 'icon' ? children : null}
       </button>
     );
   }
