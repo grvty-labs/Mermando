@@ -10,6 +10,7 @@ import RadioInputGroup from './radio-group';
 import RadioInput from './radio';
 
 import type { TagType as TagValue } from './input';
+import type { Message as InputMessage } from './input-atom';
 import type { Value as SelectValue, Option as SelectOption } from './select';
 import type { FileType as FileValue } from './file';
 import type { RadioType as RadioOption } from './radio';
@@ -28,9 +29,10 @@ export {
 };
 
 export type {
-  SelectValue,
-  SelectOption,
   FileValue,
+  InputMessage,
   RadioOption,
+  SelectOption,
+  SelectValue,
   TagValue,
 };

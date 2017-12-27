@@ -3,6 +3,7 @@ import * as React from 'react';
 import autobind from 'autobind-decorator';
 import { messageTypes } from '../../js/inputs';
 import InputAtom from './input-atom';
+import type { Message } from './input-atom';
 
 export type Value = string | number | Array<string | number>;
 
@@ -16,6 +17,7 @@ export type Option = {
 type Props = {
   id: string,
   label?: string,
+  messagesArray?: Array<Message>,
   message?: string,
   messageType?: $Keys<typeof messageTypes>,
   className?: string,
@@ -39,6 +41,7 @@ type Default = {
   label: string,
   className: string,
 
+  messagesArray: Array<Message>,
   message: string,
   messageType: $Keys<typeof messageTypes>,
 
@@ -59,6 +62,7 @@ export default class Select extends React.PureComponent<Props, State> {
     label: '',
     className: '',
 
+    messagesArray: [],
     message: '',
     messageType: 'text',
 
@@ -214,7 +218,7 @@ export default class Select extends React.PureComponent<Props, State> {
     const {
       id, label, className, required,
 
-      message, messageType,
+      message, messageType, messagesArray,
 
       leftIcon, editable, disabled, value,
       onFocus, onBlur,
@@ -224,6 +228,7 @@ export default class Select extends React.PureComponent<Props, State> {
     return (
       <InputAtom
         id={id} label={label}
+        messagesArray={messagesArray}
         message={message}
         messageType={messageType}
         forceMessageBeneath

@@ -5,6 +5,7 @@ import Dropzone from 'react-dropzone';
 import Config from 'Config';
 import InputAtom from './input-atom';
 import { messageTypes } from '../../js/inputs';
+import type { Message } from './input-atom';
 
 export type FileType = {
   lastModified: number,
@@ -19,6 +20,7 @@ export type FileType = {
 type Props = {
   id: string,
   label?: string,
+  messagesArray?: Array<Message>,
   message?: string,
   messageType?: $Keys<typeof messageTypes>,
   forceMessageBeneath?: boolean,
@@ -46,6 +48,7 @@ type Default = {
   label: string,
   className: string,
 
+  messagesArray: Array<Message>,
   message: string,
   messageType: $Keys<typeof messageTypes>,
   forceMessageBeneath: boolean,
@@ -67,6 +70,7 @@ export default class FileInput extends React.PureComponent<Props, void> {
     label: '',
     className: '',
 
+    messagesArray: [],
     message: '',
     messageType: 'text',
     forceMessageBeneath: false,
@@ -241,7 +245,7 @@ export default class FileInput extends React.PureComponent<Props, void> {
     const {
       id, label, forceInlineRequired,
       required, type, acceptedExtensions,
-      className, forceMessageBeneath, message, messageType,
+      className, forceMessageBeneath, message, messageType, messagesArray,
       rightIcon, editable, disabled, value,
     } = this.props;
 
@@ -250,6 +254,7 @@ export default class FileInput extends React.PureComponent<Props, void> {
       <InputAtom
         id={id}
         label={label}
+        messagesArray={messagesArray}
         message={message}
         messageType={messageType}
         forceInlineRequired={forceInlineRequired}

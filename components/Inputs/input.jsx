@@ -7,13 +7,15 @@ import { WithContext as ReactTags } from 'react-tag-input';
 import InputAtom from './input-atom';
 import { inputTypes, messageTypes, keyCodes } from '../../js/inputs';
 
-export type TagType = { id: number, text: string };
+import type { Message } from './input-atom';
 
+export type TagType = { id: number, text: string };
 export type Value = string | number | moment | Array<TagType>;
 
 type Props = {
   id: string,
   label?: string,
+  messagesArray?: Array<Message>,
   message?: string,
   messageType?: $Keys<typeof messageTypes>,
   forceMessageBeneath?: boolean,
@@ -42,6 +44,7 @@ type Default = {
   label: string,
   className: string,
 
+  messagesArray: Array<Message>,
   message: string,
   messageType: $Keys<typeof messageTypes>,
   forceMessageBeneath: boolean,
@@ -61,6 +64,7 @@ export default class Input extends React.PureComponent<Props, void> {
     label: '',
     className: '',
 
+    messagesArray: [],
     message: '',
     messageType: 'text',
     forceMessageBeneath: false,
@@ -168,10 +172,35 @@ export default class Input extends React.PureComponent<Props, void> {
   inputElement: ?any;
 
   @autobind
+  generatePattern() {
+    const { pattern, type } = this.props;
+    let newPattern = pattern;
+    if (!newPattern) {
+      switch (type) {
+        case 'color':
+          newPattern = '[0-9A-Fa-f]{6}';
+          break;
+        case 'number':
+          newPattern = '[-+]?[0-9]+';
+          break;
+        case 'float':
+          newPattern = '[-+]?[0-9]*[.,]?[0-9]+';
+          break;
+        case 'email':
+          newPattern = '[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]$';
+          break;
+        default:
+          break;
+      }
+    }
+    return newPattern;
+  }
+
+  @autobind
   renderInput(otherProps: { [key: string]: string }) {
     const {
       id, type, className, value, required, disabled, editable,
-      pattern, autoComplete, autoCompleteOptions, placeholder,
+      autoComplete, autoCompleteOptions, placeholder,
     } = this.props;
 
     let newClassName = className || '';
@@ -247,7 +276,7 @@ export default class Input extends React.PureComponent<Props, void> {
               onChange={this.onHTMLInputChange}
               required={required}
               disabled={disabled || !editable}
-              pattern='[0-9A-Fa-f]{6}'
+              pattern={this.generatePattern()}
             />
             <div className='color' style={{ backgroundColor: `#${value}` }} />
           </div>
@@ -307,12 +336,7 @@ export default class Input extends React.PureComponent<Props, void> {
             required={required}
             disabled={disabled || !editable}
             autoComplete={autoComplete}
-            pattern={
-              pattern ||
-              type === 'number' ? '[-+]?[0-9]+' : '' ||
-              type === 'float' ? '[-+]?[0-9]*[.,]?[0-9]+' : '' ||
-              type === 'email' ? '[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]$' : ''
-            }
+            pattern={this.generatePattern()}
           />
         );
 
@@ -327,7 +351,7 @@ export default class Input extends React.PureComponent<Props, void> {
       required, type, value,
       className, pattern,
 
-      forceMessageBeneath, message, messageType,
+      forceMessageBeneath, message, messageType, messagesArray,
 
       leftIcon, rightIcon, editable,
       disabled, onChange, autoComplete,
@@ -339,6 +363,7 @@ export default class Input extends React.PureComponent<Props, void> {
     return (
       <InputAtom
         id={id} label={label}
+        messagesArray={messagesArray}
         message={message}
         messageType={messageType}
         forceInlineRequired={forceInlineRequired}
