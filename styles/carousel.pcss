@@ -6,8 +6,8 @@
 
     > .carousel {
       display: flex;
-      max-height: 90vh;
-      min-height: 529px;
+      max-height: var(--carousel-max-height);
+      min-height: var(--carousel-min-height);
       overflow: hidden;
 
       > .pic-wrap {
@@ -16,7 +16,7 @@
         justify-content: center;
         max-height: inherit;
         min-width: 100%;
-        transition: margin-left 1s ease-in-out;
+        transition: margin-left var(--carousel-time) ease-in-out;
         width: 100%;
 
         > .fluid-img {
@@ -37,13 +37,14 @@
 
       > :--icons-class {
         align-items: center;
-        background-color: rgba(74, 74, 74, 0.18);
-        color: #c8c8c8;
+        background-color: var(--carousel-controls-background);
+        color: var(--carousel-controls-color);
         cursor: pointer;
         display: inherit;
         font-size: 2.303em;
         height: 1.3em;
         justify-content: center;
+        outline: none;
         pointer-events: visiblePainted;
         width: 1.13em;
       }
@@ -64,6 +65,7 @@
         cursor: pointer;
         font-size: 0.75em;
         height: 1em;
+        outline: none;
         overflow: hidden;
         position: relative;
         width: 1em;
@@ -76,8 +78,8 @@
           position: absolute;
           top: 0;
           transition:
-            left 1s,
-            right 1s;
+            left var(--carousel-time),
+            right var(--carousel-time);
           visibility: hidden;
           width: 1em;
         }
