@@ -2,12 +2,13 @@
 import * as React from 'react';
 import autobind from 'autobind-decorator';
 import Section from './section';
+import { types } from '../../js/sections';
 
 type Zone = {
   id: string | number,
   title: string,
   renderComponent: Function,
-  type: 'cards-panel' | 'none' | 'separated-rows',
+  type: $Keys<typeof types>,
 }
 
 export type StoreProps = {

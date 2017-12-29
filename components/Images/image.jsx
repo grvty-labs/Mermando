@@ -6,7 +6,7 @@ import { breakpoints } from '../../js/images';
 
 type Size = {
   src: string,
-  width: number, // The src image size
+  width: number, // The src image size (px)
 };
 
 type Viewport = {
@@ -15,7 +15,7 @@ type Viewport = {
 };
 
 export type StoreProps = {
-  alt: string,
+  alt?: string,
   src: string,
   srcSizes: Array<Size>,
   viewports?: Array<Viewport>,

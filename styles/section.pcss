@@ -54,6 +54,22 @@
       width: 100%;
     }
 
+    &.rows {
+      > div {
+        padding-bottom: 1.5em;
+        padding-top: 1.5em;
+
+        &:first-of-type {
+          padding-top: 0;
+        }
+
+        &:empty,
+        &:last-of-type {
+          padding-bottom: 0;
+        }
+      }
+    }
+
     &.cards-panel {
       align-items: stretch;
       display: grid;
