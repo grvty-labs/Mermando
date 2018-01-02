@@ -90,10 +90,10 @@ export default class FileInput extends React.PureComponent<Props, void> {
   @autobind
   onSelectValue(acceptedFiles: Array<FileType>) {
     const {
-      disabled, editable, type, value, onChange,
+      type, value, onChange,
     } = this.props;
 
-    if (onChange && !disabled && editable) {
+    if (onChange && !this.props.disabled && this.props.editable) {
       if (type === 'single' && acceptedFiles && acceptedFiles.length && acceptedFiles[0]) {
         onChange(acceptedFiles[0]);
       } else if (type === 'multiple' && acceptedFiles && acceptedFiles.length) {
@@ -110,10 +110,10 @@ export default class FileInput extends React.PureComponent<Props, void> {
   @autobind
   onRemoveIndex(index: number = 0) {
     const {
-      disabled, editable, type, value, onChange,
+      value, onChange,
     } = this.props;
-    if (onChange && !disabled && editable) {
-      if (type === 'multiple') {
+    if (onChange && !this.props.disabled && this.props.editable) {
+      if (this.props.type === 'multiple') {
         const casted = value && value.constructor === Array && value.length
           ? (value: Array<FileType>)
           : [];
@@ -132,17 +132,17 @@ export default class FileInput extends React.PureComponent<Props, void> {
   @autobind
   renderSinglePreview(file: FileType, index: number = 0) {
     const {
-      disabled, editable, onZoomClick, previewType, hidePreviewTag,
+      disabled, editable, onZoomClick,
     } = this.props;
     if (!editable) {
-      if (previewType === 'image') {
+      if (this.props.previewType === 'image') {
         return (
           <div className='img' key={index}>
             <img
               src={file.preview}
               alt={file.name}
             />
-            <span className='tag'>{index === 0 && !hidePreviewTag ? 'Main Image' : ''}</span>
+            <span className='tag'>{index === 0 && !this.props.hidePreviewTag ? 'Main Image' : ''}</span>
             <div
               className='overlay'
               onClick={onZoomClick ? onZoomClick : () => {}} // eslint-disable-line
@@ -165,7 +165,7 @@ export default class FileInput extends React.PureComponent<Props, void> {
         </a>
       );
     }
-    if (previewType === 'image') {
+    if (this.props.previewType === 'image') {
       return (
         <div className='img' key={index}>
           <img
@@ -225,8 +225,8 @@ export default class FileInput extends React.PureComponent<Props, void> {
 
   @autobind
   renderPlaceholder(values: { isDragActive: boolean, isDragAccept: boolean }) {
-    const { type, placeholder } = this.props;
-    let placeholderMessage = placeholder;
+    const { type } = this.props;
+    let placeholderMessage;
     if (values.isDragActive) {
       if (values.isDragAccept) {
         placeholderMessage = type === 'multiple'
@@ -237,32 +237,38 @@ export default class FileInput extends React.PureComponent<Props, void> {
           ? 'One or multiple files will be rejected'
           : 'The file will be rejected';
       }
+    } else {
+      placeholderMessage = this.props.placeholder || (
+        this.props.previewType === 'images'
+          ? type === 'multiple'
+            ? 'Drag & Drop your images here'
+            : 'Drag & Drop your image here'
+          : type === 'multiple'
+            ? 'Drag & Drop your files here'
+            : 'Drag & Drop your file here');
     }
     return (<span className='placeholder'>{placeholderMessage}</span>);
   }
 
   render() {
     const {
-      id, label, forceInlineRequired,
-      required, type, acceptedExtensions,
-      className, forceMessageBeneath, message, messageType, messagesArray,
-      rightIcon, editable, disabled, value,
+      messageType, editable, disabled, value,
     } = this.props;
 
 
     return (
       <InputAtom
-        id={id}
-        label={label}
-        messagesArray={messagesArray}
-        message={message}
-        messageType={messageType}
-        forceInlineRequired={forceInlineRequired}
-        forceMessageBeneath={forceMessageBeneath}
-        className={className}
+        id={this.props.id}
+        label={this.props.label}
+        messagesArray={this.props.messagesArray}
+        message={this.props.message}
+        messageType={this.props.messageType}
+        forceInlineRequired={this.props.forceInlineRequired}
+        forceMessageBeneath={this.props.forceMessageBeneath}
+        className={this.props.className}
         type='file'
-        rightIcon={rightIcon}
-        required={required}
+        rightIcon={this.props.rightIcon}
+        required={this.props.required}
         readOnly={!editable}
         disabled={disabled}
         empty={!value || (value.constructor === Array && value.length === 0)}
@@ -276,12 +282,12 @@ export default class FileInput extends React.PureComponent<Props, void> {
         <Dropzone
           className='file-input'
           disabled={disabled || !editable}
-          multiple={type === 'multiple'}
+          multiple={this.props.type === 'multiple'}
           activeClassName='active'
           acceptClassName='accept'
           disabledClassName='disabled'
           rejectClassName='reject'
-          accept={acceptedExtensions}
+          accept={this.props.acceptedExtensions}
           onDrop={this.onSelectValue}
         >
           {!editable
