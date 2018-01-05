@@ -1,12 +1,13 @@
 // @flow
 import * as React from 'react';
 import { Button } from '../Button';
-import { sizes } from '../../js/buttons';
+import { sizes, strains } from '../../js/buttons';
 
 export type Props = {
   className?: string,
   text?: string,
   icon?: React.Node | string,
+  buttonStrain?: $Keys<typeof strains>,
   buttonSize?: $Keys<typeof sizes>,
   showAngle?: boolean,
 
@@ -27,7 +28,7 @@ type Default = {
   showAngle: boolean,
 };
 
-export default class Notifications extends React.PureComponent<Props, State> {
+export default class Dropdown extends React.PureComponent<Props, State> {
   static defaultProps: Default = {
     className: '',
     text: '',
@@ -39,7 +40,8 @@ export default class Notifications extends React.PureComponent<Props, State> {
   render() {
     const {
       className, icon, text, headTitle, children, buttonSize,
-      headLeftElement, headRightElement, showAngle, showHead,
+      buttonStrain, headLeftElement, headRightElement, showAngle,
+      showHead,
     } = this.props;
 
     const titleRender = showHead
@@ -56,7 +58,7 @@ export default class Notifications extends React.PureComponent<Props, State> {
       <div className={`dropdown-wrapper ${className || ''}`}>
         <Button
           className={showAngle ? 'angled' : ''}
-          strain={text ? 'link' : 'icon'}
+          strain={buttonStrain || (text ? 'link' : 'icon')}
           iconSide='right'
           icon={icon}
           size={buttonSize}

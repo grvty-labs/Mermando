@@ -17,7 +17,7 @@ export type StoreProps = {
 export type Actions = {
   onChange: Function,
 };
-type Props = StoreProps & Actions;
+export type Props = StoreProps & Actions;
 type State = {};
 type Default = {
   name: string,

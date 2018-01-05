@@ -14,7 +14,7 @@ export type Option = {
   [key: string]: any,
 };
 
-type Props = {
+export type Props = {
   id: string,
   label?: string,
   messagesArray?: Array<Message>,

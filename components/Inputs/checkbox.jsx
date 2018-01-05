@@ -3,7 +3,7 @@ import * as React from 'react';
 import autobind from 'autobind-decorator';
 import Label from './label';
 
-type Props = {
+export type Props = {
   id: string,
   label?: string,
   value: boolean,

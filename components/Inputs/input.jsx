@@ -12,7 +12,7 @@ import type { Message } from './input-atom';
 export type TagType = { id: number, text: string };
 export type Value = string | number | moment | Array<TagType>;
 
-type Props = {
+export type Props = {
   id: string,
   label?: string,
   messagesArray?: Array<Message>,
