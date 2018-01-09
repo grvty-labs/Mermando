@@ -1,6 +1,15 @@
 .inputs-wrap {
   > .legend {
-    margin: 0;
+    color: var(--label-color);
+    display: none;
+    font-size: var(--label-font-size);
+    font-weight: bold;
+
+    &:not(:empty) {
+      display: initial;
+      line-height: 1.43;
+      margin-bottom: 0.5em;
+    }
   }
 
   > div {
