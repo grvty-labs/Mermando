@@ -1,17 +1,17 @@
 // @flow
-import Lightbox from '../Pages/lightbox';
-import LightboxTabbed from '../Pages/lightboxTabbed';
+import Lightbox from './lightbox';
+import LightboxTabbed from './tabbed';
 
 import type {
   StoreProps as LightboxProps,
   Actions as LightboxActions,
-} from '../Pages/lightbox';
+} from './lightbox';
 
 import type {
   Zone as LightboxTabbedZone,
   StoreProps as LightboxTabbedProps,
   Actions as LightboxTabbedActions,
-} from '../Pages/lightboxTabbed';
+} from './tabbed';
 
 export {
   Lightbox,
