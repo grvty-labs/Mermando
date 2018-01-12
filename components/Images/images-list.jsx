@@ -32,7 +32,7 @@ export default class ImagesList extends React.PureComponent<Props, State> {
   }
 
   @autobind
-  generateSizes(viewports: Array<Viewport>) {
+  generateSizes(viewports?: Array<Viewport>) {
     let sizeSet = '';
     if (viewports) {
       viewports.forEach((viewport) => {
@@ -45,14 +45,17 @@ export default class ImagesList extends React.PureComponent<Props, State> {
 
   @autobind
   renderImage(image: Image, index: number) {
+    const {
+      src, alt, srcSizes, viewports,
+    } = image;
     return (
       <img
         key={index}
         className='fluid-img'
-        srcSet={this.generateSourceSets(image.srcSizes)}
-        sizes={this.generateSizes(image.viewports)}
-        src={image.src}
-        alt={image.alt}
+        srcSet={this.generateSourceSets(srcSizes)}
+        sizes={this.generateSizes(viewports)}
+        src={src}
+        alt={alt}
       />
     );
   }
