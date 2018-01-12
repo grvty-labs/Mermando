@@ -194,14 +194,14 @@ export default class InputAtom extends React.PureComponent<Props, State> {
 
     if (label && (message || (required && !forceInlineRequired))) {
       return (
-        <small className={className}>
+        <small className={className} key={1}>
           <span className={iconClassName} />
           {message || 'Required field'}
         </small>
       );
     } else if (!label && message && forceMessageBeneath) {
       return (
-        <small className={className}>
+        <small className={className} key={1}>
           <span className={iconClassName} />
           {message}
         </small>
@@ -215,7 +215,7 @@ export default class InputAtom extends React.PureComponent<Props, State> {
     const { messagesArray } = this.props;
     if (messagesArray) {
       const msgRender = messagesArray.map((msg, index) => (
-        <small key={index} className={msg.type !== 'text' ? msg.type || '' : ''}>
+        <small key={index + 1} className={msg.type !== 'text' ? msg.type || '' : ''}>
           <span className={msg.type !== 'text' ? `${Config.mermando.icons.classPrefix}${msg.type || ''}` : ''} />
           {msg.text}
         </small>));

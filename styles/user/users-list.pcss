@@ -25,11 +25,13 @@
     }
 
     > .actions {
-      /* font-size: */
+      &:not(:empty) {
+        margin-left: auto;
+      }
     }
 
     &:not(:last-of-type) {
-      margin-bottom: 0.25em;
+      margin-bottom: 0.875em;
     }
   }
 }
