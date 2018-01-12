@@ -11,7 +11,7 @@ export type Message = {
 };
 
 type Props = {
-  id: string,
+  id: string | number,
   label?: string,
 
   messagesArray?: Array<Message>,
@@ -213,13 +213,16 @@ export default class InputAtom extends React.PureComponent<Props, State> {
   @autobind
   renderMultipleMessages() {
     const { messagesArray } = this.props;
-    const msgRender = messagesArray.map((msg, index) => (
-      <small key={index} className={msg.type !== 'text' ? msg.type || '' : ''}>
-        <span className={msg.type !== 'text' ? `${Config.mermando.icons.classPrefix}${msg.type || ''}` : ''} />
-        {msg.text}
-      </small>));
-    msgRender.unshift(this.renderMainMessage());
-    return msgRender;
+    if (messagesArray) {
+      const msgRender = messagesArray.map((msg, index) => (
+        <small key={index} className={msg.type !== 'text' ? msg.type || '' : ''}>
+          <span className={msg.type !== 'text' ? `${Config.mermando.icons.classPrefix}${msg.type || ''}` : ''} />
+          {msg.text}
+        </small>));
+      msgRender.unshift(this.renderMainMessage());
+      return msgRender;
+    }
+    return null;
   }
 
   render() {
@@ -237,15 +240,11 @@ export default class InputAtom extends React.PureComponent<Props, State> {
       <div
         className={newClassName}
         onBlur={() => {
-          if (onBlur) {
-            onBlur();
-          }
+          if (onBlur) { onBlur(); }
           this.setState({ focused: false });
         }}
         onFocus={() => {
-          if (onFocus) {
-            onFocus();
-          }
+          if (onFocus) { onFocus(); }
           this.setState({ focused: true });
         }}
       >

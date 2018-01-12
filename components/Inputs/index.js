@@ -2,6 +2,7 @@
 import CheckboxInput from './checkbox';
 import FileInput from './file';
 import FormSection from './formSection';
+import GenericField from './GenericField';
 import Input from './input';
 import InputsWrap from './inputsWrap';
 import Label from './label';
@@ -20,6 +21,7 @@ export {
   CheckboxInput,
   FileInput,
   FormSection,
+  GenericField,
   Input,
   InputsWrap,
   Label,

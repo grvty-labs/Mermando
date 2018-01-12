@@ -21,7 +21,7 @@ export type Props = {
   message?: string,
   messageType?: $Keys<typeof messageTypes>,
   className?: string,
-  value: Value,
+  value?: Value,
 
   leftIcon?: string,
 
@@ -32,7 +32,7 @@ export type Props = {
   editable?: boolean,
   disabled?: boolean,
 
-  onChange: Function,
+  onChange?: Function,
   onFocus?: Function,
   onBlur?: Function,
 };
@@ -87,18 +87,20 @@ export default class Select extends React.PureComponent<Props, State> {
 
   @autobind
   onSelectValue(newValue: string | number) {
-    const { type, value } = this.props;
-    if (type === 'single') {
-      this.setState({ showOptionsLevel: 0 }, () => {
-        this.props.onChange(newValue);
-        document.removeEventListener('click', this.handleOutsideClick);
-      });
-    } else {
-      const casted = value && value.length
-        ? (value: Array<string | number>)
-        : [];
-      if (casted.indexOf(newValue) < 0) {
-        this.props.onChange(casted.concat(newValue));
+    const { type, value, onChange } = this.props;
+    if (onChange) {
+      if (type === 'single') {
+        this.setState({ showOptionsLevel: 0 }, () => {
+          onChange(newValue);
+          document.removeEventListener('click', this.handleOutsideClick);
+        });
+      } else {
+        const casted = value && value.length
+          ? (value: Array<string | number>)
+          : [];
+        if (casted.indexOf(newValue) < 0) {
+          onChange(casted.concat(newValue));
+        }
       }
     }
   }
@@ -106,17 +108,20 @@ export default class Select extends React.PureComponent<Props, State> {
   @autobind
   onRemoveIndex(index: number) {
     const {
-      editable, disabled, type, value,
+      editable, disabled, type, value, onChange,
     } = this.props;
-    if (type === 'multiple' && editable && !disabled) {
-      const casted = value && value.length
-        ? (value: Array<string | number>)
-        : [];
-      if (index >= 0) {
-        this.props.onChange([
-          ...casted.slice(0, index),
-          ...casted.slice(index + 1),
-        ]);
+
+    if (onChange) {
+      if (type === 'multiple' && editable && !disabled) {
+        const casted = value && value.length
+          ? (value: Array<string | number>)
+          : [];
+        if (index >= 0) {
+          onChange([
+            ...casted.slice(0, index),
+            ...casted.slice(index + 1),
+          ]);
+        }
       }
     }
   }

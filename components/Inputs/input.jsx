@@ -5,7 +5,7 @@ import moment from 'moment';
 import Datetime from 'react-datetime';
 import { WithContext as ReactTags } from 'react-tag-input';
 import InputAtom from './input-atom';
-import { inputTypes, messageTypes, keyCodes } from '../../js/inputs';
+import { simpleInputTypes as inputTypes, messageTypes, keyCodes } from '../../js/inputs';
 
 import type { Message } from './input-atom';
 
@@ -13,7 +13,7 @@ export type TagType = { id: number, text: string };
 export type Value = string | number | moment | Array<TagType>;
 
 export type Props = {
-  id: string,
+  id: string | number,
   label?: string,
   messagesArray?: Array<Message>,
   message?: string,
@@ -212,7 +212,7 @@ export default class Input extends React.PureComponent<Props, void> {
           <textarea
             {...otherProps}
             ref={(input) => { this.inputElement = input; }}
-            id={id}
+            id={`${id}`}
             className={newClassName}
             value={value || ''}
             onChange={this.onHTMLInputChange}
@@ -232,7 +232,7 @@ export default class Input extends React.PureComponent<Props, void> {
             timeFormat='hh:mm A'
             inputProps={{
               ...otherProps,
-              id,
+              id: `${id}`,
               ref: (input) => { this.inputElement = input; },
               className: newClassName,
               required,
@@ -252,7 +252,7 @@ export default class Input extends React.PureComponent<Props, void> {
             timeFormat={false}
             inputProps={{
               ...otherProps,
-              id,
+              id: `${id}`,
               ref: (input) => { this.inputElement = input; },
               className: newClassName,
               required,
@@ -269,7 +269,7 @@ export default class Input extends React.PureComponent<Props, void> {
             <input
               {...otherProps}
               ref={(input) => { this.inputElement = input; }}
-              id={id}
+              id={`${id}`}
               type='text'
               className={newClassName}
               value={value || ''}
@@ -286,7 +286,7 @@ export default class Input extends React.PureComponent<Props, void> {
         return (
           <ReactTags
             ref={(input) => { this.inputElement = input; }}
-            id={id}
+            id={`${id}`}
             readOnly={disabled || !editable}
             tags={value || []}
             suggestions={autoCompleteOptions}
@@ -329,7 +329,7 @@ export default class Input extends React.PureComponent<Props, void> {
             ref={(input) => { this.inputElement = input; }}
             type={
               type === 'float' ? 'number' : type
-            } id={id}
+            } id={`${id}`}
             className={newClassName}
             value={value || ''}
             onChange={this.onHTMLInputChange}

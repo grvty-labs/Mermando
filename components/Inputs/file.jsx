@@ -17,7 +17,7 @@ export type FileType = {
   webkitRelativePath: string,
 };
 
-type Props = {
+export type Props = {
   id: string,
   label?: string,
   messagesArray?: Array<Message>,

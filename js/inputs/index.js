@@ -17,6 +17,21 @@ export const inputTypes = {
   url: 'url',
 };
 
+export const simpleInputTypes = {
+  color: 'color',
+  date: 'date',
+  datetime: 'datetime',
+  email: 'email',
+  float: 'float',
+  number: 'number',
+  password: 'password',
+  tags: 'tags',
+  tel: 'tel',
+  text: 'text',
+  textarea: 'textarea',
+  url: 'url',
+};
+
 export const messageTypes = {
   text: 'text',
   info: 'info',

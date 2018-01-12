@@ -53,7 +53,7 @@ export default class LightboxTabbed extends React.PureComponent<Props, State> {
         >
           Previous
         </Button>)
-      : <div />;
+      : undefined;
 
     const rightComponent = this.props.zones.length - 1 > this.state.zoneSelected
       ? (
