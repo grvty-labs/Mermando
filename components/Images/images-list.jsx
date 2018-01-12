@@ -2,24 +2,10 @@
 import * as React from 'react';
 import Config from 'Config';
 import autobind from 'autobind-decorator';
-import { breakpoints } from '../../js/images';
 
-type Size = {
-  src: string,
-  width: number, // The src image size (px)
-};
-
-type Viewport = {
-  breakpoint: $Keys<typeof breakpoints>,
-  width: string, // The element size on the viewport when rendered. (px, vw, calc, etc).
-};
-
-type Image = {
-  alt?: string,
-  src: string,
-  srcSizes: Array<Size>,
-  viewports?: Array<Viewport>,
-}
+import type {
+  Size, Viewport, StoreProps as Image,
+} from './image';
 
 export type StoreProps = {
   images: Array<Image>,
@@ -36,13 +22,37 @@ export default class ImagesList extends React.PureComponent<Props, State> {
   state: State = {};
 
   @autobind
-  renderImage(element: Image, index: number) {
+  generateSourceSets(srcSizes: Array<Size>) {
+    let sourceSet = '';
+    srcSizes.forEach((size) => {
+      const newSource = `${size.src} ${size.width}w`;
+      sourceSet = `${sourceSet}${sourceSet ? `, ${newSource}` : newSource}`;
+    });
+    return sourceSet;
+  }
+
+  @autobind
+  generateSizes(viewports: Array<Viewport>) {
+    let sizeSet = '';
+    if (viewports) {
+      viewports.forEach((viewport) => {
+        const newSize = `${Config.mermando.breakpoints[viewport.breakpoint]} ${viewport.width}`;
+        sizeSet = `${sizeSet}${sizeSet ? `, ${newSize}` : newSize}`;
+      });
+    }
+    return sizeSet;
+  }
+
+  @autobind
+  renderImage(image: Image, index: number) {
     return (
       <img
         key={index}
         className='fluid-img'
-        src={element.src}
-        alt=''
+        srcSet={this.generateSourceSets(image.srcSizes)}
+        sizes={this.generateSizes(image.viewports)}
+        src={image.src}
+        alt={image.alt}
       />
     );
   }

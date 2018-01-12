@@ -4,12 +4,12 @@ import Config from 'Config';
 import autobind from 'autobind-decorator';
 import { breakpoints } from '../../js/images';
 
-type Size = {
+export type Size = {
   src: string,
   width: number, // The src image size (px)
 };
 
-type Viewport = {
+export type Viewport = {
   breakpoint: $Keys<typeof breakpoints>,
   width: string, // The element size on the viewport when rendered. (px, vw, calc, etc).
 };
