@@ -10,7 +10,7 @@ export type Props = {
   icon: string,
   title: string,
   status?: $Keys<typeof eventStatus>,
-  date: moment,
+  date: string,
   eventType: string,
   children?: React.Node | Array<React.Node>,
   onClick?: Function,
@@ -57,7 +57,7 @@ export default class Event extends React.PureComponent<Props, void> {
         <div className='data'>
           <div className='header'>
             {this.renderTitle()}
-            <span className='date'>{date.fromNow()}</span>
+            <span className='date'>{date}</span>
           </div>
           <div className='content'>
             {children}
