@@ -50,7 +50,9 @@ export default class AvatarsList extends React.PureComponent<Props, State> {
     const { users, className } = this.props;
     return (
       <div className={`users-list ${className || ''}`}>
-        { users.map(this.renderUserElement) }
+        { users
+          ? users.map(this.renderUserElement)
+          : []}
       </div>
     );
   }
