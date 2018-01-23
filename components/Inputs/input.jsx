@@ -12,6 +12,11 @@ import type { Message } from './input-atom';
 export type TagType = { id: number, text: string };
 export type Value = string | number | moment | Array<TagType>;
 
+type Option = {
+  value: string,
+  label: string,
+}
+
 export type Props = {
   id: string | number,
   label?: string,
@@ -26,6 +31,7 @@ export type Props = {
   rightIcon?: string,
 
   type?: $Keys<typeof inputTypes>,
+  options?: Array<Option>,
   pattern?: string,
   autoComplete?: boolean,
   autoCompleteOptions?: Array<string>,
@@ -57,6 +63,7 @@ type Default = {
   editable: boolean,
   disabled: boolean,
   type: $Keys<typeof inputTypes>,
+  options: Array<Option>,
 };
 
 export default class Input extends React.PureComponent<Props, void> {
@@ -78,6 +85,7 @@ export default class Input extends React.PureComponent<Props, void> {
     disabled: false,
     editable: true,
     type: 'text',
+    options: [],
   };
 
   @autobind
@@ -197,10 +205,22 @@ export default class Input extends React.PureComponent<Props, void> {
   }
 
   @autobind
+  renderOptions(option: Option, index: number) {
+    return (
+      <option
+        key={index}
+        value={option.value}
+      >
+        {option.label}
+      </option>
+    );
+  }
+
+  @autobind
   renderInput(otherProps: { [key: string]: string }) {
     const {
       id, type, className, value, required, disabled, editable,
-      autoComplete, autoCompleteOptions, placeholder,
+      autoComplete, autoCompleteOptions, placeholder, options,
     } = this.props;
 
     let newClassName = className || '';
@@ -315,6 +335,27 @@ export default class Input extends React.PureComponent<Props, void> {
             placeholder={placeholder}
           />
         );
+
+      case 'select':
+        if (options && options.length) {
+          const optionsString = options.map(this.renderOptions);
+          return (
+            <select
+              {...otherProps}
+              ref={(input) => { this.inputElement = input; }}
+              id={`${id}`}
+              className={newClassName}
+              onChange={this.onHTMLInputChange}
+              required={required}
+              disabled={disabled || !editable}
+              autoComplete={autoComplete}
+              pattern={this.generatePattern()}
+            >
+              {optionsString}
+            </select>
+          );
+        }
+        break;
 
       case 'email':
       case 'float':

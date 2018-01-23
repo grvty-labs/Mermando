@@ -25,6 +25,7 @@ export const simpleInputTypes = {
   float: 'float',
   number: 'number',
   password: 'password',
+  select: 'select',
   tags: 'tags',
   tel: 'tel',
   text: 'text',
