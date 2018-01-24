@@ -1,6 +1,7 @@
 // @flow
 /* eslint no-console: [0, {}] */
 import * as React from 'react';
+import autobind from 'autobind-decorator';
 import { Button } from '../Button';
 import { Avatar } from '../User';
 import { Dropdown } from '../Menu';
@@ -10,19 +11,22 @@ export type StoreProps = {
 
   burgerIcon?: React.Node, // Icono de hamburguesa como componente de react
   imagotype: string, // Imagotipo del cliente
-  anchors: Array<{
+  anchors: {
+    id: number | string,
     text: string,
     url?: string,
+    path?: string,
     actionKey?: string,
-  }>, // Links que van hasta arriba
+  }[], // Links que van hasta arriba
   avatar?: string, // URL de donde se tiene que cargar el avatar
   username: string, // Nombre completo del usuario, pseudonimo o solo username
-  profileAnchors: Array<{
-    id: number,
+  profileAnchors: {
+    id: number | string,
     text: string,
     url?: string,
+    path?: string,
     actionKey?: string,
-  }>,
+  }[],
 
   contactComponent?: React.Node,
   notificationsComponent?: React.Node,
@@ -46,31 +50,31 @@ export default class Topbar extends React.PureComponent<Props, void> {
     notifications: false,
   }
 
+  @autobind
+  onClick(url?: string, path?: string, actionKey?: string) {
+    const { onAnchorClick } = this.props;
+    if (path) {
+      onAnchorClick(path);
+    } else if (actionKey && Object.prototype.hasOwnProperty.call(this.props, actionKey)) {
+      this.props[actionKey]();
+    } else if (url) {
+      window.location = url;
+    }
+  }
+
   render() {
     const {
       anchors, burgerIcon, className, imagotype,
       contactComponent, avatar, username, profileAnchors,
-      notificationsComponent, onBurguerClick, onAnchorClick,
+      notificationsComponent, onBurguerClick,
     } = this.props;
 
-    const centralAnchors = anchors.map((element, index) => (
+    const centralAnchors = anchors.map(element => (
       <div
         className='anchor'
-        key={index}
-        onClick={
-          element.url
-            ? () => onAnchorClick(element.url)
-            : element.actionKey && Object.prototype.hasOwnProperty.call(this.props, element.actionKey)
-              ? () => this.props[element.actionKey]
-              : () => {}
-        }
-        onKeyPress={
-          element.url
-            ? () => onAnchorClick(element.url)
-            : element.actionKey && Object.prototype.hasOwnProperty.call(this.props, element.actionKey)
-              ? () => this.props[element.actionKey]
-              : () => {}
-        }
+        key={element.id}
+        onClick={() => this.onClick(element.url, element.path, element.actionKey)}
+        onKeyPress={() => this.onClick(element.url, element.path, element.actionKey)}
         role='link'
         tabIndex={0}
       >
@@ -128,13 +132,7 @@ export default class Topbar extends React.PureComponent<Props, void> {
                 <Button
                   key={anchor.id}
                   strain='link'
-                  onClick={
-                    anchor.url
-                      ? () => onAnchorClick(anchor.url)
-                      : anchor.actionKey && Object.prototype.hasOwnProperty.call(this.props, anchor.actionKey)
-                        ? this.props[anchor.actionKey]
-                        : () => {}
-                  }
+                  onClick={() => this.onClick(anchor.url, anchor.path, anchor.actionKey)}
                 >
                   {anchor.text}
                 </Button>
