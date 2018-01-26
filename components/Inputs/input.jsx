@@ -10,17 +10,19 @@ import { simpleInputTypes as inputTypes, messageTypes, keyCodes } from '../../js
 import type { Message } from './input-atom';
 
 export type TagType = { id: number, text: string };
-export type Value = string | number | moment | Array<TagType>;
+export type Value = string | number | moment | TagType[];
 
 export type Props = {
   id: string | number,
   label?: string,
-  messagesArray?: Array<Message>,
+  messagesArray?: Message[],
   message?: string,
   messageType?: $Keys<typeof messageTypes>,
   forceMessageBeneath?: boolean,
   className?: string,
   +value?: Value,
+  maxTags?: number,
+  maxLength?: number,
 
   leftIcon?: string,
   rightIcon?: string,
@@ -28,7 +30,7 @@ export type Props = {
   type?: $Keys<typeof inputTypes>,
   pattern?: string,
   autoComplete?: boolean,
-  autoCompleteOptions?: Array<string>,
+  autoCompleteOptions?: string[],
   placeholder?: string,
   required?: boolean,
   forceInlineRequired?: boolean,
@@ -44,7 +46,7 @@ type Default = {
   label: string,
   className: string,
 
-  messagesArray: Array<Message>,
+  messagesArray: Message[],
   message: string,
   messageType: $Keys<typeof messageTypes>,
   forceMessageBeneath: boolean,
@@ -82,59 +84,63 @@ export default class Input extends React.PureComponent<Props, void> {
 
   @autobind
   onHTMLInputChange(event: SyntheticInputEvent<*>) {
-    const { type, onChange } = this.props;
+    const { type, onChange, maxLength } = this.props;
     const { value } = event.target;
     let clean;
 
-    if (onChange) {
-      if (!value) {
-        onChange(value);
-        return;
-      }
+    if (!maxLength || value.length <= maxLength) {
+      if (onChange) {
+        if (!value) {
+          onChange(value);
+          return;
+        }
 
-      switch (type) {
-        case 'number':
-          clean = Number.parseInt(value, 10);
-          if (!Number.isNaN(clean)) {
-            onChange(clean);
-          }
-          break;
-
-        case 'float':
-          clean = Number.parseFloat(value);
-          if (!Number.isNaN(clean)) {
-            onChange(clean);
-          }
-          break;
-
-        case 'textarea':
-          clean = value;
-          onChange(clean);
-          setTimeout(() => {
-            if (this.inputElement) {
-              this.inputElement.style.cssText = 'height:auto; padding: 0';
-              this.inputElement.style.cssText = `height: ${this.inputElement.scrollHeight}px`;
+        switch (type) {
+          case 'number':
+            clean = Number.parseInt(value, 10);
+            if (!Number.isNaN(clean)) {
+              onChange(clean);
             }
-          }, 0);
-          break;
+            break;
 
-        case 'email':
-        case 'password':
-        case 'tel':
-        case 'text':
-        case 'url':
-        case 'color':
-        default:
-          clean = value;
-          onChange(clean);
-          break;
+          case 'float':
+            clean = Number.parseFloat(value);
+            if (!Number.isNaN(clean)) {
+              onChange(clean);
+            }
+            break;
+
+          case 'textarea':
+            clean = value;
+            onChange(clean);
+            setTimeout(() => {
+              if (this.inputElement) {
+                this.inputElement.style.cssText = 'height:auto; padding: 0';
+                this.inputElement.style.cssText = `height: ${this.inputElement.scrollHeight}px`;
+              }
+            }, 0);
+            break;
+
+          case 'email':
+          case 'password':
+          case 'tel':
+          case 'text':
+          case 'url':
+          case 'color':
+          default:
+            clean = value;
+            onChange(clean);
+            break;
+        }
       }
     }
   }
 
   @autobind
   onCustomInputChange(newValue: ?Value, index?: number) {
-    const { type, onChange, value } = this.props;
+    const {
+      type, onChange, value, maxTags,
+    } = this.props;
     let casted;
 
     if (onChange) {
@@ -145,8 +151,11 @@ export default class Input extends React.PureComponent<Props, void> {
           break;
 
         case 'tags':
+          if (maxTags && value && value.length >= maxTags) {
+            break;
+          }
           casted = value && value.length > 0
-            ? (value: Array<TagType>)
+            ? (value: TagType[])
             : [];
           if (index === 0 || index) {
             onChange([
@@ -285,7 +294,7 @@ export default class Input extends React.PureComponent<Props, void> {
       case 'tags':
         return (
           <ReactTags
-            ref={(input) => { this.inputElement = input; }}
+            // ref={(input) => { this.inputElement = input; }}
             id={`${id}`}
             readOnly={disabled || !editable}
             tags={value || []}
@@ -377,11 +386,7 @@ export default class Input extends React.PureComponent<Props, void> {
         disabled={disabled}
         empty={!value && value !== 0}
         invalid={messageType === 'error'}
-        onClick={() => {
-          if (this.inputElement) {
-            this.inputElement.focus();
-          }
-        }}
+        onClick={() => { if (this.inputElement) this.inputElement.focus(); }}
         onFocus={onFocus}
         onBlur={onBlur}
       >
