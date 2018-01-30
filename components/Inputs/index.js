@@ -10,6 +10,7 @@ import SelectInput from './select';
 import RadioInputGroup from './radio-group';
 import RadioInput from './radio';
 import RadioBox from './radio-box';
+import RadioBoxGroup from './radio-box-group';
 
 import type { TagType as TagValue } from './input';
 import type { Message as InputMessage } from './input-atom';
@@ -30,6 +31,7 @@ export {
   RadioInputGroup,
   RadioInput,
   RadioBox,
+  RadioBoxGroup,
 };
 
 export type {
