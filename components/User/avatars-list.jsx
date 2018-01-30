@@ -5,14 +5,14 @@ import Avatar from './avatar';
 import type { AvatarProps } from './avatar';
 
 type AvatarsListProps = {
-  avatars?: Array<AvatarProps>,
+  avatars?: AvatarProps[],
   className?: string,
   overlap?: boolean,
 };
 
 type Props = AvatarsListProps;
 type Default = {
-  avatars: Array<AvatarProps>,
+  avatars: AvatarProps[],
   className: string,
   overlap: boolean,
 };
@@ -30,7 +30,7 @@ export default class AvatarsList extends React.PureComponent<Props, State> {
     return (
       <div className={`avatars-list ${overlap ? 'overlap' : ''} ${className || ''}`}>
         { avatars
-          ? avatars.map((e, i) => (
+          ? avatars.map((e: AvatarProps, i: number) => (
             <Avatar key={i} hover='simple' {...e} />
           ))
           : [] }

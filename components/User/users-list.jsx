@@ -3,16 +3,16 @@ import * as React from 'react';
 import autobind from 'autobind-decorator';
 import Avatar from './avatar';
 
-type User = {
+import type { AvatarProps } from './avatar';
+
+type User = AvatarProps & {
   id: number | string,
   email: string,
-  name: string,
-  avatarUrl?: string,
-  actions?: React.Node | Array<React.Node>,
+  actions?: React.Node | React.Node[],
 }
 
 type StoreProps = {
-  users: Array<User>,
+  users: User[],
   className?: string,
 };
 
@@ -34,7 +34,7 @@ export default class AvatarsList extends React.PureComponent<Props, State> {
   renderUserElement(user: User) {
     return (
       <div key={user.id}>
-        <Avatar url={user.avatarUrl} email={user.email} name={user.name} />
+        <Avatar {...user} />
         <div className='data'>
           <span className='name'>{user.name}</span>
           <span className='email'>{user.email}</span>

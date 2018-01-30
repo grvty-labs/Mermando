@@ -1,6 +1,7 @@
 // @flow
 
 export const inputTypes = {
+  avatar: 'avatar',
   color: 'color',
   date: 'date',
   datetime: 'datetime',
