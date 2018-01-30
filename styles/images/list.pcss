@@ -1,0 +1,14 @@
+.images-list {
+  align-items: center;
+  display: flex;
+  flex-flow: row wrap;
+
+  > .fluid-img {
+    flex: 1;
+    max-width: 15.125em;
+
+    &:not(:last-child) {
+      margin-right: 1em;
+    }
+  }
+}

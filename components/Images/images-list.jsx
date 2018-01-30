@@ -1,14 +1,15 @@
 // @flow
 import * as React from 'react';
-import Config from 'Config';
 import autobind from 'autobind-decorator';
+import Image from './image';
 
 import type {
-  Size, Viewport, StoreProps as Image,
+  Viewport, StoreProps as ImageType,
 } from './image';
 
 export type StoreProps = {
-  images: Array<Image>,
+  images: ImageType[],
+  viewports?: Viewport[],
 }
 
 export type Actions = {};
@@ -22,49 +23,30 @@ export default class ImagesList extends React.PureComponent<Props, State> {
   state: State = {};
 
   @autobind
-  generateSourceSets(srcSizes: Array<Size>) {
-    let sourceSet = '';
-    srcSizes.forEach((size) => {
-      const newSource = `${size.src} ${size.width}w`;
-      sourceSet = `${sourceSet}${sourceSet ? `, ${newSource}` : newSource}`;
-    });
-    return sourceSet;
-  }
-
-  @autobind
-  generateSizes(viewports?: Array<Viewport>) {
-    let sizeSet = '';
-    if (viewports) {
-      viewports.forEach((viewport) => {
-        const newSize = `${Config.mermando.breakpoints[viewport.breakpoint]} ${viewport.width}`;
-        sizeSet = `${sizeSet}${sizeSet ? `, ${newSize}` : newSize}`;
-      });
-    }
-    return sizeSet;
-  }
-
-  @autobind
-  renderImage(image: Image, index: number) {
+  renderImage(image: ImageType, index: number) {
     const {
-      src, alt, srcSizes, viewports,
+      src, alt, srcSizes,
     } = image;
-    return (
-      <img
-        key={index}
-        className='fluid-img'
-        srcSet={this.generateSourceSets(srcSizes)}
-        sizes={this.generateSizes(viewports)}
-        src={src}
-        alt={alt}
-      />
-    );
+
+    if (src) {
+      return (
+        <Image
+          key={index}
+          alt={alt}
+          src={src}
+          srcSizes={srcSizes}
+          viewports={image.viewports || this.props.viewports}
+        />
+      );
+    }
+    return null;
   }
 
   render() {
     const { images } = this.props;
     const imagesRender = images.map(this.renderImage);
     return (
-      <div className='image-list-wrapper'>
+      <div className='images-list'>
         {imagesRender}
       </div>
     );
