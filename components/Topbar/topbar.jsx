@@ -133,6 +133,7 @@ export default class Topbar extends React.PureComponent<Props, void> {
                   key={anchor.id}
                   strain='link'
                   onClick={() => this.onClick(anchor.url, anchor.path, anchor.actionKey)}
+                  className={anchor.selected ? 'focus' : ''}
                 >
                   {anchor.text}
                 </Button>

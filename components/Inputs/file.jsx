@@ -20,12 +20,12 @@ export type FileType = {
 export type Props = {
   id: string,
   label?: string,
-  messagesArray?: Array<Message>,
+  messagesArray?: Message[],
   message?: string,
   messageType?: $Keys<typeof messageTypes>,
   forceMessageBeneath?: boolean,
   className?: string,
-  +value?: FileType | Array<FileType>,
+  +value?: FileType | FileType[],
 
   rightIcon?: string,
 
@@ -48,7 +48,7 @@ type Default = {
   label: string,
   className: string,
 
-  messagesArray: Array<Message>,
+  messagesArray: Message[],
   message: string,
   messageType: $Keys<typeof messageTypes>,
   forceMessageBeneath: boolean,
@@ -88,7 +88,7 @@ export default class FileInput extends React.PureComponent<Props, void> {
   };
 
   @autobind
-  onSelectValue(acceptedFiles: Array<FileType>) {
+  onSelectValue(acceptedFiles: FileType[]) {
     const {
       type, value, onChange,
     } = this.props;
@@ -98,7 +98,7 @@ export default class FileInput extends React.PureComponent<Props, void> {
         onChange(acceptedFiles[0]);
       } else if (type === 'multiple' && acceptedFiles && acceptedFiles.length) {
         const casted = value && value.constructor === Array && value.length
-          ? (value: Array<FileType>)
+          ? (value: FileType[])
           : [];
         if (acceptedFiles && acceptedFiles.length && acceptedFiles[0]) {
           onChange(casted.concat(acceptedFiles));
@@ -115,7 +115,7 @@ export default class FileInput extends React.PureComponent<Props, void> {
     if (onChange && !this.props.disabled && this.props.editable) {
       if (this.props.type === 'multiple') {
         const casted = value && value.constructor === Array && value.length
-          ? (value: Array<FileType>)
+          ? (value: FileType[])
           : [];
         if (index >= 0 && index < casted.length) {
           onChange([
@@ -211,7 +211,7 @@ export default class FileInput extends React.PureComponent<Props, void> {
           </div>
         );
       } else if (type === 'multiple' && value && value.constructor === Array && value.length) {
-        const casted = (value: Array<FileType>);
+        const casted = (value: FileType[]);
         return (
           <div className={`attachment multiple ${previewType === 'image' ? 'grid' : ''}`}>
             { casted.map(this.renderSinglePreview) }

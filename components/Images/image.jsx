@@ -15,10 +15,11 @@ export type Viewport = {
 };
 
 export type StoreProps = {
+  className?: string,
   alt?: string,
   src: string,
-  srcSizes: Array<Size>,
-  viewports?: Array<Viewport>,
+  srcSizes?: Size[],
+  viewports?: Viewport[],
 };
 export type Actions = {};
 type Props = StoreProps & Actions;
@@ -27,17 +28,21 @@ type Default = {};
 type State = {};
 
 export default class FluidImage extends React.PureComponent<Props, State> {
-  static defaultProps: Default = {};
+  static defaultProps: Default = {
+    className: 'fluid-img',
+  };
   state: State = {};
 
   @autobind
   generateSourceSets() {
     const { srcSizes } = this.props;
     let sourceSet = '';
-    srcSizes.forEach((size) => {
-      const newSource = `${size.src} ${size.width}w`;
-      sourceSet = `${sourceSet}${sourceSet ? `, ${newSource}` : newSource}`;
-    });
+    if (srcSizes) {
+      srcSizes.forEach((size) => {
+        const newSource = `${size.src} ${size.width}w`;
+        sourceSet = `${sourceSet}${sourceSet ? `, ${newSource}` : newSource}`;
+      });
+    }
     return sourceSet;
   }
 
@@ -55,9 +60,10 @@ export default class FluidImage extends React.PureComponent<Props, State> {
   }
 
   render() {
+    const { className } = this.props;
     return (
       <img
-        className='fluid-img'
+        className={className || ''}
         srcSet={this.generateSourceSets()}
         sizes={this.generateSizes()}
         src={this.props.src}

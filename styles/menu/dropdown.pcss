@@ -14,7 +14,7 @@
         border-left: 2px solid currentColor;
         content: " ";
         height: 0.4375em;
-        margin-top: 0.25em;
+        margin: 0;
         position: absolute;
         right: 0.8em;
         transform: rotate(-45deg);
@@ -58,8 +58,8 @@
       visibility 0s var(--dropdown-transition-appear-time) ease-in-out;
     visibility: hidden;
 
-    > :--button,
-    > div {
+    > div,
+    > :--button {
       &.title {
         align-items: center;
         display: flex;
@@ -75,9 +75,10 @@
           pointer-events: none;
           text-align: center;
 
-          &:first-of-type {
-            justify-content: flex-start;
-            pointer-events: auto;
+          > div,
+          > span {
+            color: inherit;
+            font-size: inherit;
           }
 
           &:last-of-type {
@@ -85,10 +86,9 @@
             pointer-events: auto;
           }
 
-          > div,
-          > span {
-            color: inherit;
-            font-size: inherit;
+          &:first-of-type {
+            justify-content: flex-start;
+            pointer-events: auto;
           }
         }
       }
