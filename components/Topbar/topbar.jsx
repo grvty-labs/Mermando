@@ -6,6 +6,8 @@ import { Button } from '../Button';
 import { Avatar } from '../User';
 import { Dropdown } from '../Menu';
 
+import type { AvatarProps } from '../User';
+
 export type StoreProps = {
   className: string,
 
@@ -18,7 +20,7 @@ export type StoreProps = {
     path?: string,
     actionKey?: string,
   }[], // Links que van hasta arriba
-  avatar?: string, // URL de donde se tiene que cargar el avatar
+  avatar?: AvatarProps,
   username: string, // Nombre completo del usuario, pseudonimo o solo username
   profileAnchors: {
     id: number | string,
@@ -121,7 +123,7 @@ export default class Topbar extends React.PureComponent<Props, void> {
             {contactComponent}
             {notificationsComponent}
 
-            <Avatar url={avatar} name={username} />
+            <Avatar avatar={avatar} name={username} />
             <Dropdown
               className='user-options'
               buttonSize='small'
