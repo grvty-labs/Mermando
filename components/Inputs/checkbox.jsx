@@ -6,11 +6,20 @@ import Label from './label';
 export type Props = {
   id: string,
   label?: string,
+  readOnly?: boolean,
   value: boolean,
   onChange: Function,
 };
 
+type Default = {
+  readOnly: boolean,
+}
+
 export default class Checkbox extends React.PureComponent<Props, void> {
+  static defaultProps: Default = {
+    readOnly: false,
+  };
+
   @autobind
   onValueChange(event: SyntheticInputEvent<*>) {
     this.props.onChange(event.target.checked);
@@ -21,6 +30,7 @@ export default class Checkbox extends React.PureComponent<Props, void> {
       id,
       label,
       value,
+      readOnly,
       ...otherProps
     } = this.props;
 
@@ -28,6 +38,7 @@ export default class Checkbox extends React.PureComponent<Props, void> {
       <div className='checkbox'>
         <input
           {...otherProps}
+          readOnly={readOnly || false}
           type='checkbox'
           id={id} checked={value}
           onChange={this.onValueChange}
