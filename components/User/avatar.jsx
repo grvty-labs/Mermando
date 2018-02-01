@@ -4,25 +4,27 @@ import autobind from 'autobind-decorator';
 import { getNamePastel } from '../../js/utils';
 
 export type AvatarProps = {
-  avatar?: {
+  src: string,
+  alt?: string,
+  srcSizes?: {
     src: string,
-    alt?: string,
-    srcSizes?: {
-      src: string,
-      width: number,
-    }[],
-  },
+    width: number,
+  }[],
+};
+type Props = {
+  avatar?: AvatarProps,
   name?: string,
   hover?: 'simple' | 'complex' | 'none',
 };
-type Props = AvatarProps;
 type Default = {
+  name: string,
   hover: 'simple' | 'complex' | 'none',
 };
 
 export default class Avatar extends React.PureComponent<Props, void> {
   static defaultProps: Default = {
     hover: 'none',
+    name: 'Unknown',
   };
 
   @autobind
@@ -39,12 +41,12 @@ export default class Avatar extends React.PureComponent<Props, void> {
         className='avatar'
         style={avatar
           ? { backgroundImage: `url(${avatar.src})` }
-          : { backgroundColor: getNamePastel(name || 'Unknown') }
+          : { backgroundColor: getNamePastel(name || '') }
         }
         aria-hidden={hover === 'none'}
         title={hover === 'simple' ? name : null}
       >
-        { avatar ? null : <span>{this.getNameInitials(name || 'Unknown')}</span> }
+        { avatar ? null : <span>{this.getNameInitials(name || '')}</span> }
       </div>
     );
   }
