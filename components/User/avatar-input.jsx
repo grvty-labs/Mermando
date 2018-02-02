@@ -84,7 +84,7 @@ export default class FileInput extends React.PureComponent<Props, void> {
     return (
       <div className='preview'>
         <Avatar
-          avatar={value ? { src: value.preview } : undefined}
+          avatar={value && value.preview ? { src: value.preview } : undefined}
           name={name}
         />
         { values.isDragActive
