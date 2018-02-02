@@ -54,8 +54,15 @@
       opacity: 1;
     }
 
-    &:--disabled + label {
-      border-color: var(--checkbox-border-color);
+    &:--disabled,
+    &:--read-only {
+      + label {
+        border-color: var(--checkbox-disabled-border-color);
+
+        &::after {
+          border-color: var(--checkbox-disabled-checked-color);
+        }
+      }
     }
   }
 }
