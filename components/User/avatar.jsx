@@ -39,14 +39,14 @@ export default class Avatar extends React.PureComponent<Props, void> {
     return (
       <div
         className='avatar'
-        style={avatar
+        style={avatar && avatar.src
           ? { backgroundImage: `url(${avatar.src})` }
           : { backgroundColor: getNamePastel(name || '') }
         }
         aria-hidden={hover === 'none'}
         title={hover === 'simple' ? name : null}
       >
-        { avatar ? null : <span>{this.getNameInitials(name || '')}</span> }
+        { avatar && avatar.src ? null : <span>{this.getNameInitials(name || '')}</span> }
       </div>
     );
   }
