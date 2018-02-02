@@ -1,16 +1,18 @@
 // @flow
 import * as React from 'react';
+import autobind from 'autobind-decorator';
 import Config from 'Config';
 import { Button } from '../Button';
 
-type StoreProps = {
+export type StoreProps = {
   children: React.Node | Array<React.Node>,
   className?: string,
   show: boolean,
   title: string,
   topComponent?: React.Node | Array<React.Node>,
+  footerComponent?: React.Node | Array<React.Node>,
 };
-type Actions = {
+export type Actions = {
   onCloseClick: Function,
   onToggleLightbox?: Function,
 };
@@ -49,9 +51,15 @@ export default class Lightbox extends React.PureComponent<Props, State> {
     }
   }
 
+  @autobind
+  onCloseClick(event: SyntheticEvent<*>) {
+    event.stopPropagation();
+    this.props.onCloseClick();
+  }
+
   render() {
     const {
-      children, className, onCloseClick, show,
+      children, className, footerComponent, onCloseClick, show,
       title, topComponent,
     } = this.props;
     const { show: definitivelyShow } = this.state;
@@ -60,8 +68,8 @@ export default class Lightbox extends React.PureComponent<Props, State> {
         <div className={`lightbox-wrapper ${show ? '' : 'close'}`}>
           <div
             className='overlay'
-            onClick={onCloseClick}
-            onKeyPress={onCloseClick}
+            onClick={this.onCloseClick}
+            onKeyPress={this.onCloseClick}
             role='button'
             tabIndex={-1}
           />
@@ -70,7 +78,7 @@ export default class Lightbox extends React.PureComponent<Props, State> {
             <div className='header'>
               <div>
                 <Button
-                  type='icon'
+                  strain='icon'
                   iconSide='right'
                   icon={Config.mermando.icons.close}
                   onClick={onCloseClick}
@@ -81,6 +89,9 @@ export default class Lightbox extends React.PureComponent<Props, State> {
             </div>
             <div className='content'>
               { children }
+            </div>
+            <div className='footer'>
+              { footerComponent }
             </div>
           </div>
         </div>

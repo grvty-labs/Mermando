@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { types } from '../../js/sections';
 
 export type StoreProps = {
   title: string,
@@ -7,7 +8,7 @@ export type StoreProps = {
   topComponent?: React.Node | Array<React.Node>,
   middleComponent?: React.Node | Array<React.Node>,
   children: React.Node | Array<React.Node>,
-  type?: 'cards-panel' | 'none' | 'separated-rows' | 'split',
+  type?: $Keys<typeof types>,
 };
 export type Actions = {};
 
@@ -15,7 +16,7 @@ type Props = StoreProps & Actions;
 type State = {};
 type Default = {
   className: string,
-  type: 'cards-panel' | 'none' | 'separated-rows' | 'split',
+  type: $Keys<typeof types>,
 };
 
 export default class Section extends React.PureComponent<Props, State> {

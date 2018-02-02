@@ -8,8 +8,8 @@ The reason behind this project is the necessity to standarize the use of compone
 What's in the box?! :gift:
 -------------------
 
-### Input-Atoms :zap:
-These fellas have an internal standard to gather the values without any kind of external logic, meaning that you only pass a value and will receive a value, no more `event.target.value`, file async reading nor `checked === 'on'`. In-and-out, like it should have been since the first HTML standard was designed. Future: Validations for required and patterns, so you don't have to rely on the browser**\***.
+#### :zap: Input-Atoms
+These fellas have an internal standard to gather the values without any kind of external logic, meaning that you only pass a value and will receive a value, no more `event.target.value`, file async reading nor `checked === 'on'`. In-and-out, like it should have been since the first HTML standard was designed. Future: Validations for required and patterns, so you don't have to rely on the browser\*.
 
 What will you find in the `Inputs` folder?
 *   Input (for textareas, text, number, tags, colors, datetime-pickers, etc)
@@ -22,33 +22,31 @@ What will you find in the `Inputs` folder?
 
 \* I am looking at you, Safari...
 
-### Lightboxes :high_brightness:
+#### :high_brightness: Lightboxes
 
 *   Lightbox
 *   TabbedLightbox (work in progress)
 
 
-### Pages :pushpin:
+#### :pushpin: Pages
 
 
-### Navbars :ticket:
+#### :ticket: Navbars
 
 
-### Sidebars :bookmark:
-
-
-### Sections :scroll:
+#### :scroll: Sections
 Will have some breaking changes, consider this as the leprosy.
 
+#### :bookmark: Sidebars
 
-### Progress Loading :last_quarter_moon:
+#### :last_quarter_moon: Progress bars
 Hang in there cowboy. Coming soon.
 
-### Toastrs :tada:
+#### :tada: Toastrs
 Coming soon to the nearest theater in town.
 
 
-<img src="https://www.javatpoint.com/images/javascript/javascript_logo.png" width="26"> Javascript
+<img src="https://www.javatpoint.com/images/javascript/javascript_logo.png" width="32"> Javascript
 ------------------------
 
 Mermando requires a configuration file to be importable for it to run\*, the way it is being imported is like this: `import Config from 'Config';`. All the configurations are required and do not have fallbacks\*\*
@@ -63,17 +61,17 @@ Mermando has been tested with FontAwesome and with custom icon fonts created wit
 
 \*\*\* Mermando displays the icons inside `<span/>` tags, while FontAwesome uses `<i/>` tags in their examples.
 
-<img src="https://cdn.worldvectorlogo.com/logos/react.svg" width="26"> React
+<img src="https://cdn.worldvectorlogo.com/logos/react.svg" width="32"> React
 -----
 We try to use as much as possible the `PureComponent`s to minimize the impact in memory and rendering. If something is not re-rendering, you might need to tweak the props you are passing to the components\* or write your own components.
 
 \* This is an ugly quickfix for some cases: Replace `prop={value}` for `prop={value || ''}` or `prop={value || null}`. Not that this can impact severily in your memory, so be careful.
 
-<img src="https://camo.githubusercontent.com/2ec260a9d4d3dcc109be800af0b29a8471ad5967/687474703a2f2f706f73746373732e6769746875622e696f2f706f73746373732f6c6f676f2e737667" width="26"> PostCSS
+<img src="https://camo.githubusercontent.com/2ec260a9d4d3dcc109be800af0b29a8471ad5967/687474703a2f2f706f73746373732e6769746875622e696f2f706f73746373732f6c6f676f2e737667" width="32"> PostCSS
 ------------
 PostCSS is just so wonderful, we would marry the guy who is developing it\*. Mermando is almost fully-configurable, you just need to declare a set of variables\*\* and import the files you need. All the current variables are required (if you import its related file) and do not have fallbacks\*\*\*.
 
-### Values are important
+#### Values are important
 
 | Value | Description |
 | ----- | ----------- |
@@ -103,7 +101,7 @@ These are some **pending changes** for Mermando:
 *   Breadcrumbs design for pages
 *   Loading progress bars
 *   Fork the datetime-picker open-source project to fix the flickering, improve memory usage and minimize the rendering time.
-*   Merge the input atoms in a single component, so just require to import that component.
+*   Merge the input atoms in a single component, so you can import that component without knowing the differences between all input components.
 
 
 Hurt me plenty :feelsgood:
@@ -122,7 +120,7 @@ Here in GRVTY we aim for excellence, we are not a workshop. Right now we are dev
 
 This might seem a simple package right now, but we are aiming to make an entire toolkit, if there is something you don't like or you need, please let us know or make a pull-request to this project. We love open-source and we love when quality goes up so, if you are reading this far, we love you too.
 
-Made for you, with :heart: from
+**Made for you, with :heart: from**
 -------------------------------
 
 [![StackShare][stack-shield]][stack-tech]

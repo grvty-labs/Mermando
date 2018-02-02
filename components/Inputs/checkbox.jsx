@@ -3,14 +3,23 @@ import * as React from 'react';
 import autobind from 'autobind-decorator';
 import Label from './label';
 
-type Props = {
+export type Props = {
   id: string,
-  label?: string,
+  label?: string | React.Node | React.Node[],
+  readOnly?: boolean,
   value: boolean,
   onChange: Function,
 };
 
+type Default = {
+  readOnly: boolean,
+}
+
 export default class Checkbox extends React.PureComponent<Props, void> {
+  static defaultProps: Default = {
+    readOnly: false,
+  };
+
   @autobind
   onValueChange(event: SyntheticInputEvent<*>) {
     this.props.onChange(event.target.checked);
@@ -21,6 +30,7 @@ export default class Checkbox extends React.PureComponent<Props, void> {
       id,
       label,
       value,
+      readOnly,
       ...otherProps
     } = this.props;
 
@@ -28,6 +38,7 @@ export default class Checkbox extends React.PureComponent<Props, void> {
       <div className='checkbox'>
         <input
           {...otherProps}
+          readOnly={readOnly || false}
           type='checkbox'
           id={id} checked={value}
           onChange={this.onValueChange}

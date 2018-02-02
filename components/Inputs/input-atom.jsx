@@ -5,10 +5,16 @@ import Config from 'Config';
 import Label from './label';
 import { inputTypes, messageTypes } from '../../js/inputs';
 
+export type Message = {
+  text: string,
+  type: $Keys<typeof messageTypes>,
+};
+
 type Props = {
-  id: string,
+  id: string | number,
   label?: string,
 
+  messagesArray?: Array<Message>,
   message?: string,
   messageType?: $Keys<typeof messageTypes>,
   forceMessageBeneath?: boolean,
@@ -41,6 +47,7 @@ type Default = {
   label: string,
   className: string,
 
+  messagesArray: Array<Message>,
   message: string,
   messageType: $Keys<typeof messageTypes>,
   forceMessageBeneath: boolean,
@@ -63,6 +70,7 @@ export default class InputAtom extends React.PureComponent<Props, State> {
     label: '',
     className: '',
 
+    messagesArray: [],
     message: '',
     messageType: 'text',
     forceMessageBeneath: false,
@@ -162,7 +170,7 @@ export default class InputAtom extends React.PureComponent<Props, State> {
   }
 
   @autobind
-  renderMessages() {
+  renderMainMessage() {
     const {
       forceMessageBeneath,
       forceInlineRequired,
@@ -186,18 +194,33 @@ export default class InputAtom extends React.PureComponent<Props, State> {
 
     if (label && (message || (required && !forceInlineRequired))) {
       return (
-        <small className={className}>
+        <small className={className} key={1}>
           <span className={iconClassName} />
           {message || 'Required field'}
         </small>
       );
     } else if (!label && message && forceMessageBeneath) {
       return (
-        <small className={className}>
+        <small className={className} key={1}>
           <span className={iconClassName} />
           {message}
         </small>
       );
+    }
+    return null;
+  }
+
+  @autobind
+  renderMultipleMessages() {
+    const { messagesArray } = this.props;
+    if (messagesArray) {
+      const msgRender = messagesArray.map((msg, index) => (
+        <small key={index + 1} className={msg.type !== 'text' ? msg.type || '' : ''}>
+          <span className={msg.type !== 'text' ? `${Config.mermando.icons.classPrefix}${msg.type || ''}` : ''} />
+          {msg.text}
+        </small>));
+      msgRender.unshift(this.renderMainMessage());
+      return msgRender;
     }
     return null;
   }
@@ -217,15 +240,11 @@ export default class InputAtom extends React.PureComponent<Props, State> {
       <div
         className={newClassName}
         onBlur={() => {
-          if (onBlur) {
-            onBlur();
-          }
+          if (onBlur) { onBlur(); }
           this.setState({ focused: false });
         }}
         onFocus={() => {
-          if (onFocus) {
-            onFocus();
-          }
+          if (onFocus) { onFocus(); }
           this.setState({ focused: true });
         }}
       >
@@ -241,7 +260,7 @@ export default class InputAtom extends React.PureComponent<Props, State> {
           {children}
           {this.renderRightIcon()}
         </div>
-        <div className='msgs'>{this.renderMessages()}</div>
+        <div className='msgs'>{this.renderMultipleMessages()}</div>
         <div className='footer'>{footer}</div>
       </div>
     );

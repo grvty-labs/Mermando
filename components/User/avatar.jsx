@@ -1,27 +1,31 @@
 // @flow
 import * as React from 'react';
 import autobind from 'autobind-decorator';
-import { hashCode, intToRGB } from '../../js/utils';
+import { getNamePastel } from '../../js/utils';
 
 export type AvatarProps = {
-  url?: string,
+  src: string,
+  alt?: string,
+  srcSizes?: {
+    src: string,
+    width: number,
+  }[],
+};
+type Props = {
+  avatar?: AvatarProps,
   name?: string,
   hover?: 'simple' | 'complex' | 'none',
 };
-type Props = AvatarProps;
 type Default = {
+  name: string,
   hover: 'simple' | 'complex' | 'none',
 };
 
 export default class Avatar extends React.PureComponent<Props, void> {
   static defaultProps: Default = {
     hover: 'none',
+    name: 'Unknown',
   };
-
-  @autobind
-  getNameColor(name: string): string {
-    return `#${intToRGB(hashCode(name))}`;
-  }
 
   @autobind
   getNameInitials(name: string): string {
@@ -31,18 +35,18 @@ export default class Avatar extends React.PureComponent<Props, void> {
   }
 
   render() {
-    const { url, name, hover } = this.props;
+    const { avatar, name, hover } = this.props;
     return (
       <div
         className='avatar'
-        style={url
-          ? { backgroundImage: `url(${url})` }
-          : { backgroundColor: this.getNameColor(name || 'Unknown') }
+        style={avatar && avatar.src
+          ? { backgroundImage: `url(${avatar.src})` }
+          : { backgroundColor: getNamePastel(name || '') }
         }
         aria-hidden={hover === 'none'}
         title={hover === 'simple' ? name : null}
       >
-        { url ? null : <span>{this.getNameInitials(name || 'Unknown')}</span> }
+        { avatar && avatar.src ? null : <span>{this.getNameInitials(name || '')}</span> }
       </div>
     );
   }

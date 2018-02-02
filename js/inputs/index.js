@@ -1,6 +1,7 @@
 // @flow
 
 export const inputTypes = {
+  avatar: 'avatar',
   color: 'color',
   date: 'date',
   datetime: 'datetime',
@@ -10,6 +11,21 @@ export const inputTypes = {
   number: 'number',
   password: 'password',
   select: 'select',
+  tags: 'tags',
+  tel: 'tel',
+  text: 'text',
+  textarea: 'textarea',
+  url: 'url',
+};
+
+export const simpleInputTypes = {
+  color: 'color',
+  date: 'date',
+  datetime: 'datetime',
+  email: 'email',
+  float: 'float',
+  number: 'number',
+  password: 'password',
   tags: 'tags',
   tel: 'tel',
   text: 'text',

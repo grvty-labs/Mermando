@@ -5,18 +5,24 @@ import moment from 'moment';
 import Datetime from 'react-datetime';
 import { WithContext as ReactTags } from 'react-tag-input';
 import InputAtom from './input-atom';
-import { inputTypes, messageTypes, keyCodes } from '../../js/inputs';
+import { simpleInputTypes as inputTypes, messageTypes, keyCodes } from '../../js/inputs';
+
+import type { Message } from './input-atom';
 
 export type TagType = { id: number, text: string };
+export type Value = string | number | moment | TagType[];
 
-type Props = {
-  id: string,
+export type Props = {
+  id: string | number,
   label?: string,
+  messagesArray?: Message[],
   message?: string,
   messageType?: $Keys<typeof messageTypes>,
   forceMessageBeneath?: boolean,
   className?: string,
-  +value?: string | number | Date | moment | Array<TagType>,
+  +value?: Value,
+  maxTags?: number,
+  maxLength?: number,
 
   leftIcon?: string,
   rightIcon?: string,
@@ -24,7 +30,7 @@ type Props = {
   type?: $Keys<typeof inputTypes>,
   pattern?: string,
   autoComplete?: boolean,
-  autoCompleteOptions?: Array<string>,
+  autoCompleteOptions?: string[],
   placeholder?: string,
   required?: boolean,
   forceInlineRequired?: boolean,
@@ -40,6 +46,7 @@ type Default = {
   label: string,
   className: string,
 
+  messagesArray: Message[],
   message: string,
   messageType: $Keys<typeof messageTypes>,
   forceMessageBeneath: boolean,
@@ -52,7 +59,6 @@ type Default = {
   editable: boolean,
   disabled: boolean,
   type: $Keys<typeof inputTypes>,
-  onChange: Function,
 };
 
 export default class Input extends React.PureComponent<Props, void> {
@@ -60,6 +66,7 @@ export default class Input extends React.PureComponent<Props, void> {
     label: '',
     className: '',
 
+    messagesArray: [],
     message: '',
     messageType: 'text',
     forceMessageBeneath: false,
@@ -73,90 +80,100 @@ export default class Input extends React.PureComponent<Props, void> {
     disabled: false,
     editable: true,
     type: 'text',
-    onChange: () => {},
   };
 
   @autobind
   onHTMLInputChange(event: SyntheticInputEvent<*>) {
-    const { type, onChange } = this.props;
+    const { type, onChange, maxLength } = this.props;
     const { value } = event.target;
     let clean;
 
-    if (!value) {
-      onChange(value);
-      return;
-    }
-
-    switch (type) {
-      case 'number':
-        clean = Number.parseInt(value, 10);
-        if (!Number.isNaN(clean)) {
-          onChange(clean);
+    if (!maxLength || value.length <= maxLength) {
+      if (onChange) {
+        if (!value) {
+          onChange(value);
+          return;
         }
-        break;
 
-      case 'float':
-        clean = Number.parseFloat(value);
-        if (!Number.isNaN(clean)) {
-          onChange(clean);
+        switch (type) {
+          case 'number':
+            clean = Number.parseInt(value, 10);
+            if (!Number.isNaN(clean)) {
+              onChange(clean);
+            }
+            break;
+
+          case 'float':
+            clean = Number.parseFloat(value);
+            if (!Number.isNaN(clean)) {
+              onChange(clean);
+            }
+            break;
+
+          case 'textarea':
+            clean = value;
+            onChange(clean);
+            setTimeout(() => {
+              if (this.inputElement) {
+                this.inputElement.style.cssText = 'height:auto; padding: 0';
+                this.inputElement.style.cssText = `height: ${this.inputElement.scrollHeight}px`;
+              }
+            }, 0);
+            break;
+
+          case 'email':
+          case 'password':
+          case 'tel':
+          case 'text':
+          case 'url':
+          case 'color':
+          default:
+            clean = value;
+            onChange(clean);
+            break;
         }
-        break;
-
-      case 'textarea':
-        clean = value;
-        onChange(clean);
-        setTimeout(() => {
-          if (this.inputElement) {
-            this.inputElement.style.cssText = 'height:auto; padding: 0';
-            this.inputElement.style.cssText = `height: ${this.inputElement.scrollHeight}px`;
-          }
-        }, 0);
-        break;
-
-      case 'email':
-      case 'password':
-      case 'tel':
-      case 'text':
-      case 'url':
-      case 'color':
-      default:
-        clean = value;
-        onChange(clean);
-        break;
+      }
     }
   }
 
   @autobind
-  onCustomInputChange(newValue: any, index?: number) {
-    const { type, onChange, value } = this.props;
+  onCustomInputChange(newValue: ?Value, index?: number) {
+    const {
+      type, onChange, value, maxTags,
+    } = this.props;
     let casted;
 
-    switch (type) {
-      case 'datetime':
-      case 'date':
-        onChange(newValue);
-        break;
+    if (onChange) {
+      switch (type) {
+        case 'datetime':
+        case 'date':
+          onChange(newValue);
+          break;
 
-      case 'tags':
-        casted = value && value.length > 0
-          ? (value: Array<TagType>)
-          : [];
-        if (index === 0 || index) {
-          onChange([
-            ...casted.slice(0, index),
-            ...casted.slice(index + 1),
-          ]);
-        } else {
-          onChange([
-            ...casted,
-            { id: this.counter, text: newValue },
-          ]);
-          this.counter += 1;
-        }
-        break;
+        case 'tags':
+          if (maxTags && value && value.length >= maxTags) {
+            break;
+          }
+          casted = value && value.length > 0
+            ? (value: TagType[])
+            : [];
+          if (index === 0 || index) {
+            onChange([
+              ...casted.slice(0, index),
+              ...casted.slice(index + 1),
+            ]);
+          } else {
+            onChange([
+              ...casted,
+              { id: this.counter, text: newValue },
+            ]);
+            this.counter += 1;
+          }
+          break;
 
-      default:
-        break;
+        default:
+          break;
+      }
     }
   }
 
@@ -164,10 +181,35 @@ export default class Input extends React.PureComponent<Props, void> {
   inputElement: ?any;
 
   @autobind
+  generatePattern() {
+    const { pattern, type } = this.props;
+    let newPattern = pattern;
+    if (!newPattern) {
+      switch (type) {
+        case 'color':
+          newPattern = '[0-9A-Fa-f]{6}';
+          break;
+        case 'number':
+          newPattern = '[-+]?[0-9]+';
+          break;
+        case 'float':
+          newPattern = '[-+]?[0-9]*[.,]?[0-9]+';
+          break;
+        case 'email':
+          newPattern = '[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]$';
+          break;
+        default:
+          break;
+      }
+    }
+    return newPattern;
+  }
+
+  @autobind
   renderInput(otherProps: { [key: string]: string }) {
     const {
       id, type, className, value, required, disabled, editable,
-      pattern, autoComplete, autoCompleteOptions, placeholder,
+      autoComplete, autoCompleteOptions, placeholder,
     } = this.props;
 
     let newClassName = className || '';
@@ -179,7 +221,7 @@ export default class Input extends React.PureComponent<Props, void> {
           <textarea
             {...otherProps}
             ref={(input) => { this.inputElement = input; }}
-            id={id}
+            id={`${id}`}
             className={newClassName}
             value={value || ''}
             onChange={this.onHTMLInputChange}
@@ -199,7 +241,7 @@ export default class Input extends React.PureComponent<Props, void> {
             timeFormat='hh:mm A'
             inputProps={{
               ...otherProps,
-              id,
+              id: `${id}`,
               ref: (input) => { this.inputElement = input; },
               className: newClassName,
               required,
@@ -219,7 +261,7 @@ export default class Input extends React.PureComponent<Props, void> {
             timeFormat={false}
             inputProps={{
               ...otherProps,
-              id,
+              id: `${id}`,
               ref: (input) => { this.inputElement = input; },
               className: newClassName,
               required,
@@ -236,14 +278,14 @@ export default class Input extends React.PureComponent<Props, void> {
             <input
               {...otherProps}
               ref={(input) => { this.inputElement = input; }}
-              id={id}
+              id={`${id}`}
               type='text'
               className={newClassName}
               value={value || ''}
               onChange={this.onHTMLInputChange}
               required={required}
               disabled={disabled || !editable}
-              pattern='[0-9A-Fa-f]{6}'
+              pattern={this.generatePattern()}
             />
             <div className='color' style={{ backgroundColor: `#${value}` }} />
           </div>
@@ -252,8 +294,8 @@ export default class Input extends React.PureComponent<Props, void> {
       case 'tags':
         return (
           <ReactTags
-            ref={(input) => { this.inputElement = input; }}
-            id={id}
+            // ref={(input) => { this.inputElement = input; }}
+            id={`${id}`}
             readOnly={disabled || !editable}
             tags={value || []}
             suggestions={autoCompleteOptions}
@@ -296,19 +338,14 @@ export default class Input extends React.PureComponent<Props, void> {
             ref={(input) => { this.inputElement = input; }}
             type={
               type === 'float' ? 'number' : type
-            } id={id}
+            } id={`${id}`}
             className={newClassName}
             value={value || ''}
             onChange={this.onHTMLInputChange}
             required={required}
             disabled={disabled || !editable}
             autoComplete={autoComplete}
-            pattern={
-              pattern ||
-              type === 'number' ? '[-+]?[0-9]+' : '' ||
-              type === 'float' ? '[-+]?[0-9]*[.,]?[0-9]+' : '' ||
-              type === 'email' ? '[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]$' : ''
-            }
+            pattern={this.generatePattern()}
           />
         );
 
@@ -323,7 +360,7 @@ export default class Input extends React.PureComponent<Props, void> {
       required, type, value,
       className, pattern,
 
-      forceMessageBeneath, message, messageType,
+      forceMessageBeneath, message, messageType, messagesArray,
 
       leftIcon, rightIcon, editable,
       disabled, onChange, autoComplete,
@@ -335,6 +372,7 @@ export default class Input extends React.PureComponent<Props, void> {
     return (
       <InputAtom
         id={id} label={label}
+        messagesArray={messagesArray}
         message={message}
         messageType={messageType}
         forceInlineRequired={forceInlineRequired}
@@ -348,11 +386,7 @@ export default class Input extends React.PureComponent<Props, void> {
         disabled={disabled}
         empty={!value && value !== 0}
         invalid={messageType === 'error'}
-        onClick={() => {
-          if (this.inputElement) {
-            this.inputElement.focus();
-          }
-        }}
+        onClick={() => { if (this.inputElement) this.inputElement.focus(); }}
         onFocus={onFocus}
         onBlur={onBlur}
       >

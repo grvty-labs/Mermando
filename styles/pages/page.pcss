@@ -2,9 +2,9 @@
   background-color: var(--white, #fff);
   grid-kiss:
     "+-----+     +----------------------------------------+     +-----+ ----"
-    "|     |     |                    ↓                   |     |     |     "
-    "|     |     |               ← >.top →                |     |     | 60px"
-    "|     |     |                    ↑                   |     |     |     "
+    "|     |     |                   ↓                    |     |     |     "
+    "|     |     |               ← >.top →                |     |     | 55px"
+    "|     |     |                                        |     |     |     "
     "|     |     +----------------------------------------+     |     | ----"
     "|     |     +----------------------------------------+     |     | ----"
     "|     |     |                   ↓                    |     |     |     "
@@ -52,6 +52,8 @@
       color: var(--page-back-button-font-color);
       display: flex;
       font-size: 0.75em;
+      margin-bottom: 0.5em;
+      margin-top: 2.25em;
       padding-left: 0;
       width: auto;
 
@@ -94,14 +96,16 @@
     }
 
     > .tab {
+      align-items: center;
       border-bottom: var(--page-tab-border-width) solid transparent;
       color: var(--page-tab-color);
       cursor: pointer;
+      display: flex;
+      justify-content: center;
       margin-right: 0.6428em;
       min-width: 5.782em;
       outline: none;
       padding: 0.5em;
-      text-align: center;
       text-transform: uppercase;
       transition: opacity 0.3s;
 
@@ -119,6 +123,13 @@
         border-bottom-color: var(--page-tab-selected-color);
         color: var(--page-tab-selected-color);
         font-weight: bold;
+      }
+
+      > .tabIcon {
+        font-size: 1.325em;
+        height: 1em;
+        margin-left: 0.5em;
+        width: 1em;
       }
     }
   }

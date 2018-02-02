@@ -29,7 +29,7 @@ export default class Notifications extends React.PureComponent<Props, State> {
     return (
       <div className={`contextual-wrapper ${className || ''}`}>
         <Button
-          type='icon'
+          strain='icon'
           icon={icon}
         />
         <div className='contextual'>

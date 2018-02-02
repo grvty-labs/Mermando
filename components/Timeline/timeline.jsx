@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import autobind from 'autobind-decorator';
-import Event from './Event';
+import Event from './event';
 
 export type Props = {
   className?: string,

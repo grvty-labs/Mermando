@@ -54,7 +54,7 @@ export default class Page extends React.PureComponent<Props, State> {
     return (
       <div className={`page ${close ? 'close' : 'open'} ${className || ''}`}>
         <div className='top'>
-          <Button type='link' onClick={this.onBackClick}>
+          <Button strain='link' onClick={this.onBackClick}>
             {backText}
           </Button>
         </div>

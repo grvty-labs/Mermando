@@ -3,6 +3,7 @@ import * as React from 'react';
 import autobind from 'autobind-decorator';
 import moment from 'moment';
 
+import { EventDictionary } from '../../../Overrides/EventConstants';
 import { eventStatus } from '../../js/events';
 
 export type Props = {
@@ -10,8 +11,8 @@ export type Props = {
   icon: string,
   title: string,
   status?: $Keys<typeof eventStatus>,
-  date: moment,
-  eventType: string,
+  date: string,
+  eventType: number,
   children?: React.Node | Array<React.Node>,
   onClick?: Function,
 };
@@ -51,13 +52,13 @@ export default class Event extends React.PureComponent<Props, void> {
       className, icon, children, eventType, date, status,
     } = this.props;
     return (
-      <div className={`event ${eventType} ${status || ''} ${className || ''}`}>
+      <div className={`event ${EventDictionary.find(event => (event.key === eventType), eventType).name} ${status || ''} ${className || ''}`}>
         {/* FIXME: Remove path when connected to db */}
-        <img src={`/images/svg/${icon}.svg`} alt={eventType} />
+        <img src={icon} alt={EventDictionary.find(event => (event.key === eventType), eventType).name} />
         <div className='data'>
           <div className='header'>
             {this.renderTitle()}
-            <span className='date'>{date.fromNow()}</span>
+            <span className='date'>{date}</span>
           </div>
           <div className='content'>
             {children}

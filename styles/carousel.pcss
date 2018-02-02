@@ -1,0 +1,173 @@
+.carousel-wrapper {
+  > .content {
+    max-width: 100%;
+    overflow-x: hidden;
+    position: relative;
+
+    > .carousel {
+      display: flex;
+      max-height: var(--carousel-max-height);
+      min-height: var(--carousel-min-height);
+      overflow: hidden;
+
+      > .pic-wrap {
+        align-items: center;
+        display: flex;
+        justify-content: center;
+        max-height: inherit;
+        min-width: 100%;
+        transition: margin-left var(--carousel-time) ease-in-out;
+        width: 100%;
+
+        > .fluid-img {
+          position: absolute;
+        }
+      }
+    }
+
+    > .controls {
+      align-items: center;
+      bottom: 0;
+      display: flex;
+      justify-content: space-between;
+      pointer-events: none;
+      position: absolute;
+      top: 0;
+      width: 100%;
+
+      > :--icons-class {
+        align-items: center;
+        background-color: var(--carousel-controls-background);
+        color: var(--carousel-controls-color);
+        cursor: pointer;
+        display: inherit;
+        font-size: 2.303em;
+        height: 1.3em;
+        justify-content: center;
+        outline: none;
+        pointer-events: visiblePainted;
+        width: 1.13em;
+      }
+    }
+  }
+
+  > .footer {
+    display: flex;
+    justify-content: center;
+    padding: 1em 0;
+
+    > .dots {
+      display: inherit;
+
+      > div {
+        background-color: var(--carousel-dots-background);
+        border-radius: 3em;
+        cursor: pointer;
+        font-size: 0.75em;
+        height: 1em;
+        outline: none;
+        overflow: hidden;
+        position: relative;
+        width: 1em;
+
+        &::after,
+        &::before {
+          background-color: var(--carousel-dots-selected-background);
+          content: '';
+          height: 1em;
+          position: absolute;
+          top: 0;
+          transition:
+            left var(--carousel-time),
+            right var(--carousel-time);
+          visibility: hidden;
+          width: 1em;
+        }
+
+        &::before {
+          left: 0;
+        }
+
+        &::after {
+          right: 0;
+        }
+
+        &.last,
+        &.selected {
+          background-color: var(--carousel-dots-selected-background);
+
+          &::after,
+          &::before {
+            background-color: var(--carousel-dots-background);
+          }
+        }
+
+        &.last {
+          &::before {
+            visibility: visible;
+          }
+
+          &::after {
+            visibility: visible;
+          }
+
+          &.left {
+            &::before {
+              visibility: hidden;
+            }
+
+            &::after {
+              visibility: visible;
+            }
+          }
+
+          &.right {
+            &::before {
+              visibility: visible;
+            }
+
+            &::after {
+              visibility: hidden;
+            }
+          }
+        }
+
+        &.selected {
+          &::before {
+            left: -100%;
+            visibility: visible;
+          }
+
+          &::after {
+            right: -100%;
+            visibility: visible;
+          }
+
+          &.left {
+            &::before {
+              visibility: visible;
+            }
+
+            &::after {
+              visibility: hidden;
+            }
+          }
+
+          &.right {
+            &::before {
+              visibility: hidden;
+            }
+
+            &::after {
+              visibility: visible;
+            }
+          }
+        }
+
+        &:not(:last-child) {
+          margin-right: 1em;
+        }
+      }
+    }
+  }
+}

@@ -55,8 +55,8 @@ export default class Chat extends React.PureComponent<Props, State> {
               onChange={() => {}}
             />
             <div className='footer'>
-              <Button type='link' size='regular'>Attach File</Button>
-              <Button type='main' size='big'>Send</Button>
+              <Button strain='link' size='regular'>Attach File</Button>
+              <Button strain='main' size='big'>Send</Button>
             </div>
           </div>
         </div>

@@ -2,7 +2,7 @@
 import * as React from 'react';
 
 type Props = {
-  htmlFor: string,
+  htmlFor: string | number,
 };
 
 const Label = (props: Props) => {
@@ -12,7 +12,7 @@ const Label = (props: Props) => {
   } = props;
 
   return (
-    <label htmlFor={htmlFor} {...otherProps} />
+    <label htmlFor={`${htmlFor}`} {...otherProps} />
   );
 };
 

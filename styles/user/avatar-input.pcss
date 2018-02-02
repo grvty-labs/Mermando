@@ -1,0 +1,77 @@
+.avatar-input {
+  align-items: center;
+  background-color: var(--avatar-input-background);
+  cursor: pointer;
+  display: flex;
+  height: inherit;
+  justify-content: center;
+  width: 100%;
+}
+
+.input-atom {
+  > .input-sham {
+    &.avatar-sham {
+      border-radius: 10em;
+      height: 5.375em;
+      max-height: 5.375em;
+      max-width: 5.375em;
+      min-height: 5.375em;
+      min-width: 5.375em;
+      overflow: hidden;
+      padding: 0;
+      transition: all var(--input-transition-time) ease-in-out;
+
+      > :--icons-class {
+        &:first-child {
+          font-size: 1.75em;
+          height: 1em;
+          width: 1em;
+        }
+      }
+
+      > .avatar-input {
+        > .preview {
+          display: flex;
+          flex-wrap: wrap;
+          height: inherit;
+          position: relative;
+          width: inherit;
+
+          > .avatar {
+            font-size: 1.746em;
+            height: inherit;
+            max-height: unset;
+            max-width: unset;
+            width: inherit;
+          }
+
+          > .accepted,
+          > .rejected {
+            bottom: 0;
+            height: inherit;
+            opacity: 0.6;
+            position: absolute;
+            top: 0;
+            width: inherit;
+          }
+
+          > .accepted {
+            background-color: var(--avatar-input-accept-background);
+          }
+
+          > .rejected {
+            background-color: var(--avatar-input-reject-background);
+          }
+        }
+      }
+    }
+  }
+
+  &.readOnly {
+    > .input-sham {
+      &.avatar-sham {
+        font-size: 1em;
+      }
+    }
+  }
+}

@@ -3,16 +3,18 @@ import * as React from 'react';
 import autobind from 'autobind-decorator';
 import Avatar from './avatar';
 
-type User = {
+import type { AvatarProps } from './avatar';
+
+export type UserProps = {
+  avatar?: AvatarProps,
   id: number | string,
-  email: string,
   name: string,
-  avatarUrl?: string,
-  actions?: React.Node | Array<React.Node>,
-}
+  email: string,
+  actions?: React.Node | React.Node[],
+};
 
 type StoreProps = {
-  users: Array<User>,
+  users: UserProps[],
   className?: string,
 };
 
@@ -24,17 +26,17 @@ type Default = {
 };
 type State = {};
 
-export default class AvatarsList extends React.PureComponent<Props, State> {
+export default class UsersList extends React.PureComponent<Props, State> {
   static defaultProps: Default = {
     className: '',
     overlap: true,
   };
 
   @autobind
-  renderUserElement(user: User) {
+  renderUserElement(user: UserProps) {
     return (
       <div key={user.id}>
-        <Avatar url={user.avatarUrl} email={user.email} name={user.name} />
+        <Avatar {...user} />
         <div className='data'>
           <span className='name'>{user.name}</span>
           <span className='email'>{user.email}</span>
@@ -50,7 +52,9 @@ export default class AvatarsList extends React.PureComponent<Props, State> {
     const { users, className } = this.props;
     return (
       <div className={`users-list ${className || ''}`}>
-        { users.map(this.renderUserElement) }
+        { users
+          ? users.map(this.renderUserElement)
+          : []}
       </div>
     );
   }

@@ -18,9 +18,12 @@
     padding: 0 2.6875em;
 
     > .tab {
+      align-items: center;
       border-bottom: var(--section-tab-border-width) solid transparent;
       color: var(--section-tab-color);
       cursor: pointer;
+      display: flex;
+      justify-content: center;
       margin-right: 0.5625em;
       min-width: 5.06em;
       outline: none;
@@ -52,6 +55,22 @@
 
     > table {
       width: 100%;
+    }
+
+    &.rows {
+      > div {
+        padding-bottom: 1.5em;
+        padding-top: 1.5em;
+
+        &:first-of-type {
+          padding-top: 0;
+        }
+
+        &:empty,
+        &:last-of-type {
+          padding-bottom: 0;
+        }
+      }
     }
 
     &.cards-panel {
