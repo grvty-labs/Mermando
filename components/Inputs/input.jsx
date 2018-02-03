@@ -147,6 +147,7 @@ export default class Input extends React.PureComponent<Props, void> {
       switch (type) {
         case 'datetime':
         case 'date':
+        case 'time':
           onChange(newValue);
           break;
 
@@ -238,6 +239,26 @@ export default class Input extends React.PureComponent<Props, void> {
             className='datetime-input'
             onChange={this.onCustomInputChange}
             dateFormat='DD-MMM-YYYY'
+            timeFormat='hh:mm A'
+            inputProps={{
+              ...otherProps,
+              id: `${id}`,
+              ref: (input) => { this.inputElement = input; },
+              className: newClassName,
+              required,
+              disabled: disabled || !editable,
+              readOnly: true,
+            }}
+          />
+        );
+
+      case 'time':
+        return (
+          <Datetime
+            value={value}
+            className='datetime-input'
+            onChange={this.onCustomInputChange}
+            dateFormat={false}
             timeFormat='hh:mm A'
             inputProps={{
               ...otherProps,

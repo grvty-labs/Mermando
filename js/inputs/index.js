@@ -15,6 +15,7 @@ export const inputTypes = {
   tel: 'tel',
   text: 'text',
   textarea: 'textarea',
+  time: 'time',
   url: 'url',
 };
 
@@ -30,6 +31,7 @@ export const simpleInputTypes = {
   tel: 'tel',
   text: 'text',
   textarea: 'textarea',
+  time: 'time',
   url: 'url',
 };
 
