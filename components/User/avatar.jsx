@@ -4,7 +4,7 @@ import autobind from 'autobind-decorator';
 import { getNamePastel } from '../../js/utils';
 
 export type AvatarProps = {
-  src: string,
+  src?: string,
   alt?: string,
   srcSizes?: {
     src: string,

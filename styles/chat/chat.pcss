@@ -50,8 +50,52 @@
       > .messages-wrapper {
         margin: 0.5em 0;
         max-height: calc(100vh - 23.1em);
+        max-width: 100%;
         min-height: 27.25em;
-        overflow-x: auto;
+        overflow-x: hidden;
+        overflow-y: auto;
+
+        > .msg-row {
+          display: flex;
+          width: 100%;
+
+          &.mine {
+            justify-content: flex-end;
+          }
+
+          &.not-mine {
+            justify-content: flex-start;
+          }
+
+          > .avatar {
+            font-size: 1.333em;
+          }
+
+          > .msg-cnt {
+            margin: 0 1em;
+
+            > span {
+              display: block;
+              font-weight: bold;
+            }
+
+            > .text {
+              letter-spacing: normal;
+              line-break: strict;
+              line-height: 1.33;
+              margin: 0.666em 0 1em;
+              overflow-wrap: break-word;
+              text-overflow: clip;
+              white-space: pre-wrap;
+              word-break: break-word;
+
+              &.mentioned {
+                background-color: yellow;
+              }
+            }
+          }
+
+        }
       }
 
       > .footer {

@@ -20,7 +20,7 @@ const systemHooks = [
         const dataURL = canvas.toDataURL();
         const blobBin = atob(dataURL.split(',')[1]);
         const array = [];
-        for (let i = 0; i < blobBin.length; i++) {
+        for (let i = 0; i < blobBin.length; i += 1) {
           array.push(blobBin.charCodeAt(i));
         }
 
@@ -50,6 +50,27 @@ export const isHookMessage = (text) => {
   // Group 2. 12-20 `hookText`
   const hookMessageRegex = /\$=>(@.*.):(.*)/;
   return hookMessageRegex.exec(text);
+};
+
+const executeHook = async ({
+  hook,
+  apiToken,
+  channel,
+  username,
+}) => {
+  debugLog('Hook trigger found', hook.id);
+  const hookActionResponse = await hook.action({
+    apiToken,
+    channel,
+    username,
+  });
+  debugLog('Action executed. Posting response.');
+  return postMessage({
+    text: `$=>@[${hook.id}]:${hookActionResponse}`,
+    apiToken,
+    channel,
+    username,
+  });
 };
 
 // Needs Message Object
@@ -99,25 +120,4 @@ export const execHooksIfFound = ({
       });
     }
   }
-};
-
-const executeHook = async ({
-  hook,
-  apiToken,
-  channel,
-  username,
-}) => {
-  debugLog('Hook trigger found', hook.id);
-  const hookActionResponse = await hook.action({
-    apiToken,
-    channel,
-    username,
-  });
-  debugLog('Action executed. Posting response.');
-  return postMessage({
-    text: `$=>@[${hook.id}]:${hookActionResponse}`,
-    apiToken,
-    channel,
-    username,
-  });
 };

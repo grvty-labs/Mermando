@@ -6,6 +6,7 @@ import { load as emojiLoader, parse as emojiParser } from 'gh-emoji';
 import classNames from 'classnames';
 import { Button } from '../Button';
 import { Input, FileInput } from '../Inputs';
+import { Avatar } from '../User';
 import {
   wasIMentioned, decodeHtml, postMessage,
   postFile, getNewMessages, hasEmoji,
@@ -30,6 +31,21 @@ type Channel = {
   legend: string,
 };
 
+type Message = {
+  user?: string | number,
+  username: string,
+  text: string,
+  ts: string,
+};
+
+type ChannelUser = {
+  id: string | number,
+  name: string,
+  color: string,
+  real_name: string,
+  image: string,
+};
+
 export type StoreProps = {
   apiToken: string,
   channels: Channel[],
@@ -40,7 +56,7 @@ export type StoreProps = {
   themeColor?: string,
   userImage?: string,
   hooks?: any[],
-  debugMode?: boolean
+  debugMode?: boolean,
 };
 export type Actions = {};
 type Props = StoreProps & Actions;
@@ -56,9 +72,9 @@ type State = {
   postMyFile?: FileValue,
   fileUploadLoader: boolean,
   userThreadTss: any[],
-  onlineUsers: any[],
-  channels: any[],
-  messages: any[],
+  onlineUsers: ChannelUser[],
+  channels: Channel[],
+  messages: Message[],
 };
 
 export default class SlackChat extends React.PureComponent<Props, State> {
@@ -72,12 +88,12 @@ export default class SlackChat extends React.PureComponent<Props, State> {
     this.apiToken = atob(this.props.apiToken);
     this.refreshTime = 2000;
     this.chatInitiatedTs = '';
-    this.activeChannel = [];
+    // this.activeChannel = undefined;
     this.activeChannelInterval = null;
     this.messageFormatter = {
       emoji: false, // default
     };
-    this.fileUploadTitle = `Posted by ${this.props.botName}`;
+    this.fileUploadTitle = `Posted by ${this.props.botName || ''}`;
     this.themeDefaultColor = '#2e7eea'; // Defined as $theme_color sass variable in .scss
     // Initiate Emoji Library
     emojiLoader().then(() => {
@@ -86,14 +102,20 @@ export default class SlackChat extends React.PureComponent<Props, State> {
       };
     }).catch(err => debugLog(`Cant initiate emoji library ${err}`));
     // Connect bot
-    this.connectBot(this).then((data) => {
+    this.connectBot().then((data) => {
       debugLog('got data', data);
       if (this.props.defaultChannel) {
-        this.activeChannel = data.channels.filter(channel => channel.name === this.props.defaultChannel)[0];
+        const [channel] = data.channels.filter(({ name }) => name === this.props.defaultChannel);
+        this.activeChannel = channel;
       }
       this.setState({
         onlineUsers: data.onlineUsers,
         channels: data.channels,
+      }, () => {
+        if (this.props.defaultChannel) {
+          const defChannel = this.state.channels.find(c => c.name === this.props.defaultChannel);
+          if (defChannel) this.openChannel(defChannel);
+        }
       });
     }).catch((err) => {
       debugLog('could not intialize slack bot', err);
@@ -122,40 +144,47 @@ export default class SlackChat extends React.PureComponent<Props, State> {
   }
 
   @autobind
-  getUserImg(message) {
-    return null;
+  getUserImg(message: Message): React.Element<typeof Avatar> {
     const userId = message.user || message.username;
     let image;
-    this.state.onlineUsers.map((user) => {
-      if (user.id === userId) {
-        image = user.image;
+    let realName = message.username;
+    this.state.onlineUsers.forEach(({
+      id: uid, image: uimage, real_name: urealName, name,
+    }) => {
+      if (uid === userId) {
+        image = uimage;
+        realName = urealName || name || message.username;
       }
     });
     const imageToReturn = image
-      ? // Found backend user
-        <img src={image} className='contact__photo' alt='mentionedUserImg' />
-      : (
-        // Check admin or client user?
-        isAdmin(message)
-          ? <img src={`https://robohash.org/${userId}?set=set2`} className='contact__photo' alt={userId} />
-          : (
-            // Check system message or client user?
-            isSystemMessage(message)
-              ? <img src={`https://robohash.org/${userId}?set=set3`} className='contact__photo' alt={userId} />
-              : // Regular browser client user
-              <img src={`https://robohash.org/${userId}`} className='contact__photo' alt={userId} />
-          )
-      );
+    // Found backend user
+      ? <Avatar avatar={{ src: image }} name={realName} />
+      : isAdmin(message)
+        ? <Avatar name={realName} />
+        : isSystemMessage(message)
+          ? <Avatar name={realName} />
+          : <Avatar name={realName} />;
     return imageToReturn;
   }
 
   @autobind
-  displayFormattedMessage(message) {
+  getUserName(message: Message): ?string {
+    const userId = message.user || message.username;
+    let realName = message.username;
+    this.state.onlineUsers.forEach(({ id: uid, real_name: urealName, name }) => {
+      if (uid === userId) realName = urealName || name || message.username;
+    });
+    return realName;
+  }
+
+  @autobind
+  displayFormattedMessage(message: Message) {
     // decode formatting from messages text to html text
-    const messageText = decodeHtml(message.text);
+    let messageText = decodeHtml(message.text);
     // who's message is this?
     const myMessage = message.username === this.props.botName;
     // Check to see if this is a Slack System message?
+    const username = this.getUserName(message) || 'Unknown';
     if (isSystemMessage(message)) {
       // message.text is a system message
       // try to see if it has an attachment in it
@@ -169,16 +198,16 @@ export default class SlackChat extends React.PureComponent<Props, State> {
           const fileNameFromUrl = attachmentFound[1].split('/');
           return (
             <div
-              className={classNames('msgRow', didIPostIt ? 'mine' : 'notMine')}
+              className={classNames('msg-row', didIPostIt ? 'mine' : 'not-mine')}
               key={message.ts}
             >
               {
                 didIPostIt
                 // show customer image
-                  ? <img src={this.props.userImage} className='user__contact__photo' alt='userIcon' />
-                  : null
+                  ? <Avatar avatar={{ src: this.props.userImage }} name={username} />
+                  : this.getUserImg(message)
               }
-              <div className={classNames('chat__message', didIPostIt ? 'mine' : 'notMine')}>
+              <div className={classNames('chat__message', didIPostIt ? 'mine' : 'not-mine')}>
                 <strong>Sent an Attachment: </strong>
                 <span>{fileNameFromUrl[fileNameFromUrl.length - 1]}</span>
                 <hr />
@@ -186,12 +215,6 @@ export default class SlackChat extends React.PureComponent<Props, State> {
                   <span>Click to Download</span>
                 </a>
               </div>
-              {
-                // Show remote users image only if message isn't customers
-                !didIPostIt
-                  ? this.getUserImg(message)
-                  : null
-              }
             </div>
           );
         }
@@ -199,7 +222,7 @@ export default class SlackChat extends React.PureComponent<Props, State> {
       // else we display a system message that doesn't belong to
       // anyone
       return (
-        <div className={classNames('msgRow')} key={message.ts}>
+        <div className={classNames('msg-row')} key={message.ts}>
           <div
             className={classNames('message', 'system__message')}
             dangerouslySetInnerHTML={{ __html: messageText }}
@@ -218,44 +241,44 @@ export default class SlackChat extends React.PureComponent<Props, State> {
     // check if emoji library is enabled
     if (this.messageFormatter.emoji && textHasEmoji) {
       // parse plain text to emoji
-      // NOTE: messageText = emojiParser(messageText);
+      messageText = emojiParser(messageText);
+    }
+    if (!messageText) {
+      return null;
     }
     return (
-      <div className={classNames('msgRow', myMessage ? 'mine' : 'notMine')} key={message.ts}>
+      <div className={classNames('msg-row', myMessage ? 'mine' : 'not-mine')} key={message.ts}>
         {
           myMessage
           // show customer image
-            ? <img src={this.props.userImage} className='user__contact__photo' alt='userIcon' />
-            : null
+            ? <Avatar avatar={{ src: this.props.userImage }} name={username} />
+            : this.getUserImg(message)
         }
-        {
-          textHasEmoji
-          // dangerouslySetInnerHTML only if text has Emoji
-            ? (
-              <div
-                className={classNames('message', mentioned ? 'mentioned' : '')}
-                dangerouslySetInnerHTML={{ __html: messageText }}
-              />
-            )
-              // else display it normally
-            : (
-              <div className={classNames('message', mentioned ? 'mentioned' : '')}>
-                {messageText}
-              </div>
-            )
-        }
-        {
-          // Show remote users image only if message isn't customers
-          !myMessage
-            ? this.getUserImg(message)
-            : null
-        }
+        <div className='msg-cnt'>
+          <span>{username}</span>
+          {
+            textHasEmoji
+            // dangerouslySetInnerHTML only if text has Emoji
+              ? (
+                <div
+                  className={classNames('text', mentioned ? 'mentioned' : '')}
+                  dangerouslySetInnerHTML={{ __html: messageText }}
+                />
+              )
+                // else display it normally
+              : (
+                <div className={classNames('text', mentioned ? 'mentioned' : '')}>
+                  {messageText}
+                </div>
+              )
+          }
+        </div>
       </div>
     );
   }
 
   @autobind
-  isValidOnlineUser(user) {
+  isValidOnlineUser(user: ChannelUser & { is_bot: boolean}) {
     // return true if
     // user should be active / online
     // user.presence === 'active' &&
@@ -266,7 +289,7 @@ export default class SlackChat extends React.PureComponent<Props, State> {
   }
 
   @autobind
-  connectBot() {
+  connectBot(): Promise<*> {
     return new Promise((resolve: Function, reject: Function) => {
       try {
         // start the bot, get the initial payload
@@ -280,30 +303,32 @@ export default class SlackChat extends React.PureComponent<Props, State> {
             ? onlineUsers.push(new User(user))
             : null));
           // get the channels we need
-          const channels = [];
-          payload.channels.map((channel) => {
+          const activeChannels = [];
+          payload.channels.forEach((channel) => {
             this.props.channels.forEach((channelObject) => {
               // If this channel is exactly as requested
               if (channelObject.name === channel.name || channelObject.id === channel.id) {
                 if (this.props.defaultChannel === channel.name) {
                   this.activeChannel = channelObject;
                 }
-                // NOTE: channel.icon = channelObject.icon; // Add on the icon property to the channel list
-                channels.push(channel);
+                // Add on the icon property to the channel list
+                // NOTE: channel.icon = channelObject.icon;
+                activeChannels.push(channel);
               }
             });
           });
-          return resolve({ channels, onlineUsers });
+          return resolve({ channels: activeChannels, onlineUsers });
         });
         // tell the bot to listen
         this.bot.listen({ token: this.apiToken }, (err) => {
           if (err) {
-            debugLog`Could not connect to Slack Server. Reason: ${JSON.stringify(err)}`;
+            debugLog(`Could not connect to Slack Server. Reason: ${JSON.stringify(err)}`);
             this.setState({
               helpText: 'Slack Connection Error!',
             });
           }
         });
+        return;
       } catch (err) {
         return reject(err);
       }
@@ -325,8 +350,10 @@ export default class SlackChat extends React.PureComponent<Props, State> {
       }, () => {
         // Adjust scroll height
         setTimeout(() => {
-          const chatMessages = document.getElementById('widget-reactSlakChatMessages');
-          chatMessages.scrollTop = chatMessages.scrollHeight;
+          const chatMessages = this.messagesWrapper;
+          if (chatMessages) {
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+          }
         }, this.refreshTime);
       });
       return this.forceUpdate();
@@ -367,7 +394,8 @@ export default class SlackChat extends React.PureComponent<Props, State> {
           // We dont wish to execute action hooks if user opens chat for the first time
           if (this.state.messages.length !== 0) {
             // Execute action hooks only if they are really new messages
-            // We know they are really new messages by checking to see if we already have messages in the state
+            // We know they are really new messages by checking to see if we already
+            //  have messages in the state
             // Only if we atleast have some messages in the state
             // Grab new messages
             const newMessages = getNewMessages(this.state.messages, data.messages);
@@ -391,7 +419,9 @@ export default class SlackChat extends React.PureComponent<Props, State> {
           //       {
           //         if (message.username === that.props.botName) {
           //           if (message.thread_ts) {
-          //             this.state.userThreadTss.indexOf(message.thread_ts) === -1 ? this.state.userThreadTss.push(message.thread_ts) : null;
+          //             this.state.userThreadTss.indexOf(message.thread_ts) === -1
+          //               ? this.state.userThreadTss.push(message.thread_ts)
+          //               : null;
           //           }
           //           return true;
           //         }
@@ -413,12 +443,15 @@ export default class SlackChat extends React.PureComponent<Props, State> {
           return this.setState({
             messages: that.messages,
           }, () => {
-            // if div is already scrolled to bottom, scroll down again just incase a new message has arrived
-            const chatMessages = document.getElementById('widget-reactSlakChatMessages');
-            chatMessages.scrollTop = (chatMessages.scrollHeight < chatMessages.scrollTop + 600 ||
-              messagesLength === 0)
-              ? chatMessages.scrollHeight
-              : chatMessages.scrollTop;
+            // if div is already scrolled to bottom, scroll down again just
+            //   incase a new message has arrived
+            const chatMessages = this.messagesWrapper;
+            if (chatMessages) {
+              chatMessages.scrollTop = (chatMessages.scrollHeight < chatMessages.scrollTop + 600 ||
+                messagesLength === 0)
+                ? chatMessages.scrollHeight
+                : chatMessages.scrollTop;
+            }
           });
         }
       });
@@ -436,7 +469,9 @@ export default class SlackChat extends React.PureComponent<Props, State> {
   bot: any;
   chatInitiatedTs: any;
   fileUploadTitle: string;
+  messages: Message[];
   messageFormatter: any;
+  messagesWrapper: ?HTMLDivElement;
   refreshTime: number;
   themeDefaultColor: string;
 
@@ -505,7 +540,7 @@ export default class SlackChat extends React.PureComponent<Props, State> {
 
           <div className='content'>
             {/* <span className='legend'>{stateChannels[0].legend}</span> */}
-            <div className='messages-wrapper'>
+            <div className='messages-wrapper' ref={(vref) => { this.messagesWrapper = vref; }}>
               { messages.map(message => this.displayFormattedMessage(message)) }
             </div>
             <div>
@@ -542,7 +577,7 @@ export default class SlackChat extends React.PureComponent<Props, State> {
             />
             <div className='footer'>
               <Button strain='link' size='regular'>Attach File</Button>
-              <Button strain='main' size='big'>Send</Button>
+              <Button strain='main' size='big' onClick={this.postMyMessage}>Send</Button>
             </div>
           </div>
         </div>
