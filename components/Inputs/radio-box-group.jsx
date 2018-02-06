@@ -6,7 +6,7 @@ import type { RadioType } from './radio-box';
 
 export type StoreProps = {
   id: string | number,
-  value: string | number,
+  value?: string | number,
   options: Array<RadioType>,
   className?: string,
   type?: 'column' | 'inline',

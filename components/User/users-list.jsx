@@ -1,24 +1,28 @@
 // @flow
 import * as React from 'react';
 import autobind from 'autobind-decorator';
+import classNames from 'classnames';
 import Avatar from './avatar';
 
 import type { AvatarProps } from './avatar';
 
 export type UserProps = {
-  avatar?: AvatarProps,
   id: number | string,
+  avatar?: AvatarProps,
   name: string,
   email: string,
   actions?: React.Node | React.Node[],
 };
 
 type StoreProps = {
-  users: UserProps[],
+  users?: UserProps[],
   className?: string,
+  selected?: (number | string)[],
 };
 
-type Actions = {}
+type Actions = {
+  onElementClick?: () => void,
+}
 
 type Props = StoreProps & Actions;
 type Default = {
@@ -34,8 +38,13 @@ export default class UsersList extends React.PureComponent<Props, State> {
 
   @autobind
   renderUserElement(user: UserProps) {
+    const { selected, onElementClick } = this.props;
     return (
-      <div key={user.id}>
+      <div
+        key={user.id}
+        className={classNames({ selected: selected && selected.includes(user.id) })}
+        onClick={onElementClick ? () => onElementClick(user.id) : undefined}
+      >
         <Avatar {...user} />
         <div className='data'>
           <span className='name'>{user.name}</span>
@@ -54,7 +63,8 @@ export default class UsersList extends React.PureComponent<Props, State> {
       <div className={`users-list ${className || ''}`}>
         { users
           ? users.map(this.renderUserElement)
-          : []}
+          : null
+        }
       </div>
     );
   }

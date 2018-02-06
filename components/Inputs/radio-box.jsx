@@ -10,7 +10,7 @@ export type RadioType = {
 
 export type StoreProps = {
   id: string | number,
-  value: string | number,
+  value?: string | number,
   name?: string,
 } & RadioType;
 export type Actions = {

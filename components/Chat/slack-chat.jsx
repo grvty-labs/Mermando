@@ -143,6 +143,10 @@ export default class SlackChat extends React.PureComponent<Props, State> {
     }
   }
 
+  componentWillUnmount() {
+    if (this.activeChannelInterval) clearInterval(this.activeChannelInterval);
+  }
+
   @autobind
   getUserImg(message: Message): React.Element<typeof Avatar> {
     const userId = message.user || message.username;

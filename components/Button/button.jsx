@@ -9,6 +9,7 @@ type Props = {
   strain?: $Keys<typeof strains>,
   type?: $Keys<typeof types>,
   aria?: string,
+  title?: string,
 
   size?: $Keys<typeof sizes>,
   icon?: React.Node | string,
@@ -60,7 +61,7 @@ export default class Button extends React.PureComponent<Props, void> {
   render() {
     const {
       aria, className, type, size, icon, iconSide, disabled, linkColor,
-      children, strain,
+      children, strain, title,
     } = this.props;
 
     const iconRender = typeof icon === 'string'
@@ -80,6 +81,7 @@ export default class Button extends React.PureComponent<Props, void> {
         }
         aria-label={aria || null}
         aria-hidden={children && strain !== 'icon'}
+        title={title}
       >
         {iconRender}
         {strain !== 'icon' ? children : null}
