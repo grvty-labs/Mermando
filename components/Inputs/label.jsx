@@ -12,7 +12,11 @@ const Label = (props: Props) => {
   } = props;
 
   return (
-    <label htmlFor={`${htmlFor}`} {...otherProps} />
+    <label
+      htmlFor={`${htmlFor}`}
+      onClick={(e: SyntheticEvent<*>) => { if (e) e.stopPropagation(); }}
+      {...otherProps}
+    />
   );
 };
 

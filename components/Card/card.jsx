@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import autobind from 'autobind-decorator';
 import Config from 'Config';
 
 export type CardProps = {
@@ -32,6 +33,13 @@ export default class Card extends React.PureComponent<CardProps, void> {
     size: 'small',
   };
 
+  @autobind
+  onClick(e: SyntheticEvent<*>) {
+    const { onClick } = this.props;
+    if (e) e.stopPropagation();
+    if (onClick) onClick();
+  }
+
   render() {
     const {
       className, title, actions, footer, orientation, style,
@@ -46,8 +54,8 @@ export default class Card extends React.PureComponent<CardProps, void> {
       <div
         className={newClassName}
         style={style}
-        onClick={onClick}
-        onKeyPress={onClick}
+        onClick={this.onClick}
+        onKeyPress={this.onClick}
         role='menuitem'
         tabIndex={onClick ? 0 : -1}
       >
