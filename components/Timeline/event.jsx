@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import autobind from 'autobind-decorator';
+import classnames from 'classnames';
 import { eventStatus } from '../../js/events';
 
 export type Props = {
@@ -9,9 +10,9 @@ export type Props = {
   title: string,
   status?: $Keys<typeof eventStatus>,
   date: string,
-  eventType: string | number,
+  eventType: number,
   eventName?: string,
-  children?: React.Node | Array<React.Node>,
+  children?: React.Node,
   onClick?: Function,
 };
 
@@ -27,31 +28,37 @@ export default class Event extends React.PureComponent<Props, void> {
   };
 
   @autobind
+  onClick(e: SyntheticEvent<*>) {
+    const { onClick } = this.props;
+    if (e) e.stopPropagation();
+    if (onClick) onClick();
+  }
+
+  @autobind
   renderTitle() {
     const { title, onClick } = this.props;
-    if (onClick) {
-      return (
-        <span
-          className='title'
-          onClick={onClick}
-          onKeyPress={onClick}
-          tabIndex={0}
-          role='menuitem'
-        >
-          {title}
-        </span>
-      );
-    }
-    return <span className='title'>{title}</span>;
+    return (
+      <span
+        className='title'
+        onClick={this.onClick}
+        onKeyPress={this.onClick}
+        tabIndex={onClick ? 0 : undefined}
+        role={onClick ? 'menuitem' : undefined}
+      >
+        {title}
+      </span>
+    );
   }
 
   render() {
     const {
-      className, icon, children, eventName = `ev${this.props.eventType}`, date, status,
+      className, icon, children, eventName = `ev${this.props.eventType}`,
+      date, status, onClick,
     } = this.props;
     return (
-      <div className={`event ${eventName || ''} ${status || ''} ${className || ''}`}>
-        {/* FIXME: Remove path when connected to db */}
+      <div className={
+        classnames('event', eventName, status, { clickable: onClick }, className)}
+      >
         <img src={icon} alt={eventName || ''} />
         <div className='data'>
           <div className='header'>

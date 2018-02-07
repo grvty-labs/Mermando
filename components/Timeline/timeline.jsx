@@ -5,7 +5,8 @@ import Event from './event';
 
 export type Props = {
   className?: string,
-  children: React.ChildrenArray<React.Element<typeof Event>>,
+  children: React.Node,
+  // children: React.ChildrenArray<React.Element<typeof Event>>,
 };
 
 type Default = {
