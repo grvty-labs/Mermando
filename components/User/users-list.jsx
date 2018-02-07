@@ -11,7 +11,7 @@ export type UserProps = {
   avatar?: AvatarProps,
   name: string,
   email: string,
-  actions?: React.Node | React.Node[],
+  actions?: React.Node,
 };
 
 type StoreProps = {
@@ -44,6 +44,7 @@ export default class UsersList extends React.PureComponent<Props, State> {
         key={user.id}
         className={classNames({ selected: selected && selected.includes(user.id) })}
         onClick={onElementClick ? () => onElementClick(user.id) : undefined}
+        onKeyPress={onElementClick ? () => onElementClick(user.id) : undefined}
       >
         <Avatar {...user} />
         <div className='data'>

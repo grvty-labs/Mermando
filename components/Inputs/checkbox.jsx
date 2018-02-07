@@ -5,7 +5,7 @@ import Label from './label';
 
 export type Props = {
   id: string,
-  label?: string | React.Node | React.Node[],
+  label?: string | React.Node,
   readOnly?: boolean,
   value: boolean,
   onChange: Function,
