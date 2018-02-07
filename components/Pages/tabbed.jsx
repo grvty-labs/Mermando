@@ -25,8 +25,9 @@ export type StoreProps = {
   backText?: string,
   topComponent?: React.Node | Array<React.Node>,
   children?: React.Node | Array<React.Node>,
-  zones: Array<Zone>,
+  zones: Zone[],
   hideTabs?: boolean,
+  initialZone?: number | string,
 };
 
 export type Actions = {
@@ -55,8 +56,17 @@ export default class TabbedPage extends React.Component<Props, State> {
   };
 
   componentWillMount() {
-    if (this.props.zones.length > 0) {
-      this.setState({ zoneSelected: this.props.zones[0].id });
+    if (this.props.initialZone) {
+      this.setState({ zoneSelected: this.props.initialZone });
+    } else if (this.props.zones.length > 0) {
+      const zone = [this.props.zones];
+      if (zone) this.setState({ zoneSelected: zone.id });
+    }
+  }
+
+  componentWillReceiveProps(nextProps: Props) {
+    if (nextProps.initialZone && this.props.initialZone !== nextProps.initialZone) {
+      this.setState({ zoneSelected: nextProps.initialZone });
     }
   }
 
