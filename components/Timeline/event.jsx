@@ -1,9 +1,6 @@
 // @flow
 import * as React from 'react';
 import autobind from 'autobind-decorator';
-import moment from 'moment';
-
-import { EventDictionary } from '../../../Overrides/EventConstants';
 import { eventStatus } from '../../js/events';
 
 export type Props = {
@@ -12,7 +9,8 @@ export type Props = {
   title: string,
   status?: $Keys<typeof eventStatus>,
   date: string,
-  eventType: number,
+  eventType: string | number,
+  eventName?: string,
   children?: React.Node | Array<React.Node>,
   onClick?: Function,
 };
@@ -49,12 +47,12 @@ export default class Event extends React.PureComponent<Props, void> {
 
   render() {
     const {
-      className, icon, children, eventType, date, status,
+      className, icon, children, eventName = `ev${this.props.eventType}`, date, status,
     } = this.props;
     return (
-      <div className={`event ${EventDictionary.find(event => (event.key === eventType), eventType).name} ${status || ''} ${className || ''}`}>
+      <div className={`event ${eventName || ''} ${status || ''} ${className || ''}`}>
         {/* FIXME: Remove path when connected to db */}
-        <img src={icon} alt={EventDictionary.find(event => (event.key === eventType), eventType).name} />
+        <img src={icon} alt={eventName || ''} />
         <div className='data'>
           <div className='header'>
             {this.renderTitle()}
