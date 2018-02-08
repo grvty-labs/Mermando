@@ -36,7 +36,7 @@ export default class Event extends React.PureComponent<Props, void> {
 
   @autobind
   renderTitle() {
-    const { title, onClick } = this.props;
+    const { onClick, title } = this.props;
     return (
       <span
         className='title'
@@ -57,7 +57,7 @@ export default class Event extends React.PureComponent<Props, void> {
     } = this.props;
     return (
       <div className={
-        classnames('event', eventName, status, { clickable: onClick }, className)}
+        classnames('event', eventName, status, { actionable: onClick }, className)}
       >
         <img src={icon} alt={eventName || ''} />
         <div className='data'>
