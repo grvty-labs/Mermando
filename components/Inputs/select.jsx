@@ -1,23 +1,26 @@
 // @flow
 import * as React from 'react';
 import autobind from 'autobind-decorator';
+import classnames from 'classnames';
 import { messageTypes } from '../../js/inputs';
 import InputAtom from './input-atom';
 import type { Message } from './input-atom';
 
-export type Value = string | number | Array<string | number>;
+type param = string | number;
+export type Value = param | param[];
 
 export type Option = {
-  display: string | number,
-  value: string | number,
-  options?: Array<Option>,
-  [key: string]: any,
+  display: param,
+  value: param,
+  disabled?: boolean,
+  hover?: string,
+  options?: Option[],
 };
 
 export type Props = {
   id: string,
   label?: string,
-  messagesArray?: Array<Message>,
+  messagesArray?: Message[],
   message?: string,
   messageType?: $Keys<typeof messageTypes>,
   className?: string,
@@ -26,7 +29,7 @@ export type Props = {
   leftIcon?: string,
 
   type?: 'single' | 'multiple',
-  options: Array<Option>,
+  options: Option[],
   placeholder?: string,
   required?: boolean,
   editable?: boolean,
@@ -41,7 +44,7 @@ type Default = {
   label: string,
   className: string,
 
-  messagesArray: Array<Message>,
+  messagesArray: Message[],
   message: string,
   messageType: $Keys<typeof messageTypes>,
 
@@ -86,7 +89,8 @@ export default class Select extends React.PureComponent<Props, State> {
   }
 
   @autobind
-  onSelectValue(newValue: string | number) {
+  onSelectValue(event: SyntheticEvent<*>, newValue: param) {
+    if (event) event.stopPropagation();
     const { type, value, onChange } = this.props;
     if (onChange) {
       if (type === 'single') {
@@ -96,7 +100,7 @@ export default class Select extends React.PureComponent<Props, State> {
         });
       } else {
         const casted = value && value.length
-          ? (value: Array<string | number>)
+          ? (value: param[])
           : [];
         if (casted.indexOf(newValue) < 0) {
           onChange(casted.concat(newValue));
@@ -114,7 +118,7 @@ export default class Select extends React.PureComponent<Props, State> {
     if (onChange) {
       if (type === 'multiple' && editable && !disabled) {
         const casted = value && value.length
-          ? (value: Array<string | number>)
+          ? (value: param[])
           : [];
         if (index >= 0) {
           onChange([
@@ -157,26 +161,33 @@ export default class Select extends React.PureComponent<Props, State> {
     const { showOptionsLevel } = this.state;
     return (
       <div
-        className={`options ${showOptionsLevel > 0 ? 'open' : ''}`}
+        className={classnames('options', { open: showOptionsLevel > 0 })}
         ref={(node) => { this.node = node; }}
       >
-        {options.map((option: Option, index: number) => (
+        { options.map((option: Option, index: number) => (
           <span
             key={index}
-            onClick={option.options
-              ? () => this.onSelectValue(option.value)
-              : () => this.onSelectValue(option.value)
+            className={classnames({ disabled: option.disabled })}
+            onClick={option.disabled
+              ? undefined
+              : option.options
+                ? e => this.onSelectValue(e, option.value)
+                : e => this.onSelectValue(e, option.value)
             }
-            onKeyPress={option.options
-              ? () => this.onSelectValue(option.value)
-              : () => this.onSelectValue(option.value)
+            onKeyPress={option.disabled
+              ? undefined
+              : option.options
+                ? e => this.onSelectValue(e, option.value)
+                : e => this.onSelectValue(e, option.value)
             }
             role='menuitem'
-            tabIndex={showOptionsLevel > 0 ? 0 : -1}
+            tabIndex={!option.disabled && showOptionsLevel > 0 ? 0 : -1}
+            title={option.hover}
           >
             {option.display}
           </span>
-        ))}
+        ))
+        }
       </div>
     );
   }
@@ -193,7 +204,7 @@ export default class Select extends React.PureComponent<Props, State> {
       );
     } else if (value && value.constructor === Array && value.length) {
       const casted = value && value.length
-        ? (value: Array<string | number>)
+        ? (value: param[])
         : [];
       const optsFiltered = options.filter(opt => casted.indexOf(opt.value) > -1);
       return (
@@ -251,7 +262,7 @@ export default class Select extends React.PureComponent<Props, State> {
       >
         <div
           id={id}
-          className={`select-input ${disabled ? 'disabled' : ''} ${!editable ? 'blocked' : ''}`}
+          className={classnames('select-input', { disabled, blocked: !editable })}
           tabIndex={!disabled && editable ? 0 : -1}
           role='button'
         >
