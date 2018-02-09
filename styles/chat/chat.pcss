@@ -61,6 +61,7 @@
 
           &.mine {
             justify-content: flex-end;
+            padding-left: 2em;
           }
 
           &.not-mine {
@@ -74,16 +75,28 @@
           > .msg-cnt {
             margin: 0 1em;
 
-            > span {
-              display: block;
-              font-weight: bold;
+            > .head {
+              display: flex;
+
+              > .name {
+                align-self: flex-start;
+                font-weight: bold;
+              }
+
+              > .date {
+                align-self: center;
+                color: var(--light-grey);
+                font-size: 0.8333em;
+                font-weight: bold;
+                margin-left: 0.8em;
+              }
             }
 
             > .text {
               letter-spacing: normal;
               line-break: strict;
               line-height: 1.33;
-              margin: 0.666em 0 1em;
+              margin: 0.666em 0 1.1em;
               overflow-wrap: break-word;
               text-overflow: clip;
               white-space: pre-wrap;
