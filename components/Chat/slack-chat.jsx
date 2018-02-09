@@ -385,9 +385,10 @@ export default class SlackChat extends React.PureComponent<Props, State> {
       }, (err, data) => {
         if (err) {
           debugLog(`There was an error loading messages for ${channel.name}. ${err}`);
-          return this.setState({
-            failed: true,
-          });
+          return null;
+          // return this.setState({
+          //   failed: true,
+          // });
         }
         // loaded channel history
         debugLog('got data', data);
