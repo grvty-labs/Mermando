@@ -7,6 +7,7 @@ import Input from './input';
 import InputsWrap from './inputsWrap';
 import Label from './label';
 import SelectInput from './select';
+import DataListInput from './datalist';
 import RadioInputGroup from './radio-group';
 import RadioInput from './radio';
 import RadioBox from './radio-box';
@@ -28,6 +29,7 @@ export {
   InputsWrap,
   Label,
   SelectInput,
+  DataListInput,
   RadioInputGroup,
   RadioInput,
   RadioBox,

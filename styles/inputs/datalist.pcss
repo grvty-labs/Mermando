@@ -1,0 +1,32 @@
+.datalist {
+  .input-sham {
+    position: relative;
+
+    .options {
+      background-color: white;
+      border: solid 1px black;
+      top: 100%;
+      display: block;
+      left: -0.1em;
+      opacity: 0;
+      position: absolute;
+      transition:
+        opacity var(--select-transition-time) ease-in-out,
+        visibility 0s var(--select-transition-time) ease-in-out;
+      visibility: hidden;
+      width: 100%;
+      z-index: 1;
+
+      &.open {
+        opacity: 1;
+        transition: opacity var(--select-transition-time) ease-in-out;
+        visibility: visible;
+      }
+
+      span {
+        display: block;
+        padding: 0.2em;
+      }
+    }
+  }
+}
