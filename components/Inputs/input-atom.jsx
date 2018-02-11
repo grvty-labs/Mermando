@@ -93,7 +93,25 @@ export default class InputAtom extends React.PureComponent<Props, State> {
   }
 
   @autobind
-  renderLeftIcon() {
+  messageTypeIcon(type?: $Keys<typeof messageTypes>): string {
+    const { icons } = Config.mermando;
+    switch (type) {
+      case 'info':
+        return `${icons.classPrefix}${icons.msgInfo}`;
+      case 'subtle':
+        return `${icons.classPrefix}${icons.msgSubtle}`;
+      case 'success':
+        return `${icons.classPrefix}${icons.msgSuccess}`;
+      case 'error':
+        return `${icons.classPrefix}${icons.msgError}`;
+      case 'text':
+      default:
+        return '';
+    }
+  }
+
+  @autobind
+  renderLeftIcon(): React.Node {
     const {
       leftIcon,
       type,
@@ -131,7 +149,7 @@ export default class InputAtom extends React.PureComponent<Props, State> {
   }
 
   @autobind
-  renderRightIcon() {
+  renderRightIcon(): React.Node {
     const {
       forceInlineRequired,
       forceMessageBeneath,
@@ -152,7 +170,7 @@ export default class InputAtom extends React.PureComponent<Props, State> {
         className = rightIcon
           ? `${Config.mermando.icons.classPrefix}${rightIcon}`
           : message && !label && !forceMessageBeneath
-            ? `${Config.mermando.icons.classPrefix}${messageType || ''}`
+            ? this.messageTypeIcon(messageType)
             : required && (!label || forceInlineRequired)
               ? `${Config.mermando.icons.classPrefix}${Config.mermando.icons.requiredInput}`
               : '';
@@ -187,9 +205,9 @@ export default class InputAtom extends React.PureComponent<Props, State> {
         : '';
 
     const iconClassName = required && !forceInlineRequired
-      ? `${Config.mermando.icons.classPrefix}info`
+      ? this.messageTypeIcon('info')
       : messageType !== 'text'
-        ? `${Config.mermando.icons.classPrefix}${messageType || ''}`
+        ? this.messageTypeIcon(messageType)
         : '';
 
     if (label && (message || (required && !forceInlineRequired))) {
@@ -216,7 +234,7 @@ export default class InputAtom extends React.PureComponent<Props, State> {
     if (messagesArray) {
       const msgRender = messagesArray.map((msg, index) => (
         <small key={index + 1} className={msg.type !== 'text' ? msg.type || '' : ''}>
-          <span className={msg.type !== 'text' ? `${Config.mermando.icons.classPrefix}${msg.type || ''}` : ''} />
+          <span className={msg.type !== 'text' ? this.messageTypeIcon(msg.type) : ''} />
           {msg.text}
         </small>));
       msgRender.unshift(this.renderMainMessage());
