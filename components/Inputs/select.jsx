@@ -62,6 +62,10 @@ type State = {
   showOptionsLevel: number
 };
 
+function isNullOrVoid(value: Value) {
+  return value !== 0 && !value;
+}
+
 export default class Select extends React.PureComponent<Props, State> {
   static defaultProps: Default = {
     label: '',
@@ -85,7 +89,6 @@ export default class Select extends React.PureComponent<Props, State> {
   }
 
   componentDidMount() {
-    console.log('SELECT Mount');
     this.autoSelectFirst(this.props);
   }
 
@@ -106,7 +109,7 @@ export default class Select extends React.PureComponent<Props, State> {
           document.removeEventListener('click', this.handleOutsideClick);
         });
       } else {
-        const casted = value && value.length
+        const casted = !isNullOrVoid(value) && value.length
           ? (value: param[])
           : [];
         if (casted.indexOf(newValue) < 0) {
@@ -142,10 +145,9 @@ export default class Select extends React.PureComponent<Props, State> {
   @autobind
   autoSelectFirst(props: Props) {
     const { options, required, value } = props;
-    if (required && !value) {
+    if (required && isNullOrVoid(value)) {
       const [opt] = options.filter(o => !o.disabled);
       if (opt) {
-        console.log(opt);
         this.onSelectValue(undefined, opt.value);
       }
     }
@@ -216,12 +218,12 @@ export default class Select extends React.PureComponent<Props, State> {
     const {
       options, placeholder, type, value, disabled, editable,
     } = this.props;
-    if (type === 'single' && value) {
+    if (type === 'single' && (value === 0 || value)) {
       const option = options.find(opt => value === opt.value);
       return (
         <div className='value single'><span>{option ? option.display : value}</span></div>
       );
-    } else if (value && value.constructor === Array && value.length) {
+    } else if (!isNullOrVoid(value) && value.constructor === Array && value.length) {
       const casted = value && value.length
         ? (value: param[])
         : [];
@@ -274,7 +276,7 @@ export default class Select extends React.PureComponent<Props, State> {
         type='select'
         readOnly={!editable}
         disabled={disabled}
-        empty={!value || (value.constructor === Array && !value.length)}
+        empty={isNullOrVoid(value) || (value.constructor === Array && !value.length)}
         invalid={messageType === 'error'}
         onClick={this.handleClick}
         onFocus={onFocus}

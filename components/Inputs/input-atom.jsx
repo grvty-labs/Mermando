@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import autobind from 'autobind-decorator';
+import classnames from 'classnames';
 import Config from 'Config';
 import Label from './label';
 import { inputTypes, messageTypes } from '../../js/inputs';
@@ -160,21 +161,7 @@ export default class InputAtom extends React.PureComponent<Props, State> {
       rightIcon,
       type,
     } = this.props;
-
-    let className = '';
-    switch (type) {
-      case 'select':
-        className = `${Config.mermando.icons.classPrefix}${Config.mermando.icons.selectInput}`;
-        break;
-      default:
-        className = rightIcon
-          ? `${Config.mermando.icons.classPrefix}${rightIcon}`
-          : message && !label && !forceMessageBeneath
-            ? this.messageTypeIcon(messageType)
-            : required && (!label || forceInlineRequired)
-              ? `${Config.mermando.icons.classPrefix}${Config.mermando.icons.requiredInput}`
-              : '';
-    }
+    const { icons } = Config.mermando;
 
     const title = !label && message
       ? message
@@ -183,7 +170,16 @@ export default class InputAtom extends React.PureComponent<Props, State> {
         : null;
 
     return (
-      <span className={`icon ${className}`} title={title} />
+      <span
+        className={classnames('icon', {
+          [`${icons.classPrefix}`]: rightIcon || type === 'select' || (required && (!label || forceInlineRequired)),
+          [`${icons.requiredInput}`]: required && (!label || forceInlineRequired),
+          [`${this.messageTypeIcon(messageType)}`]: message && !label && !forceMessageBeneath,
+          [`${icons.selectInput}`]: type === 'select',
+          [`${rightIcon || ''}`]: rightIcon,
+        })}
+        title={title}
+      />
     );
   }
 
