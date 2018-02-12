@@ -32,6 +32,7 @@ export type Props = {
   options: Option[],
   placeholder?: string,
   required?: boolean,
+  forceInlineRequired?: boolean,
   editable?: boolean,
   disabled?: boolean,
 
@@ -51,6 +52,7 @@ type Default = {
   leftIcon: string,
 
   required: boolean,
+  forceInlineRequired: boolean,
   editable: boolean,
   disabled: boolean,
   type: 'single' | 'multiple',
@@ -72,6 +74,7 @@ export default class Select extends React.PureComponent<Props, State> {
     leftIcon: '',
 
     required: false,
+    forceInlineRequired: false,
     disabled: false,
     editable: true,
     type: 'single',
@@ -82,14 +85,18 @@ export default class Select extends React.PureComponent<Props, State> {
   }
 
   componentDidMount() {
-    const { options, required, value } = this.props;
-    if (required && !value) {
-      this.onSelectValue(options[0].value);
+    console.log('SELECT Mount');
+    this.autoSelectFirst(this.props);
+  }
+
+  componentWillReceiveProps(nextProps: Props) {
+    if (JSON.stringify(nextProps.options) !== JSON.stringify(this.props.options)) {
+      this.autoSelectFirst(nextProps);
     }
   }
 
   @autobind
-  onSelectValue(event: SyntheticEvent<*>, newValue: param) {
+  onSelectValue(event?: SyntheticEvent<*>, newValue: param) {
     if (event) event.stopPropagation();
     const { type, value, onChange } = this.props;
     if (onChange) {
@@ -131,6 +138,18 @@ export default class Select extends React.PureComponent<Props, State> {
   }
 
   node: ?HTMLDivElement;
+
+  @autobind
+  autoSelectFirst(props: Props) {
+    const { options, required, value } = props;
+    if (required && !value) {
+      const [opt] = options.filter(o => !o.disabled);
+      if (opt) {
+        console.log(opt);
+        this.onSelectValue(undefined, opt.value);
+      }
+    }
+  }
 
   @autobind
   handleClick() {
@@ -232,7 +251,7 @@ export default class Select extends React.PureComponent<Props, State> {
 
   render() {
     const {
-      id, label, className, required,
+      id, label, className, required, forceInlineRequired,
 
       message, messageType, messagesArray,
 
@@ -251,6 +270,7 @@ export default class Select extends React.PureComponent<Props, State> {
         className={className}
         leftIcon={leftIcon}
         required={required}
+        forceInlineRequired={forceInlineRequired}
         type='select'
         readOnly={!editable}
         disabled={disabled}
