@@ -32,6 +32,7 @@ export type Props = {
   autoComplete?: boolean,
   autoCompleteOptions?: string[],
   placeholder?: string,
+  viewDate?: moment | string,
   required?: boolean,
   forceInlineRequired?: boolean,
   editable?: boolean,
@@ -52,6 +53,8 @@ type Default = {
   messageType: $Keys<typeof messageTypes>,
   forceMessageBeneath: boolean,
 
+  viewDate: moment | string,
+
   leftIcon: string,
   rightIcon: string,
 
@@ -71,6 +74,8 @@ export default class Input extends React.PureComponent<Props, void> {
     message: '',
     messageType: 'text',
     forceMessageBeneath: false,
+
+    viewDate: moment(),
 
     leftIcon: '',
     rightIcon: '',
@@ -211,7 +216,7 @@ export default class Input extends React.PureComponent<Props, void> {
   renderInput(otherProps: { [key: string]: string }) {
     const {
       id, type, className, value, required, disabled, editable,
-      autoComplete, autoCompleteOptions, placeholder, isValidDate,
+      autoComplete, autoCompleteOptions, placeholder, viewDate, isValidDate,
     } = this.props;
 
     let newClassName = className || '';
@@ -282,6 +287,7 @@ export default class Input extends React.PureComponent<Props, void> {
             className='datetime-input'
             onChange={this.onCustomInputChange}
             dateFormat='DD-MMM-YYYY'
+            viewDate={viewDate}
             timeFormat={false}
             isValidDate={isValidDate}
             inputProps={{
@@ -389,7 +395,7 @@ export default class Input extends React.PureComponent<Props, void> {
 
       leftIcon, rightIcon, editable,
       disabled, onChange, autoComplete,
-      autoCompleteOptions, onFocus, onBlur, isValidDate,
+      autoCompleteOptions, onFocus, onBlur, isValidDate, viewDate,
 
       ...otherProps
     } = this.props;
