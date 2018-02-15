@@ -30,13 +30,14 @@ export default class ImagesList extends React.PureComponent<Props, State> {
 
     if (src) {
       return (
-        <Image
-          key={index}
-          alt={alt}
-          src={src}
-          srcSizes={srcSizes}
-          viewports={image.viewports || this.props.viewports}
-        />
+        <div className='img-wrap' key={index}>
+          <Image
+            alt={alt}
+            src={src}
+            srcSizes={srcSizes}
+            viewports={image.viewports || this.props.viewports}
+          />
+        </div>
       );
     }
     return null;
