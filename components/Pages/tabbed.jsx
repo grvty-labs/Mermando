@@ -67,6 +67,9 @@ export default class TabbedPage extends React.Component<Props, State> {
   componentWillReceiveProps(nextProps: Props) {
     if (nextProps.initialZone && this.props.initialZone !== nextProps.initialZone) {
       this.setState({ zoneSelected: nextProps.initialZone });
+    } else if (!this.props.zones.length && nextProps.zones.length) {
+      const [zone] = nextProps.zones;
+      if (zone) this.setState({ zoneSelected: zone.id });
     }
   }
 
