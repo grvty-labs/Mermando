@@ -36,13 +36,11 @@ export default class RadioInputGroup extends React.Component<Props, State> {
     const newId = `${id}-${index}`;
     return (
       <RadioInput
+        {...radioData}
         key={newId}
         id={newId}
         name={`${id}`}
         value={value}
-        label={radioData.label}
-        option={radioData.option}
-        legend={radioData.legend}
         onChange={onChange}
       />
     );
