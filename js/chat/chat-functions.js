@@ -20,28 +20,25 @@ type Message = {
 
 type PostMessage = {
   user?: string | number,
-  username: string,
+  username?: string,
   text: string,
-  lastThreadTs: string,
-  apiToken: string,
+  lastThreadTs?: string,
+  token: string,
   channel: string | number,
 };
 
 export const postMessage: (x: PostMessage) => Promise<*> = ({
   text,
   lastThreadTs,
-  apiToken,
+  token,
   channel,
   username,
 }) => new Promise((resolve: Function, reject: Function) => {
   if (text !== '') {
-    return chat.postMessage({
-      token: apiToken,
-      thread_ts: lastThreadTs,
-      channel,
-      text,
-      username,
-    }, (err, data) => (err ? reject(err) : resolve(data)));
+    const msg = { token, channel, text };
+    if (lastThreadTs) msg.thread_ts = lastThreadTs;
+    if (username) msg.username = username;
+    return chat.postMessage(msg, (err, data) => (err ? reject(err) : resolve(data)));
   }
 });
 
@@ -78,16 +75,17 @@ export const postFile: (x: File) => Promise<*> = ({
   };
 });
 
-export const getNewMessages: (old: T[], total: T[]) => T[] = (old, total) => {
+export function getNewMessages<T>(old: T[], total: T[]): T[] {
   const oldText = JSON.stringify(old);
   // Message Order has to be consistent
   const differenceInMessages = total.filter((i) => {
     if (oldText.indexOf(JSON.stringify(i)) === -1) {
       return i;
     }
+    return false;
   });
   return differenceInMessages;
-};
+}
 
 export const isSystemMessage: (x: Message) => boolean = (message) => {
   const systemMessageRegex = /<@.[^|]*[|].*>/;
@@ -99,9 +97,9 @@ export const isAdmin: (x: Message) => boolean = message =>
   // Any post that has the `user` field is from the backend
   typeof message.user !== 'undefined';
 
-export const wasIMentioned: (x: Message, y: string) => boolean = (message, botName) => {
+export const wasIMentioned: (x: Message, y?: string) => boolean = (message, botName) => {
   const myMessage = message.username === botName;
-  return !myMessage && message.text.indexOf(`@${botName}`) > -1;
+  return !myMessage && message.text.indexOf(`@${botName || ''}`) > -1;
 };
 
 export const hasEmoji: (x: string) => boolean = (text) => {

@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import autobind from 'autobind-decorator';
+import moment from 'moment';
 import { rtm, channels } from 'slack';
 import { load as emojiLoader, parse as emojiParser } from 'gh-emoji';
 import classNames from 'classnames';
@@ -36,6 +37,7 @@ type Message = {
   username: string,
   text: string,
   ts: string,
+  date: moment,
 };
 
 type ChannelUser = {
@@ -71,7 +73,7 @@ type State = {
   failed: boolean,
   postMyFile?: FileValue,
   fileUploadLoader: boolean,
-  userThreadTss: any[],
+  userThreadTss: string[],
   onlineUsers: ChannelUser[],
   channels: Channel[],
   messages: Message[],
@@ -84,8 +86,8 @@ export default class SlackChat extends React.PureComponent<Props, State> {
   };
   constructor(props: Props) {
     super(props);
-    this.bot = rtm.client();
     this.apiToken = atob(this.props.apiToken);
+    this.bot = rtm.connect({ token: this.apiToken });
     this.refreshTime = 2000;
     this.chatInitiatedTs = '';
     // this.activeChannel = undefined;
@@ -259,19 +261,22 @@ export default class SlackChat extends React.PureComponent<Props, State> {
             : this.getUserImg(message)
         }
         <div className='msg-cnt'>
-          <span>{username}</span>
+          <div className='head'>
+            <span className='name'>{username}</span>
+            <span className='date'>{message.date.fromNow()}</span>
+          </div>
           {
             textHasEmoji
             // dangerouslySetInnerHTML only if text has Emoji
               ? (
                 <div
-                  className={classNames('text', mentioned ? 'mentioned' : '')}
+                  className={classNames('text', { mentioned })}
                   dangerouslySetInnerHTML={{ __html: messageText }}
                 />
               )
                 // else display it normally
               : (
-                <div className={classNames('text', mentioned ? 'mentioned' : '')}>
+                <div className={classNames('text', { mentioned })}>
                   {messageText}
                 </div>
               )
@@ -297,7 +302,7 @@ export default class SlackChat extends React.PureComponent<Props, State> {
     return new Promise((resolve: Function, reject: Function) => {
       try {
         // start the bot, get the initial payload
-        this.bot.started((payload) => {
+        rtm.start({ token: this.apiToken }).then((payload) => {
           debugLog(payload);
           // Create new User object for each online user found
           // Add to our list only if the user is valid
@@ -324,15 +329,15 @@ export default class SlackChat extends React.PureComponent<Props, State> {
           return resolve({ channels: activeChannels, onlineUsers });
         });
         // tell the bot to listen
-        this.bot.listen({ token: this.apiToken }, (err) => {
+        rtm.connect({ token: this.apiToken }, (err) => {
           if (err) {
             debugLog(`Could not connect to Slack Server. Reason: ${JSON.stringify(err)}`);
-            this.setState({
-              helpText: 'Slack Connection Error!',
-            });
+            // this.setState({
+            //   helpText: 'Slack Connection Error!',
+            // });
           }
         });
-        return;
+        return null;
       } catch (err) {
         return reject(err);
       }
@@ -341,10 +346,11 @@ export default class SlackChat extends React.PureComponent<Props, State> {
 
   @autobind
   postMyMessage() {
+    const { postMyMessage: text, userThreadTss } = this.state;
     return postMessage({
-      text: this.state.postMyMessage,
-      lastThreadTs: this.state.userThreadTss[this.state.userThreadTss.length - 1],
-      apiToken: this.apiToken,
+      text,
+      lastThreadTs: userThreadTss.length ? userThreadTss[userThreadTss.length - 1] : undefined,
+      token: this.apiToken,
       channel: this.activeChannel.id,
       username: this.props.botName,
     }).then((data) => {
@@ -361,13 +367,12 @@ export default class SlackChat extends React.PureComponent<Props, State> {
         }, this.refreshTime);
       });
       return this.forceUpdate();
-    })
-      .catch((err) => {
-        if (err) {
-          return debugLog('failed to post. Err:', err);
-        }
-        return null;
-      });
+    }).catch((err) => {
+      if (err) {
+        return debugLog('failed to post. Err:', err);
+      }
+      return null;
+    });
   }
 
   @autobind
@@ -385,15 +390,16 @@ export default class SlackChat extends React.PureComponent<Props, State> {
       }, (err, data) => {
         if (err) {
           debugLog(`There was an error loading messages for ${channel.name}. ${err}`);
-          return this.setState({
-            failed: true,
-          });
+          return null;
+          // return this.setState({
+          //   failed: true,
+          // });
         }
         // loaded channel history
-        debugLog('got data', data);
         // Scroll down only if the stored messages and received messages are not the same
         // reverse() mutates the array
-        if (!arraysIdentical(this.state.messages, data.messages.reverse())) {
+        if (!arraysIdentical(that.messages, data.messages.reverse())) {
+          debugLog('got new data', data);
           // Got new messages
           // We dont wish to execute action hooks if user opens chat for the first time
           if (this.state.messages.length !== 0) {
@@ -414,8 +420,13 @@ export default class SlackChat extends React.PureComponent<Props, State> {
               }));
             }
           }
-          // set the state with new messages
+
           that.messages = data.messages;
+          const parsedMessages = data.messages.map(msg => ({
+            ...msg,
+            date: moment(msg.ts, 'X'),
+          }));
+
           // NOTE: if (this.props.singleUserMode) {
           //   if (that.messages.length > 0) {
           //     that.messages = that.messages.filter(
@@ -445,7 +456,7 @@ export default class SlackChat extends React.PureComponent<Props, State> {
           //   that.messages.unshift({text: this.props.defaultMessage, ts: this.chatInitiatedTs});
           // }
           return this.setState({
-            messages: that.messages,
+            messages: parsedMessages,
           }, () => {
             // if div is already scrolled to bottom, scroll down again just
             //   incase a new message has arrived
@@ -471,7 +482,7 @@ export default class SlackChat extends React.PureComponent<Props, State> {
   activeChannelInterval: any;
   apiToken: any;
   bot: any;
-  chatInitiatedTs: any;
+  chatInitiatedTs: number;
   fileUploadTitle: string;
   messages: Message[];
   messageFormatter: any;
@@ -525,7 +536,7 @@ export default class SlackChat extends React.PureComponent<Props, State> {
 
   render() {
     const {
-      postMyMessage, failed, messages, postMyFile, helpText, channels: stateChannels,
+      postMyMessage, failed, messages, postMyFile, channels: stateChannels,
     } = this.state;
 
     if (failed) {
@@ -537,7 +548,6 @@ export default class SlackChat extends React.PureComponent<Props, State> {
         <div className='chat'>
 
           <div className='channels-wrapper'>
-            <span>{helpText}</span>
             <span className='legend'>Channels</span>
             { stateChannels.map(this.renderChannel) }
           </div>

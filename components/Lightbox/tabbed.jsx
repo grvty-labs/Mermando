@@ -7,6 +7,8 @@ import Lightbox from './lightbox';
 export type Zone = {
   title?: string,
   className?: string,
+  canBack?: boolean,
+  canContinue?: boolean,
   renderComponent: Function,
 }
 
@@ -44,11 +46,13 @@ export default class LightboxTabbed extends React.PureComponent<Props, State> {
 
   @autobind
   renderBottomComponent() {
+    const zone = this.props.zones[this.state.zoneSelected];
     const leftComponent = this.state.zoneSelected > 0
       ? (
         <Button
           size='small'
           strain='link'
+          disabled={zone.canBack === false}
           onClick={() => this.onZoneClick(this.state.zoneSelected - 1)}
         >
           Previous
@@ -60,6 +64,7 @@ export default class LightboxTabbed extends React.PureComponent<Props, State> {
         <Button
           size='small'
           strain='main'
+          disabled={zone.canContinue === false}
           onClick={() => this.onZoneClick(this.state.zoneSelected + 1)}
         >
           Next

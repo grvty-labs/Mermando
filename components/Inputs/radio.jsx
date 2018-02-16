@@ -1,11 +1,13 @@
 // @flow
 import * as React from 'react';
 import autobind from 'autobind-decorator';
+import classnames from 'classnames';
 import Label from './label';
 
 export type RadioType = {
   label: string,
   option: string | number,
+  disabled?: boolean,
   legend?: string,
 };
 
@@ -30,24 +32,26 @@ export default class RadioInput extends React.PureComponent<Props, State> {
   state: State = {};
 
   @autobind
-  onChange() {
+  onChange(e: SyntheticEvent<*>) {
+    if (e) e.stopPropagation();
     const { onChange, option } = this.props;
     onChange(option);
   }
 
   render() {
     const {
-      id, name, option, label, legend, value,
+      id, name, option, label, legend, value, disabled,
     } = this.props;
     return (
-      <div className='radio'>
+      <div className={classnames('radio', { disabled })}>
         <input
           type='radio'
           id={id}
           name={name}
           value={option}
           checked={value === option}
-          onChange={this.onChange}
+          readOnly={disabled}
+          onChange={disabled ? undefined : this.onChange}
         />
         <Label htmlFor={`${id}`} />
         <Label htmlFor={`${id}`}>{label}</Label>

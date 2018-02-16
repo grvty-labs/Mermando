@@ -4,8 +4,9 @@ import autobind from 'autobind-decorator';
 import Section from './section';
 import { types } from '../../js/sections';
 
+type param = string | number;
 type Zone = {
-  id: string | number,
+  id: param,
   title: string,
   renderComponent: Function,
   type: $Keys<typeof types>,
@@ -14,15 +15,16 @@ type Zone = {
 export type StoreProps = {
   title: string,
   className?: string,
-  topComponent?: React.Node | Array<React.Node>,
-  children?: React.Node | Array<React.Node>,
-  zones: Array<Zone>,
+  topComponent?: React.Node,
+  children?: React.Node,
+  zones: Zone[],
+  initialZone?: param,
 };
 export type Actions = {};
 
 type Props = StoreProps & Actions;
 type State = {
-  zoneSelected?: string | number,
+  zoneSelected?: param,
 };
 type Default = {
   className: string,
@@ -38,8 +40,20 @@ export default class TabbedSection extends React.PureComponent<Props, State> {
   };
 
   componentWillMount() {
-    if (this.props.zones.length > 0) {
-      this.setState({ zoneSelected: this.props.zones[0].id });
+    if (this.props.initialZone) {
+      this.setState({ zoneSelected: this.props.initialZone });
+    } else if (this.props.zones.length) {
+      const [zone] = this.props.zones;
+      if (zone) this.setState({ zoneSelected: zone.id });
+    }
+  }
+
+  componentWillReceiveProps(nextProps: Props) {
+    if (nextProps.initialZone && this.props.initialZone !== nextProps.initialZone) {
+      this.setState({ zoneSelected: nextProps.initialZone });
+    } else if (!this.props.zones.length && nextProps.zones.length) {
+      const [zone] = nextProps.zones;
+      if (zone) this.setState({ zoneSelected: zone.id });
     }
   }
 

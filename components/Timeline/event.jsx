@@ -1,9 +1,7 @@
 // @flow
 import * as React from 'react';
 import autobind from 'autobind-decorator';
-import moment from 'moment';
-
-import { EventDictionary } from '../../../Overrides/EventConstants';
+import classnames from 'classnames';
 import { eventStatus } from '../../js/events';
 
 export type Props = {
@@ -13,7 +11,8 @@ export type Props = {
   status?: $Keys<typeof eventStatus>,
   date: string,
   eventType: number,
-  children?: React.Node | Array<React.Node>,
+  eventName?: string,
+  children?: React.Node,
   onClick?: Function,
 };
 
@@ -29,32 +28,38 @@ export default class Event extends React.PureComponent<Props, void> {
   };
 
   @autobind
+  onClick(e: SyntheticEvent<*>) {
+    const { onClick } = this.props;
+    if (e) e.stopPropagation();
+    if (onClick) onClick();
+  }
+
+  @autobind
   renderTitle() {
-    const { title, onClick } = this.props;
-    if (onClick) {
-      return (
-        <span
-          className='title'
-          onClick={onClick}
-          onKeyPress={onClick}
-          tabIndex={0}
-          role='menuitem'
-        >
-          {title}
-        </span>
-      );
-    }
-    return <span className='title'>{title}</span>;
+    const { onClick, title } = this.props;
+    return (
+      <span
+        className='title'
+        onClick={this.onClick}
+        onKeyPress={this.onClick}
+        tabIndex={onClick ? 0 : undefined}
+        role={onClick ? 'menuitem' : undefined}
+      >
+        {title}
+      </span>
+    );
   }
 
   render() {
     const {
-      className, icon, children, eventType, date, status,
+      className, icon, children, eventName = `ev${this.props.eventType}`,
+      date, status, onClick,
     } = this.props;
     return (
-      <div className={`event ${EventDictionary.find(event => (event.key === eventType), eventType).name} ${status || ''} ${className || ''}`}>
-        {/* FIXME: Remove path when connected to db */}
-        <img src={icon} alt={EventDictionary.find(event => (event.key === eventType), eventType).name} />
+      <div className={
+        classnames('event', eventName, status, { actionable: onClick }, className)}
+      >
+        <img src={icon} alt={eventName || ''} />
         <div className='data'>
           <div className='header'>
             {this.renderTitle()}

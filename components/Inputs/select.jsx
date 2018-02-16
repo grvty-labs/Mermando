@@ -1,23 +1,26 @@
 // @flow
 import * as React from 'react';
 import autobind from 'autobind-decorator';
+import classnames from 'classnames';
 import { messageTypes } from '../../js/inputs';
 import InputAtom from './input-atom';
 import type { Message } from './input-atom';
 
-export type Value = string | number | Array<string | number>;
+type param = string | number;
+export type Value = param | param[];
 
 export type Option = {
-  display: string | number,
-  value: string | number,
-  options?: Array<Option>,
-  [key: string]: any,
+  display: param,
+  value: param,
+  disabled?: boolean,
+  hover?: string,
+  options?: Option[],
 };
 
 export type Props = {
   id: string,
   label?: string,
-  messagesArray?: Array<Message>,
+  messagesArray?: Message[],
   message?: string,
   messageType?: $Keys<typeof messageTypes>,
   className?: string,
@@ -26,9 +29,10 @@ export type Props = {
   leftIcon?: string,
 
   type?: 'single' | 'multiple',
-  options: Array<Option>,
+  options: Option[],
   placeholder?: string,
   required?: boolean,
+  forceInlineRequired?: boolean,
   editable?: boolean,
   disabled?: boolean,
 
@@ -41,13 +45,14 @@ type Default = {
   label: string,
   className: string,
 
-  messagesArray: Array<Message>,
+  messagesArray: Message[],
   message: string,
   messageType: $Keys<typeof messageTypes>,
 
   leftIcon: string,
 
   required: boolean,
+  forceInlineRequired: boolean,
   editable: boolean,
   disabled: boolean,
   type: 'single' | 'multiple',
@@ -56,6 +61,10 @@ type Default = {
 type State = {
   showOptionsLevel: number
 };
+
+function isNullOrVoid(value: Value) {
+  return value !== 0 && !value;
+}
 
 export default class Select extends React.PureComponent<Props, State> {
   static defaultProps: Default = {
@@ -69,6 +78,7 @@ export default class Select extends React.PureComponent<Props, State> {
     leftIcon: '',
 
     required: false,
+    forceInlineRequired: false,
     disabled: false,
     editable: true,
     type: 'single',
@@ -79,14 +89,18 @@ export default class Select extends React.PureComponent<Props, State> {
   }
 
   componentDidMount() {
-    const { options, required, value } = this.props;
-    if (required && !value) {
-      this.onSelectValue(options[0].value);
+    this.autoSelectFirst(this.props);
+  }
+
+  componentWillReceiveProps(nextProps: Props) {
+    if (JSON.stringify(nextProps.options) !== JSON.stringify(this.props.options)) {
+      this.autoSelectFirst(nextProps);
     }
   }
 
   @autobind
-  onSelectValue(newValue: string | number) {
+  onSelectValue(event?: SyntheticEvent<*>, newValue: param) {
+    if (event) event.stopPropagation();
     const { type, value, onChange } = this.props;
     if (onChange) {
       if (type === 'single') {
@@ -95,8 +109,8 @@ export default class Select extends React.PureComponent<Props, State> {
           document.removeEventListener('click', this.handleOutsideClick);
         });
       } else {
-        const casted = value && value.length
-          ? (value: Array<string | number>)
+        const casted = !isNullOrVoid(value) && value.length
+          ? (value: param[])
           : [];
         if (casted.indexOf(newValue) < 0) {
           onChange(casted.concat(newValue));
@@ -114,7 +128,7 @@ export default class Select extends React.PureComponent<Props, State> {
     if (onChange) {
       if (type === 'multiple' && editable && !disabled) {
         const casted = value && value.length
-          ? (value: Array<string | number>)
+          ? (value: param[])
           : [];
         if (index >= 0) {
           onChange([
@@ -127,6 +141,17 @@ export default class Select extends React.PureComponent<Props, State> {
   }
 
   node: ?HTMLDivElement;
+
+  @autobind
+  autoSelectFirst(props: Props) {
+    const { options, required, value } = props;
+    if (required && isNullOrVoid(value)) {
+      const [opt] = options.filter(o => !o.disabled);
+      if (opt) {
+        this.onSelectValue(undefined, opt.value);
+      }
+    }
+  }
 
   @autobind
   handleClick() {
@@ -157,26 +182,33 @@ export default class Select extends React.PureComponent<Props, State> {
     const { showOptionsLevel } = this.state;
     return (
       <div
-        className={`options ${showOptionsLevel > 0 ? 'open' : ''}`}
+        className={classnames('options', { open: showOptionsLevel > 0 })}
         ref={(node) => { this.node = node; }}
       >
-        {options.map((option: Option, index: number) => (
+        { options.map((option: Option, index: number) => (
           <span
             key={index}
-            onClick={option.options
-              ? () => this.onSelectValue(option.value)
-              : () => this.onSelectValue(option.value)
+            className={classnames({ disabled: option.disabled })}
+            onClick={option.disabled
+              ? undefined
+              : option.options
+                ? e => this.onSelectValue(e, option.value)
+                : e => this.onSelectValue(e, option.value)
             }
-            onKeyPress={option.options
-              ? () => this.onSelectValue(option.value)
-              : () => this.onSelectValue(option.value)
+            onKeyPress={option.disabled
+              ? undefined
+              : option.options
+                ? e => this.onSelectValue(e, option.value)
+                : e => this.onSelectValue(e, option.value)
             }
             role='menuitem'
-            tabIndex={showOptionsLevel > 0 ? 0 : -1}
+            tabIndex={!option.disabled && showOptionsLevel > 0 ? 0 : -1}
+            title={option.hover}
           >
             {option.display}
           </span>
-        ))}
+        ))
+        }
       </div>
     );
   }
@@ -186,14 +218,14 @@ export default class Select extends React.PureComponent<Props, State> {
     const {
       options, placeholder, type, value, disabled, editable,
     } = this.props;
-    if (type === 'single' && value) {
+    if (type === 'single' && (value === 0 || value)) {
       const option = options.find(opt => value === opt.value);
       return (
         <div className='value single'><span>{option ? option.display : value}</span></div>
       );
-    } else if (value && value.constructor === Array && value.length) {
+    } else if (!isNullOrVoid(value) && value.constructor === Array && value.length) {
       const casted = value && value.length
-        ? (value: Array<string | number>)
+        ? (value: param[])
         : [];
       const optsFiltered = options.filter(opt => casted.indexOf(opt.value) > -1);
       return (
@@ -221,7 +253,7 @@ export default class Select extends React.PureComponent<Props, State> {
 
   render() {
     const {
-      id, label, className, required,
+      id, label, className, required, forceInlineRequired,
 
       message, messageType, messagesArray,
 
@@ -240,10 +272,11 @@ export default class Select extends React.PureComponent<Props, State> {
         className={className}
         leftIcon={leftIcon}
         required={required}
+        forceInlineRequired={forceInlineRequired}
         type='select'
         readOnly={!editable}
         disabled={disabled}
-        empty={!value || (value.constructor === Array && !value.length)}
+        empty={isNullOrVoid(value) || (value.constructor === Array && !value.length)}
         invalid={messageType === 'error'}
         onClick={this.handleClick}
         onFocus={onFocus}
@@ -251,7 +284,7 @@ export default class Select extends React.PureComponent<Props, State> {
       >
         <div
           id={id}
-          className={`select-input ${disabled ? 'disabled' : ''} ${!editable ? 'blocked' : ''}`}
+          className={classnames('select-input', { disabled, blocked: !editable })}
           tabIndex={!disabled && editable ? 0 : -1}
           role='button'
         >

@@ -25,8 +25,9 @@ export type StoreProps = {
   backText?: string,
   topComponent?: React.Node | Array<React.Node>,
   children?: React.Node | Array<React.Node>,
-  zones: Array<Zone>,
+  zones: Zone[],
   hideTabs?: boolean,
+  initialZone?: number | string,
 };
 
 export type Actions = {
@@ -55,13 +56,25 @@ export default class TabbedPage extends React.Component<Props, State> {
   };
 
   componentWillMount() {
-    if (this.props.zones.length > 0) {
-      this.setState({ zoneSelected: this.props.zones[0].id });
+    if (this.props.initialZone) {
+      this.setState({ zoneSelected: this.props.initialZone });
+    } else if (this.props.zones.length) {
+      const [zone] = this.props.zones;
+      if (zone) this.setState({ zoneSelected: zone.id });
+    }
+  }
+
+  componentWillReceiveProps(nextProps: Props) {
+    if (nextProps.initialZone && this.props.initialZone !== nextProps.initialZone) {
+      this.setState({ zoneSelected: nextProps.initialZone });
+    } else if (!this.props.zones.length && nextProps.zones.length) {
+      const [zone] = nextProps.zones;
+      if (zone) this.setState({ zoneSelected: zone.id });
     }
   }
 
   @autobind
-  onZoneClick(id: string | number) {
+  changeZone(id: string | number) {
     this.setState({ zoneSelected: id });
   }
 
@@ -75,8 +88,8 @@ export default class TabbedPage extends React.Component<Props, State> {
         <div
           key={z.id}
           className={`tab ${z.id === zoneSelected ? 'selected' : ''} ${z.statusClassName || ''}`}
-          onClick={() => this.onZoneClick(z.id)}
-          onKeyPress={() => this.onZoneClick(z.id)}
+          onClick={() => this.changeZone(z.id)}
+          onKeyPress={() => this.changeZone(z.id)}
           role='menuitemradio'
           aria-checked={z.id === zoneSelected}
           tabIndex={0}
@@ -113,7 +126,7 @@ export default class TabbedPage extends React.Component<Props, State> {
         topComponent={
           zoneRender.topComponent ||
           zoneRender.renderTopComponent
-            ? zoneRender.renderTopComponent(this.onZoneClick)
+            ? zoneRender.renderTopComponent(this.changeZone)
             : topComponent
         }
         backText={backText}
@@ -122,7 +135,7 @@ export default class TabbedPage extends React.Component<Props, State> {
         legend={zoneRender.legend || ''}
         type={zoneRender.type}
       >
-        { zoneRender.renderComponent(this.onZoneClick) }
+        { zoneRender.renderComponent(this.changeZone) }
         { children }
       </Page>
     );

@@ -63,6 +63,18 @@
       opacity: 1;
     }
   }
+
+  &.disabled {
+    > input[type='radio'] {
+      + label {
+        border-color: var(--radio-disabled-border-color);
+
+        &::after {
+          background: var(--radio-disabled-checked-color);
+        }
+      }
+    }
+  }
 }
 
 .radio-group {
