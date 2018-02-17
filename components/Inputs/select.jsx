@@ -12,6 +12,7 @@ export type Value = param | param[];
 export type Option = {
   display: param,
   value: param,
+  image?: string,
   disabled?: boolean,
   hover?: string,
   options?: Option[],
@@ -205,6 +206,10 @@ export default class Select extends React.PureComponent<Props, State> {
             tabIndex={!option.disabled && showOptionsLevel > 0 ? 0 : -1}
             title={option.hover}
           >
+            { option.image
+              ? <img src={option.image} alt='' />
+              : null
+            }
             {option.display}
           </span>
         ))
