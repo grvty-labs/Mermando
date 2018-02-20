@@ -10,12 +10,12 @@ import type { ImageStoreProps } from '../Images';
 
 export type ImageType = {
   id: number | string,
-  type: 'image',
+  type?: 'image',
 } & ImageStoreProps;
 
 export type VideoType = {
   id: number | string,
-  type: 'video',
+  type?: 'video',
   url: string,
 }
 
@@ -27,6 +27,8 @@ type Viewport = {
 export type StoreProps = {
   images?: ImageType[],
   videos?: VideoType[],
+  videoWidth?: number,
+  videoHeight?: number,
   time?: number,
   autoScroll?: boolean,
   viewports?: Viewport[],
@@ -36,9 +38,10 @@ export type Actions = {
 };
 type Props = StoreProps & Actions;
 type Default = {
-  type: 'images' | 'videos',
   time: number,
   autoScroll: boolean,
+  videoWidth: number,
+  videoHeight: number,
 };
 type State = {
   selected: number,
@@ -50,9 +53,10 @@ let elements;
 
 export default class Carousel extends React.PureComponent<Props, State> {
   static defaultProps: Default = {
-    type: 'images',
     time: 6000,
     autoScroll: true,
+    videoWidth: 853,
+    videoHeight: 480,
   };
 
   state: State = {
@@ -63,6 +67,14 @@ export default class Carousel extends React.PureComponent<Props, State> {
 
   componentWillMount() {
     const { images, videos } = this.props;
+    const imagesType = [...images || []];
+    const videosType = [...videos || []];
+    imagesType.forEach((image) => {
+      image.type = 'image';
+    });
+    videosType.forEach((video) => {
+      video.type = 'video';
+    });
     if (images && images.length && !videos) {
       elements = [...images];
     } else if (videos && videos.length && !images) {
@@ -172,7 +184,9 @@ export default class Carousel extends React.PureComponent<Props, State> {
 
   render() {
     const { selected } = this.state;
-    const { viewports } = this.props;
+    const {
+      viewports, videoWidth, videoHeight,
+    } = this.props;
 
     return (
       <div className='carousel-wrapper'>
@@ -195,6 +209,8 @@ export default class Carousel extends React.PureComponent<Props, State> {
                     : <ReactPlayer
                       url={element.url}
                       controls
+                      width={`${videoWidth}px`}
+                      height={`${videoHeight}px`}
                       onPlay={() => {
                         clearTimeout(this.timeout);
                       }}
