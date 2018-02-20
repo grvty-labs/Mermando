@@ -47,9 +47,9 @@ type State = {
   selected: number,
   lastSelected: number,
   slideSide: 'left' | 'right',
+  elements: ImageType[] | VideoType[],
 };
 
-let elements;
 
 export default class Carousel extends React.PureComponent<Props, State> {
   static defaultProps: Default = {
@@ -60,37 +60,21 @@ export default class Carousel extends React.PureComponent<Props, State> {
   };
 
   state: State = {
+    elements: [],
     selected: 0,
     lastSelected: 0,
     slideSide: 'right',
   };
 
   componentWillMount() {
-    const { images, videos } = this.props;
-    const imagesType = [...images || []];
-    const videosType = [...videos || []];
-    imagesType.forEach((image) => {
-      image.type = 'image';
-    });
-    videosType.forEach((video) => {
-      video.type = 'video';
-    });
-    if (images && images.length && !videos) {
-      elements = [...images];
-    } else if (videos && videos.length && !images) {
-      elements = [...videos];
-    } else if (videos && videos.length && images && images.length) {
-      elements = [
-        ...images,
-        ...videos,
-      ];
-    } else {
-      elements = [];
-    }
+    this.setElements(this.props);
   }
 
   componentDidMount() {
-    this.onSelect(0);
+  }
+
+  componentWillReceiveProps(nextProps: Props) {
+    this.setElements(nextProps);
   }
 
   @autobind
@@ -104,7 +88,7 @@ export default class Carousel extends React.PureComponent<Props, State> {
         if (this.timeout) clearTimeout(this.timeout);
         this.timeout = setTimeout(() => {
           const { selected } = this.state;
-          const nextIndex = selected < elements.length - 1
+          const nextIndex = selected < this.state.elements.length - 1
             ? selected + 1
             : 0;
           this.onSelect(nextIndex);
@@ -113,22 +97,29 @@ export default class Carousel extends React.PureComponent<Props, State> {
     });
   }
 
-  onPlay = () => {
-    this.setState({ playing: true });
-  }
-  onPause = () => {
-    this.setState({ playing: false });
-  }
-
-  ref = (player) => {
-    this.player = player;
+  @autobind
+  setElements(props: Props) {
+    const { images = [], videos = [] } = props;
+    let elements = [];
+    if (images && images.length) {
+      elements = [
+        ...images.map(img => ({ ...img, type: 'image' })),
+      ];
+    }
+    if (videos && videos.length) {
+      elements = [
+        ...elements,
+        ...videos.map(vid => ({ ...vid, type: 'video' })),
+      ];
+    }
+    this.setState({ elements }, () => { this.onSelect(0); });
   }
 
   timeout: number;
 
   @autobind
   renderButton(side: 'left' | 'right') {
-    const { selected } = this.state;
+    const { selected, elements } = this.state;
     const { icons } = Config.mermando;
     const className = `${icons.classPrefix}${
       side === 'left' ? icons.carouselLeft : icons.carouselRight}`;
@@ -152,7 +143,9 @@ export default class Carousel extends React.PureComponent<Props, State> {
 
   @autobind
   renderDots() {
-    const { selected, lastSelected, slideSide } = this.state;
+    const {
+      selected, lastSelected, slideSide, elements,
+    } = this.state;
 
     if (elements && elements.length) {
       const dots = elements.map((element, index: number) => (
@@ -183,7 +176,7 @@ export default class Carousel extends React.PureComponent<Props, State> {
   }
 
   render() {
-    const { selected } = this.state;
+    const { selected, elements } = this.state;
     const {
       viewports, videoWidth, videoHeight,
     } = this.props;
@@ -200,31 +193,35 @@ export default class Carousel extends React.PureComponent<Props, State> {
                   style={index === 0 ? { marginLeft: `-${selected * 100}%` } : undefined}
                 >
                   { element.type === 'image'
-                    ? <Image
-                      alt={element.alt}
-                      src={element.src}
-                      srcSizes={element.srcSizes}
-                      viewports={viewports}
-                    />
-                    : <ReactPlayer
-                      url={element.url}
-                      controls
-                      width={`${videoWidth}px`}
-                      height={`${videoHeight}px`}
-                      onPlay={() => {
-                        clearTimeout(this.timeout);
-                      }}
-                      onPause={() => {
-                        this.onSelect(this.state.selected);
-                      }}
-                      onEnded={() => {
-                        this.onSelect(this.state.selected);
-                      }}
-                    />}
-
+                    ? (
+                      <Image
+                        alt={element.alt}
+                        src={element.src}
+                        srcSizes={element.srcSizes}
+                        viewports={viewports}
+                      />
+                    )
+                    : (
+                      <ReactPlayer
+                        url={element.url}
+                        controls
+                        width={`${videoWidth}px`}
+                        height={`${videoHeight}px`}
+                        onPlay={() => {
+                          clearTimeout(this.timeout);
+                        }}
+                        onPause={() => {
+                          this.onSelect(this.state.selected);
+                        }}
+                        onEnded={() => {
+                          this.onSelect(this.state.selected);
+                        }}
+                      />
+                    )
+                  }
                 </div>
-                ))
-                : null}
+              ))
+              : null}
           </div>
           <div className='controls'>
             { this.renderButton('left') }
