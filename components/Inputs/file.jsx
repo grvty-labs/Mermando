@@ -172,7 +172,7 @@ export default class FileInput extends React.PureComponent<Props, void> {
             src={file.preview}
             alt={file.name}
           />
-          <span className='tag'>{index === 0 ? 'Main Image' : null}</span>
+          <span className='tag'>{index === 0 && !this.props.hidePreviewTag ? 'Main Image' : ''}</span>
           <span
             className={`remove-btn ${disabled ? 'disabled' : ''}`}
             onClick={() => this.onRemoveIndex(index)}
