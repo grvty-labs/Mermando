@@ -227,7 +227,7 @@ export default class InputAtom extends React.PureComponent<Props, State> {
   @autobind
   renderMultipleMessages() {
     const { messagesArray } = this.props;
-    if (messagesArray) {
+    if (messagesArray && messagesArray.length) {
       const msgRender = messagesArray.map((msg, index) => (
         <small key={index + 1} className={msg.type !== 'text' ? msg.type || '' : ''}>
           <span className={msg.type !== 'text' ? this.messageTypeIcon(msg.type) : ''} />
@@ -236,7 +236,7 @@ export default class InputAtom extends React.PureComponent<Props, State> {
       msgRender.unshift(this.renderMainMessage());
       return msgRender;
     }
-    return null;
+    return this.renderMainMessage();
   }
 
   render() {
