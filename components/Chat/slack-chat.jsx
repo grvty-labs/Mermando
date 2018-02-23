@@ -25,11 +25,24 @@ import { isHookMessage, execHooksIfFound } from '../../js/chat/hooks';
 import { changeColorRecursive } from '../../js/chat/themes';
 import type { FileValue } from '../Inputs';
 
-type Channel = {
-  id: number | string,
+type HardChannel = {
+  id: string,
   name: string,
-  connection: string,
-  legend: string,
+  created: number,
+  creator: string,
+  has_pins: boolean,
+  is_archived: boolean,
+  is_channel: true,
+  is_general: boolean,
+  is_member: boolean,
+  is_mpim: boolean,
+  is_org_shared: boolean,
+  is_private: boolean,
+  is_shared: boolean,
+  name_normalized: string,
+  previous_names: string[],
+  priority: number,
+  unlinked: number,
 };
 
 type Message = {
@@ -49,8 +62,8 @@ type ChannelUser = {
 };
 
 export type StoreProps = {
-  apiToken: string,
-  channels: Channel[],
+  apiToken?: string,
+  channels: string[],
   botName?: string,
   helpText?: string,
   // bypass the channel list and go directly to a specific channel
@@ -75,7 +88,7 @@ type State = {
   fileUploadLoader: boolean,
   userThreadTss: string[],
   onlineUsers: ChannelUser[],
-  channels: Channel[],
+  channels: HardChannel[],
   messages: Message[],
 };
 
@@ -84,48 +97,6 @@ export default class SlackChat extends React.PureComponent<Props, State> {
     hooks: [],
     debugMode: false,
   };
-  constructor(props: Props) {
-    super(props);
-    this.apiToken = atob(this.props.apiToken);
-    this.bot = rtm.connect({ token: this.apiToken });
-    this.refreshTime = 2000;
-    this.chatInitiatedTs = '';
-    // this.activeChannel = undefined;
-    this.activeChannelInterval = null;
-    this.messageFormatter = {
-      emoji: false, // default
-    };
-    this.fileUploadTitle = `Posted by ${this.props.botName || ''}`;
-    this.themeDefaultColor = '#2e7eea'; // Defined as $theme_color sass variable in .scss
-    // Initiate Emoji Library
-    emojiLoader().then(() => {
-      this.messageFormatter = {
-        emoji: true,
-      };
-    }).catch(err => debugLog(`Cant initiate emoji library ${err}`));
-    // Connect bot
-    this.connectBot().then((data) => {
-      debugLog('got data', data);
-      if (this.props.defaultChannel) {
-        const [channel] = data.channels.filter(({ name }) => name === this.props.defaultChannel);
-        this.activeChannel = channel;
-      }
-      this.setState({
-        onlineUsers: data.onlineUsers,
-        channels: data.channels,
-      }, () => {
-        if (this.props.defaultChannel) {
-          const defChannel = this.state.channels.find(c => c.name === this.props.defaultChannel);
-          if (defChannel) this.openChannel(defChannel);
-        }
-      });
-    }).catch((err) => {
-      debugLog('could not intialize slack bot', err);
-      this.setState({
-        failed: true,
-      });
-    });
-  }
 
   state: State = {
     helpText: this.props.helpText || '',
@@ -143,10 +114,64 @@ export default class SlackChat extends React.PureComponent<Props, State> {
     if (this.props.themeColor) {
       changeColorRecursive(document.body, this.themeDefaultColor, this.props.themeColor);
     }
+
+    if (this.props.apiToken) {
+      this.onStartChat();
+    }
+  }
+
+  componentDidUpdate(prevProps: Props) {
+    if (prevProps.apiToken !== this.props.apiToken) {
+      this.onStartChat();
+    }
   }
 
   componentWillUnmount() {
     if (this.activeChannelInterval) clearInterval(this.activeChannelInterval);
+  }
+
+  @autobind
+  onStartChat() {
+    if (this.props.apiToken) {
+      this.apiToken = atob(this.props.apiToken);
+      this.bot = rtm.connect({ token: this.apiToken });
+      this.refreshTime = 2000;
+      this.chatInitiatedTs = '';
+      // this.activeChannel = undefined;
+      this.activeChannelInterval = null;
+      this.messageFormatter = {
+        emoji: false, // default
+      };
+      this.fileUploadTitle = `Posted by ${this.props.botName || ''}`;
+      this.themeDefaultColor = '#2e7eea'; // Defined as $theme_color sass variable in .scss
+      // Initiate Emoji Library
+      emojiLoader().then(() => {
+        this.messageFormatter = {
+          emoji: true,
+        };
+      }).catch(err => debugLog(`Cant initiate emoji library ${err}`));
+      // Connect bot
+      this.connectBot().then((data) => {
+        if (this.props.defaultChannel) {
+          const [channel] = data.channels.filter(({ name }) => name === this.props.defaultChannel);
+          this.activeChannel = channel;
+        }
+        this.setState({
+          onlineUsers: data.onlineUsers,
+          channels: data.channels,
+        }, () => {
+          if (this.props.defaultChannel) {
+            const defChannel = this.state.channels.find(c => c.name === this.props.defaultChannel);
+            if (defChannel) this.openChannel(defChannel);
+          }
+        });
+      }).catch((err) => {
+        debugLog('could not intialize slack bot', err);
+        this.setState({
+          failed: true,
+        });
+      });
+    }
   }
 
   @autobind
@@ -314,11 +339,11 @@ export default class SlackChat extends React.PureComponent<Props, State> {
           // get the channels we need
           const activeChannels = [];
           payload.channels.forEach((channel) => {
-            this.props.channels.forEach((channelObject) => {
+            this.props.channels.forEach((cname) => {
               // If this channel is exactly as requested
-              if (channelObject.name === channel.name || channelObject.id === channel.id) {
+              if (cname === channel.name || cname === channel.id) {
                 if (this.props.defaultChannel === channel.name) {
-                  this.activeChannel = channelObject;
+                  this.activeChannel = channel;
                 }
                 // Add on the icon property to the channel list
                 // NOTE: channel.icon = channelObject.icon;
@@ -376,7 +401,7 @@ export default class SlackChat extends React.PureComponent<Props, State> {
   }
 
   @autobind
-  loadMessages(channel: Channel) {
+  loadMessages(channel: HardChannel) {
     const that = this;
     if (!this.chatInitiatedTs) {
       this.chatInitiatedTs = Date.now() / 1000;
@@ -478,7 +503,7 @@ export default class SlackChat extends React.PureComponent<Props, State> {
     this.activeChannelInterval = setInterval(getMessagesFromSlack, this.refreshTime);
   }
 
-  activeChannel: Channel;
+  activeChannel: HardChannel;
   activeChannelInterval: any;
   apiToken: any;
   bot: any;
@@ -514,19 +539,20 @@ export default class SlackChat extends React.PureComponent<Props, State> {
   }
 
   @autobind
-  openChannel(channel: Channel) {
+  openChannel(channel: HardChannel) {
     // stop propagation so we can prevent any other click events from firing
+    if (this.activeChannelInterval) clearInterval(this.activeChannelInterval);
     this.activeChannel = channel;
     this.setState({}, () => this.loadMessages(channel));
     // Set this channel as active channel
   }
 
   @autobind
-  renderChannel(channel: Channel, index: number) {
+  renderChannel(channel: HardChannel) {
     return (
       <Button
         key={channel.id} size='small'
-        className={index === 0 ? 'selected' : ''}
+        className={channel.id === this.activeChannel.id ? 'selected' : ''}
         onClick={() => this.openChannel(channel)}
       >
         {channel.name}

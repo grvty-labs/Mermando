@@ -54,6 +54,7 @@
         min-height: 27.25em;
         overflow-x: hidden;
         overflow-y: auto;
+        padding-right: 1em;
 
         > .msg-row {
           display: flex;
@@ -61,11 +62,21 @@
 
           &.mine {
             justify-content: flex-end;
-            padding-left: 2em;
+            margin-bottom: 1.1em;
+            padding-left: 30%;
+
+            & + .not-mine {
+              margin-top: 1.5em;
+            }
           }
 
           &.not-mine {
             justify-content: flex-start;
+            margin-bottom: 1.1em;
+
+            & + .mine {
+              margin-top: 1.5em;
+            }
           }
 
           > .avatar {
@@ -73,7 +84,7 @@
           }
 
           > .msg-cnt {
-            margin: 0 1em;
+            margin-left: 1em;
 
             > .head {
               display: flex;
@@ -96,7 +107,7 @@
               letter-spacing: normal;
               line-break: strict;
               line-height: 1.33;
-              margin: 0.666em 0 1.1em;
+              margin: 0.666em 0 0;
               overflow-wrap: break-word;
               text-overflow: clip;
               white-space: pre-wrap;
@@ -112,7 +123,6 @@
               }
             }
           }
-
         }
       }
 
