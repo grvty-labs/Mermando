@@ -6,6 +6,7 @@ type Props = {
   legend?: string,
   topComponent?: React.Node | Array<React.Node>,
   children: React.Node | Array<React.Node>,
+  onSubmit?: Function,
 };
 type State = {};
 type Default = {};
@@ -20,7 +21,7 @@ export default class FormSection extends React.PureComponent<Props, State> {
     } = this.props;
 
     return (
-      <div className={`form-section ${className || ''}`}>
+      <form className={`form-section ${className || ''}`} onSubmit={this.props.onSubmit}>
         <div className='top'>
           {
             legend
@@ -30,7 +31,7 @@ export default class FormSection extends React.PureComponent<Props, State> {
           {topComponent}
         </div>
         {children}
-      </div>
+      </form>
     );
   }
 }

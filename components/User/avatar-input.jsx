@@ -48,7 +48,7 @@ type Default = {
   disabled: boolean,
 };
 
-export default class FileInput extends React.PureComponent<Props, void> {
+export default class AvatarInput extends React.PureComponent<Props, void> {
   static defaultProps: Default = {
     label: '',
     className: '',

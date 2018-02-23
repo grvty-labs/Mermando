@@ -5,12 +5,12 @@ import Config from 'Config';
 import { Button } from '../Button';
 
 export type StoreProps = {
-  children: React.Node | Array<React.Node>,
+  children: React.Node,
   className?: string,
   show: boolean,
   title: string,
-  topComponent?: React.Node | Array<React.Node>,
-  footerComponent?: React.Node | Array<React.Node>,
+  topComponent?: React.Node,
+  footerComponent?: React.Node,
 };
 export type Actions = {
   onCloseClick: Function,
