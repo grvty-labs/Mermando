@@ -51,8 +51,8 @@ export const keyCodes: { [key: string ]: number } = {
   SPACE: 32,
   UP_ARROW: 38,
   DOWN_ARROW: 40,
-  SEMI_COLON: 186,
-  COLON: 186,
+  SEMI_COLON: 185,
+  COLON: 185,
   COMMA: 188,
   PERIOD: 190,
 };
