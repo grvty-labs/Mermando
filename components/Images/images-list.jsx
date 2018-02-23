@@ -12,6 +12,7 @@ import type {
 
 export type StoreProps = {
   images: ImageType[],
+  className?: string,
   viewports?: Viewport[],
 
   lightbox?: boolean,
@@ -117,18 +118,18 @@ export default class ImagesList extends React.PureComponent<Props, State> {
   }
 
   render() {
-    const { images, lightbox } = this.props;
+    const { images, lightbox, className } = this.props;
     const imagesRender = images.map(this.renderImage);
     if (lightbox) {
       return (
-        <div className='images-list'>
+        <div className={`images-list ${className || ''}`}>
           {imagesRender}
           {this.renderLightbox()}
         </div>
       );
     }
     return (
-      <div className='images-list'>
+      <div className={`images-list ${className || ''}`}>
         {imagesRender}
       </div>
     );
