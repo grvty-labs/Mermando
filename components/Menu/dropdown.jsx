@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import Config from 'Config';
 import { Button } from '../Button';
 import { sizes, strains } from '../../js/buttons';
 
@@ -9,7 +10,6 @@ export type Props = {
   icon?: React.Node | string,
   buttonStrain?: $Keys<typeof strains>,
   buttonSize?: $Keys<typeof sizes>,
-  showAngle?: boolean,
 
   showHead?: boolean,
   headTitle?: string,
@@ -25,22 +25,20 @@ type Default = {
   text: string,
   icon: string,
   showHead: boolean,
-  showAngle: boolean,
 };
 
 export default class Dropdown extends React.PureComponent<Props, State> {
   static defaultProps: Default = {
     className: '',
     text: '',
-    icon: '',
+    icon: Config.mermando.icons.dropdownButton,
     showHead: false,
-    showAngle: false,
   };
 
   render() {
     const {
       className, icon, text, headTitle, children, buttonSize,
-      buttonStrain, headLeftElement, headRightElement, showAngle,
+      buttonStrain, headLeftElement, headRightElement,
       showHead,
     } = this.props;
 
@@ -57,7 +55,6 @@ export default class Dropdown extends React.PureComponent<Props, State> {
     return (
       <div className={`dropdown-wrapper ${className || ''}`}>
         <Button
-          className={showAngle ? 'angled' : ''}
           strain={buttonStrain || (text ? 'link' : 'icon')}
           iconSide='right'
           icon={icon}

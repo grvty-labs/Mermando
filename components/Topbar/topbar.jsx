@@ -128,7 +128,6 @@ export default class Topbar extends React.PureComponent<Props, void> {
               className='user-options'
               buttonSize='small'
               text={username}
-              showAngle
             >
               {profileAnchors.map(anchor => (
                 <Button
