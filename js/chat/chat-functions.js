@@ -25,6 +25,7 @@ type PostMessage = {
   lastThreadTs?: string,
   token: string,
   channel: string | number,
+  as_user?: boolean,
 };
 
 export const postMessage: (x: PostMessage) => Promise<*> = ({
@@ -33,9 +34,12 @@ export const postMessage: (x: PostMessage) => Promise<*> = ({
   token,
   channel,
   username,
+  as_user,
 }) => new Promise((resolve: Function, reject: Function) => {
   if (text !== '') {
-    const msg = { token, channel, text };
+    const msg = {
+      token, channel, text, as_user,
+    };
     if (lastThreadTs) msg.thread_ts = lastThreadTs;
     if (username) msg.username = username;
     return chat.postMessage(msg, (err, data) => (err ? reject(err) : resolve(data)));
@@ -97,9 +101,9 @@ export const isAdmin: (x: Message) => boolean = message =>
   // Any post that has the `user` field is from the backend
   typeof message.user !== 'undefined';
 
-export const wasIMentioned: (x: Message, y?: string) => boolean = (message, botName) => {
-  const myMessage = message.username === botName;
-  return !myMessage && message.text.indexOf(`@${botName || ''}`) > -1;
+export const wasIMentioned: (x: Message, y?: string, z?: string) => boolean = (message, id, name) => {
+  const myMessage = message.user === id || message.bot_id === id;
+  return !myMessage && message.text.indexOf(`@${name || ''}`) > -1;
 };
 
 export const hasEmoji: (x: string) => boolean = (text) => {

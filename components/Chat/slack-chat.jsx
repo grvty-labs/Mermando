@@ -142,7 +142,6 @@ export default class SlackChat extends React.PureComponent<Props, State> {
       this.messageFormatter = {
         emoji: false, // default
       };
-      this.fileUploadTitle = `Posted by ${this.props.botName || ''}`;
       this.themeDefaultColor = '#2e7eea'; // Defined as $theme_color sass variable in .scss
       // Initiate Emoji Library
       emojiLoader().then(() => {
@@ -213,7 +212,7 @@ export default class SlackChat extends React.PureComponent<Props, State> {
     // decode formatting from messages text to html text
     let messageText = decodeHtml(message.text);
     // who's message is this?
-    const myMessage = message.username === this.props.botName;
+    const myMessage = message.user === this.userID || message.bot_id === this.userID;
     // Check to see if this is a Slack System message?
     const username = this.getUserName(message) || 'Unknown';
     if (isSystemMessage(message)) {
@@ -233,7 +232,7 @@ export default class SlackChat extends React.PureComponent<Props, State> {
               key={message.ts}
             >
               {
-                didIPostIt
+                didIPostIt && this.props.userImage
                 // show customer image
                   ? <Avatar avatar={{ src: this.props.userImage }} name={username} />
                   : this.getUserImg(message)
@@ -267,7 +266,7 @@ export default class SlackChat extends React.PureComponent<Props, State> {
       return null;
     }
     // check if user was mentioned by anyone else remotely
-    const mentioned = wasIMentioned(message, this.props.botName);
+    const mentioned = wasIMentioned(message, this.userID, this.user.real_name);
     const textHasEmoji = hasEmoji(messageText);
     // check if emoji library is enabled
     if (this.messageFormatter.emoji && textHasEmoji) {
@@ -280,7 +279,7 @@ export default class SlackChat extends React.PureComponent<Props, State> {
     return (
       <div className={classNames('msg-row', myMessage ? 'mine' : 'not-mine')} key={message.ts}>
         {
-          myMessage
+          myMessage && this.props.userImage
           // show customer image
             ? <Avatar avatar={{ src: this.props.userImage }} name={username} />
             : this.getUserImg(message)
@@ -329,6 +328,8 @@ export default class SlackChat extends React.PureComponent<Props, State> {
         // start the bot, get the initial payload
         rtm.start({ token: this.apiToken }).then((payload) => {
           debugLog(payload);
+          this.userID = payload.self.id;
+          this.user = payload.users.find(u => u.id === this.userID);
           // Create new User object for each online user found
           // Add to our list only if the user is valid
           const onlineUsers = [];
@@ -377,7 +378,8 @@ export default class SlackChat extends React.PureComponent<Props, State> {
       lastThreadTs: userThreadTss.length ? userThreadTss[userThreadTss.length - 1] : undefined,
       token: this.apiToken,
       channel: this.activeChannel.id,
-      username: this.props.botName,
+      username: this.user.name,
+      as_user: true,
     }).then((data) => {
       this.setState({
         postMyMessage: '',
@@ -438,7 +440,7 @@ export default class SlackChat extends React.PureComponent<Props, State> {
             if (newMessages) {
               newMessages.forEach(message => execHooksIfFound({
                 message,
-                username: this.props.botName,
+                username: this.user.real_name,
                 customHooks: this.props.hooks,
                 apiToken: this.apiToken,
                 channel: this.activeChannel.id,
@@ -507,6 +509,8 @@ export default class SlackChat extends React.PureComponent<Props, State> {
   activeChannelInterval: any;
   apiToken: any;
   bot: any;
+  userID: string;
+  user: { real_name: string };
   chatInitiatedTs: number;
   fileUploadTitle: string;
   messages: Message[];
