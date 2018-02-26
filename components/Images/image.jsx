@@ -21,7 +21,9 @@ export type StoreProps = {
   srcSizes?: Size[],
   viewports?: Viewport[],
 };
-export type Actions = {};
+export type Actions = {
+  onClick?: Function;
+};
 type Props = StoreProps & Actions;
 
 type Default = {};
@@ -68,6 +70,7 @@ export default class FluidImage extends React.PureComponent<Props, State> {
         sizes={this.generateSizes()}
         src={this.props.src}
         alt={this.props.alt}
+        onClick={this.props.onClick}
       />
     );
   }
