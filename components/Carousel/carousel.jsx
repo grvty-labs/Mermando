@@ -109,7 +109,11 @@ export default class Carousel extends React.PureComponent<Props, State> {
     if (videos && videos.length) {
       elements = [
         ...elements,
-        ...videos.map(vid => ({ ...vid, type: 'video' })),
+        ...videos.map(vid => ({
+          ...vid,
+          type: 'video',
+          id: vid.id + images.length,
+        })),
       ];
     }
     this.setState({ elements }, () => { this.onSelect(0); });
