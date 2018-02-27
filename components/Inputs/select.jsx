@@ -12,10 +12,11 @@ export type Value = param | param[];
 export type Option = {
   display: param,
   value: param,
+  className?: string,
   image?: string,
   disabled?: boolean,
   hover?: string,
-  options?: Option[],
+  // options?: Option[],
 };
 
 export type Props = {
@@ -189,7 +190,7 @@ export default class Select extends React.PureComponent<Props, State> {
         { options.map((option: Option, index: number) => (
           <span
             key={index}
-            className={classnames({ disabled: option.disabled })}
+            className={classnames({ disabled: option.disabled, [`${option.className || ''}`]: true })}
             onClick={option.disabled
               ? undefined
               : option.options
