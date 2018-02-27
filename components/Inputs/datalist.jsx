@@ -28,6 +28,7 @@ export type Props = {
 
   leftIcon?: string,
   rightIcon?: string,
+  returnValueDisplay?: boolean,
 
   type?: $Keys<typeof inputTypes>,
   options: Array<Option>,
@@ -55,6 +56,7 @@ type Default = {
 
   leftIcon: string,
   rightIcon: string,
+  returnValueDisplay: boolean,
 
   required: boolean,
   editable: boolean,
@@ -77,6 +79,7 @@ export default class DataListInput extends React.PureComponent<Props, State> {
 
     leftIcon: '',
     rightIcon: '',
+    returnValueDisplay: false,
 
     forceMessageBeneath: false,
     forceInlineRequired: false,
@@ -95,7 +98,7 @@ export default class DataListInput extends React.PureComponent<Props, State> {
   componentDidMount() {
     const { options, required, value } = this.props;
     if (required && !value) {
-      this.onSelectValue([options].value);
+      this.onSelectValue([options].value, [options].display);
     }
   }
 
@@ -155,13 +158,17 @@ export default class DataListInput extends React.PureComponent<Props, State> {
   }
 
   @autobind
-  onSelectValue(newValue: string | number) {
+  onSelectValue(newValue: string | number, newValueDisplay: string) {
     const {
-      onSelect,
+      onSelect, returnValueDisplay,
     } = this.props;
     if (onSelect) {
       this.setState({ showOptionsLevel: 0 }, () => {
-        onSelect(newValue);
+        if (returnValueDisplay) {
+          onSelect(newValue, newValueDisplay);
+        } else {
+          onSelect(newValue);
+        }
         document.removeEventListener('click', this.handleOutsideClick);
       });
     }
@@ -205,12 +212,12 @@ export default class DataListInput extends React.PureComponent<Props, State> {
           <span
             key={index}
             onClick={option.options
-              ? () => this.onSelectValue(option.value)
-              : () => this.onSelectValue(option.value)
+              ? () => this.onSelectValue(option.value, option.display)
+              : () => this.onSelectValue(option.value, option.display)
             }
             onKeyPress={option.options
-              ? () => this.onSelectValue(option.value)
-              : () => this.onSelectValue(option.value)
+              ? () => this.onSelectValue(option.value, option.display)
+              : () => this.onSelectValue(option.value, option.display)
             }
             role='menuitem'
             tabIndex={showOptionsLevel > 0 ? 0 : -1}
@@ -231,7 +238,7 @@ export default class DataListInput extends React.PureComponent<Props, State> {
       message, messageType, messagesArray,
 
       leftIcon, rightIcon, editable, disabled, value, type,
-      onFocus, onBlur, onChange, onSelect,
+      onFocus, onBlur, onChange, onSelect, returnValueDisplay,
 
 
       ...otherProps
