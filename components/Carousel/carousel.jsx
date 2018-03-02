@@ -70,11 +70,12 @@ export default class Carousel extends React.PureComponent<Props, State> {
     this.setElements(this.props);
   }
 
-  componentDidMount() {
-  }
-
   componentWillReceiveProps(nextProps: Props) {
     this.setElements(nextProps);
+  }
+
+  componentWillUnmount() {
+    if (this.timeout) clearTimeout(this.timeout);
   }
 
   @autobind
