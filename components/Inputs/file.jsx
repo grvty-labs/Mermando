@@ -121,7 +121,7 @@ export default class FileInput extends React.PureComponent<Props, void> {
           onChange([
             ...casted.slice(0, index),
             ...casted.slice(index + 1),
-          ]);
+          ], casted[index]);
         }
       } else {
         onChange(undefined);
