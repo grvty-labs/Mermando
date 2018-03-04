@@ -101,19 +101,22 @@ export default class Input extends React.PureComponent<Props, void> {
           return;
         }
 
+        // const pattern = this.generatePattern();
+        // console.log(!new RegExp(pattern).test(value));
+        // if (pattern && !new RegExp(pattern).test(value)) {
+        //   onChange(this.props.value);
+        //   return
+        // }
+
         switch (type) {
           case 'number':
             clean = Number.parseInt(value, 10);
-            if (!Number.isNaN(clean)) {
-              onChange(clean);
-            }
+            if (!Number.isNaN(clean)) onChange(clean);
             break;
 
           case 'float':
             clean = Number.parseFloat(value);
-            if (!Number.isNaN(clean)) {
-              onChange(clean);
-            }
+            if (!Number.isNaN(clean)) onChange(clean);
             break;
 
           case 'textarea':
@@ -202,6 +205,9 @@ export default class Input extends React.PureComponent<Props, void> {
         case 'float':
           newPattern = '[-+]?[0-9]*[.,]?[0-9]+';
           break;
+        // case 'tel':
+        //   newPattern = '[\\+]\\d{2}[\\(]\\d{2}[\\)]\\d{4}[\\-]\\d{4}';
+        //   break;
         case 'email':
           newPattern = '[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]$';
           break;
