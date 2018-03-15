@@ -23,8 +23,10 @@ export type StoreProps = {
 };
 
 export type Actions = {
-  onCloseClick: Function, // Función a ejecutar en cuanto se da clic en el icono de hamburguesa
-  onAnchorClick: Function, // Función a ejecutar cuando se da clic en un link (puede ser push)
+  // Función a ejecutar en cuanto se da clic en el icono de hamburguesa
+  onCloseClick: Function,
+  // Función a ejecutar cuando se da clic en un link (puede ser push)
+  onAnchorClick: (v: string) => void,
   renderAnchor?: Function,
 };
 
@@ -51,8 +53,8 @@ export default class Sidebar extends React.PureComponent<Props, State> {
       <div
         className='anchor'
         key={index}
-        onClick={() => this.onAnchorClick(element.url)}
-        onKeyPress={() => this.onAnchorClick(element.url)}
+        onClick={() => this.onAnchorClick(element)}
+        onKeyPress={() => this.onAnchorClick(element)}
         role='link'
         tabIndex={0}
       >
