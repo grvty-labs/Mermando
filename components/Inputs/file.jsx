@@ -2,6 +2,7 @@
 import * as React from 'react';
 import autobind from 'autobind-decorator';
 import Dropzone from 'react-dropzone';
+import ImageCompressor from 'image-compressor.js';
 import Config from 'Config';
 import InputAtom from './input-atom';
 import { messageTypes } from '../../js/inputs';
@@ -88,20 +89,49 @@ export default class FileInput extends React.PureComponent<Props, void> {
   };
 
   @autobind
+  onCompression(index: number, result) {
+    const { value = [] } = this.props;
+    const newValue = [...value];
+    const file = new File([result], result.name, { type: result.type, lastModified: Date.now() });
+    file.preview = URL.createObjectURL(file);
+    newValue[index] = file;
+    return newValue;
+  }
+
+  @autobind
   onSelectValue(acceptedFiles: FileType[]) {
     const {
       type, value, onChange,
     } = this.props;
 
+    const options = {
+      maxWidth: 800,
+      convertSize: 1000000,
+    };
+
     if (onChange && !this.props.disabled && this.props.editable) {
       if (type === 'single' && acceptedFiles && acceptedFiles.length && acceptedFiles[0]) {
-        onChange(acceptedFiles[0]);
+        new ImageCompressor(acceptedFiles[0], {
+          ...options,
+          success: (result) => {
+            const newValue = result;
+            newValue.preview = URL.createObjectURL(result);
+            onChange(this.onCompression(0, newValue)[0]);
+          },
+        });
       } else if (type === 'multiple' && acceptedFiles && acceptedFiles.length) {
         const casted = value && value.constructor === Array && value.length
           ? (value: FileType[])
           : [];
         if (acceptedFiles && acceptedFiles.length && acceptedFiles[0]) {
-          onChange(casted.concat(acceptedFiles));
+          acceptedFiles.forEach((file, index) => {
+            new ImageCompressor(file, {
+              ...options,
+              success: (result) => {
+                onChange(this.onCompression(index, result));
+              },
+            });
+          });
         }
       }
     }
@@ -134,6 +164,7 @@ export default class FileInput extends React.PureComponent<Props, void> {
     const {
       disabled, editable, onZoomClick,
     } = this.props;
+
     if (!editable) {
       if (this.props.previewType === 'image') {
         return (
