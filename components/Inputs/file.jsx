@@ -21,6 +21,10 @@ export type FileType = {
 export type Props = {
   id: string,
   label?: string,
+
+  compress?: boolean,
+  compressOptions?: any,
+
   messagesArray?: Message[],
   message?: string,
   messageType?: $Keys<typeof messageTypes>,
@@ -49,6 +53,9 @@ type Default = {
   label: string,
   className: string,
 
+  compress: boolean,
+  compressOptions: any,
+
   messagesArray: Message[],
   message: string,
   messageType: $Keys<typeof messageTypes>,
@@ -70,6 +77,13 @@ export default class FileInput extends React.PureComponent<Props, void> {
   static defaultProps: Default = {
     label: '',
     className: '',
+
+    compress: false,
+    compressOptions: {
+      quality: 0.6,
+      maxWidth: 1000,
+      convertSize: 1000000,
+    },
 
     messagesArray: [],
     message: '',
@@ -102,36 +116,40 @@ export default class FileInput extends React.PureComponent<Props, void> {
   onSelectValue(acceptedFiles: FileType[]) {
     const {
       type, value, onChange,
+      compress, compressOptions,
     } = this.props;
-
-    const options = {
-      maxWidth: 800,
-      convertSize: 1000000,
-    };
 
     if (onChange && !this.props.disabled && this.props.editable) {
       if (type === 'single' && acceptedFiles && acceptedFiles.length && acceptedFiles[0]) {
-        new ImageCompressor(acceptedFiles[0], {
-          ...options,
-          success: (result) => {
-            const newValue = result;
-            newValue.preview = URL.createObjectURL(result);
-            onChange(this.onCompression(0, newValue)[0]);
-          },
-        });
+        if (compress) {
+          new ImageCompressor(acceptedFiles[0], {
+            ...compressOptions,
+            success: (result) => {
+              const newValue = result;
+              newValue.preview = URL.createObjectURL(result);
+              onChange(this.onCompression(0, newValue)[0]);
+            },
+          });
+        } else {
+          onChange(acceptedFiles[0]);
+        }
       } else if (type === 'multiple' && acceptedFiles && acceptedFiles.length) {
         const casted = value && value.constructor === Array && value.length
           ? (value: FileType[])
           : [];
         if (acceptedFiles && acceptedFiles.length && acceptedFiles[0]) {
-          acceptedFiles.forEach((file, index) => {
-            new ImageCompressor(file, {
-              ...options,
-              success: (result) => {
-                onChange(this.onCompression(index, result));
-              },
+          if (compress) {
+            acceptedFiles.forEach((file, index) => {
+              new ImageCompressor(file, {
+                ...compressOptions,
+                success: (result) => {
+                  onChange(this.onCompression(index, result));
+                },
+              });
             });
-          });
+          } else {
+            onChange(casted.concat(acceptedFiles));
+          }
         }
       }
     }
