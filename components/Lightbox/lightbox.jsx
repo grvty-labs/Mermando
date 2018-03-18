@@ -13,7 +13,7 @@ export type StoreProps = {
   footerComponent?: React.Node,
 };
 export type Actions = {
-  onCloseClick: Function,
+  onCloseClick?: Function,
   onToggleLightbox?: Function,
 };
 type Props = StoreProps & Actions;
@@ -54,7 +54,7 @@ export default class Lightbox extends React.PureComponent<Props, State> {
   @autobind
   onCloseClick(event: SyntheticEvent<*>) {
     event.stopPropagation();
-    this.props.onCloseClick();
+    if (this.props.onCloseClick) this.props.onCloseClick();
   }
 
   render() {
@@ -77,12 +77,17 @@ export default class Lightbox extends React.PureComponent<Props, State> {
           <div className={`lightbox ${className || ''}`}>
             <div className='header'>
               <div>
-                <Button
-                  strain='icon'
-                  iconSide='right'
-                  icon={Config.mermando.icons.close}
-                  onClick={onCloseClick}
-                />
+                {
+                  onCloseClick
+                    ? (
+                      <Button
+                        strain='icon'
+                        iconSide='right'
+                        icon={Config.mermando.icons.close}
+                        onClick={onCloseClick}
+                      />)
+                    : null
+                }
               </div>
               <div><span>{title}</span></div>
               <div>{topComponent}</div>
