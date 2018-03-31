@@ -34,7 +34,7 @@ export type StoreProps = {
   viewports?: Viewport[],
 };
 export type Actions = {
-
+  onClick?: Function,
 };
 type Props = StoreProps & Actions;
 type Default = {
@@ -204,6 +204,7 @@ export default class Carousel extends React.PureComponent<Props, State> {
                         src={element.src}
                         srcSizes={element.srcSizes}
                         viewports={viewports}
+                        onClick={() => this.props.onClick(element)}
                       />
                     )
                     : (
