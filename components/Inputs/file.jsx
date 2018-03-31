@@ -105,10 +105,13 @@ export default class FileInput extends React.PureComponent<Props, void> {
   @autobind
   onCompression(index: number, result) {
     const { value = [] } = this.props;
-    const newValue = [...value];
+    let newValue = [...value];
     const file = new File([result], result.name, { type: result.type, lastModified: Date.now() });
     file.preview = URL.createObjectURL(file);
-    newValue[index] = file;
+    newValue = [
+      ...newValue,
+      file,
+    ];
     return newValue;
   }
 
