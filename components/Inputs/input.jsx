@@ -209,7 +209,7 @@ export default class Input extends React.PureComponent<Props, void> {
         //   newPattern = '[\\+]\\d{2}[\\(]\\d{2}[\\)]\\d{4}[\\-]\\d{4}';
         //   break;
         case 'email':
-          newPattern = '[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]$';
+          newPattern = '[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]+$';
           break;
         default:
           break;
