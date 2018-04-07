@@ -1,6 +1,7 @@
 // @flow
 import Chat from './chat';
-import SlackChat from './slack-chat';
+// import SlackChat from './slack-chat';
+import SlackChat from './rev';
 import type { StoreProps as ChatProps, Actions as ChatActions } from './chat';
 import type { StoreProps as SlackChatProps, Actions as SlackChatActions } from './slack-chat';
 
