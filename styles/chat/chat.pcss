@@ -54,9 +54,15 @@
         min-height: 27.25em;
         overflow-x: hidden;
         overflow-y: auto;
-        padding-right: 1em;
+        width: 100%;
 
-        > .msg-row {
+        > div {
+          &:first-child {
+            padding-right: 1.5em;
+          }
+        }
+
+        .msg-row {
           display: flex;
           width: 100%;
 
@@ -120,6 +126,11 @@
               .gh-emoji {
                 max-height: 1.8em;
                 max-width: 1.8em;
+              }
+
+              .mention {
+                color: var(--royal-blue-2);
+                font-weight: bold;
               }
             }
           }
