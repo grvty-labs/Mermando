@@ -240,7 +240,7 @@ export default class Input extends React.PureComponent<Props, void> {
             onChange={this.onHTMLInputChange}
             required={required}
             disabled={disabled || !editable}
-            autoComplete={autoComplete}
+            // autoComplete={autoComplete}
           />
         );
 
@@ -381,7 +381,7 @@ export default class Input extends React.PureComponent<Props, void> {
             onChange={this.onHTMLInputChange}
             required={required}
             disabled={disabled || !editable}
-            autoComplete={autoComplete}
+            // autoComplete={autoComplete}
             pattern={this.generatePattern()}
           />
         );
