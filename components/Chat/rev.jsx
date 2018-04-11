@@ -2,7 +2,7 @@
 import * as React from 'react';
 import autobind from 'autobind-decorator';
 import moment from 'moment';
-import { rtm as SlackRTM, channels as SlackChannels } from 'slack';
+import { rtm as SlackRTM, channels as SlackChannels, apps, auth, bots, users } from 'slack';
 import { load as emojiLoader, parse as emojiParser } from 'gh-emoji';
 import classnames from 'classnames';
 import { Scrollbars } from 'react-custom-scrollbars';
@@ -19,6 +19,8 @@ import {
 } from '../../js/chat/utilities';
 
 import type { FileValue } from '../Inputs';
+
+const DefaultComponent = () => (<div />);
 
 type WebSocketMessage = {
   type: 'desktop_notification' | 'user_typing' | 'message' | 'channel_marked' |
@@ -209,16 +211,31 @@ type RTMStartPayload = {
 }
 
 type Props = {
-  b64Token?: string,
+  userToken?: string,
+  // userID?: string,
   debug?: boolean,
 
   refreshTime?: number,
-  availableChannelsIDs: string[],
+  availableChannels: { id: string, name: string }[],
 
+  components: {
+    disconnected: React.ComponentType<any>,
+    emptyMessages: React.ComponentType<any>,
+    invalidChannels: React.ComponentType<any>,
+    invalidToken: React.ComponentType<any>,
+  },
 }
 
 type Default = {
+  debug: boolean,
   refreshTime: number,
+
+  components: {
+    disconnected: React.ComponentType<any>,
+    emptyMessages: React.ComponentType<any>,
+    invalidChannels: React.ComponentType<any>,
+    invalidToken: React.ComponentType<any>,
+  },
 }
 
 type State = {
@@ -226,13 +243,22 @@ type State = {
   messages: Message[],
   loading: boolean,
   sending: boolean,
+
+  validToken: boolean,
+  connected: boolean,
 }
 
-
-export default class SlackChat extends React.PureComponent<Props, State> {
+export default class SlackChat extends React.Component<Props, State> {
   static defaultProps: Default = {
     debug: false,
     refreshTime: 2000,
+
+    components: {
+      disconnected: DefaultComponent,
+      emptyMessages: DefaultComponent,
+      invalidChannels: DefaultComponent,
+      invalidToken: DefaultComponent,
+    },
   }
 
   state: State = {
@@ -240,6 +266,9 @@ export default class SlackChat extends React.PureComponent<Props, State> {
     messages: [],
     loading: false,
     sending: false,
+
+    validToken: true,
+    connected: false,
   }
 
   componentWillMount() {
@@ -252,11 +281,11 @@ export default class SlackChat extends React.PureComponent<Props, State> {
   }
 
   componentDidMount() {
-    this.onUpdateProps(this.props);
+    this.onUpdateProps({});
   }
 
-  componentDidUpdate(nextProps: Props) {
-    this.onUpdateProps(nextProps);
+  componentDidUpdate(prevProps: Props) {
+    this.onUpdateProps(prevProps);
   }
 
   componentWillUnmount() {
@@ -264,24 +293,31 @@ export default class SlackChat extends React.PureComponent<Props, State> {
   }
 
   @autobind
-  onUpdateProps(props: Props) {
-    const { b64Token, availableChannelsIDs } = props;
-    if (this.active && this.props.b64Token !== b64Token) {
+  onUpdateProps(prevProps: Props) {
+    const { userToken } = prevProps;
+    const { availableChannels } = this.props;
+    if (this.active && this.props.userToken !== userToken) {
       this.debugLog('Disable previous');
-
+      this.setState({ connected: false });
 
       this.active = false;
     }
 
-    if (!this.active && b64Token && availableChannelsIDs && availableChannelsIDs.length) {
-      this.activeToken = atob(b64Token);
+    if (!this.active && userToken && availableChannels && availableChannels.length) {
+      this.debugLog('Connect to new');
+      this.activeToken = userToken;
       this.active = true;
-      this.debugLog('Try to connect');
-      SlackRTM.start({ token: this.activeToken }).then((resp: RTMStartPayload) => {
-        this.debugLog('Start connected: ', resp);
+      // users.list({ token: this.activeToken }).then(console.log).catch(console.error);
+      // apps.permissions.info({ token: this.activeToken }).then(console.log).catch(console.error);
+      // bots.info({ token: this.activeToken }).then(console.log).catch(console.error);
+      // auth.test({ token: this.activeToken }).then((data) => {
+      //   this.setState({ validToken: data.ok });
+      //   console.log(data);
+      SlackRTM.start({ token: this.props.botToken }).then((resp: RTMStartPayload) => {
+        this.debugLog('RTM Start: ', resp);
         this.rawChannels = resp.channels;
-        const [defChannelID] = availableChannelsIDs;
-        const channel = this.rawChannels.find(c => c.id === defChannelID);
+        const [defChannelID] = availableChannels;
+        const channel = this.rawChannels.find(c => c.id === defChannelID.id);
         if (channel) {
           this.rawBots = resp.bots;
           this.rawUsers = resp.users;
@@ -290,13 +326,24 @@ export default class SlackChat extends React.PureComponent<Props, State> {
           if (user) {
             this.activeAccount = user;
             this.refetchMessages();
+
+            // SlackRTM.connect({ token: this.props.botToken }).then((response) => {
+            // console.log('RTM Connect: ', response);
             this.activeWebsocket = new WebSocket(resp.url);
             this.activeWebsocket.onmessage = (e: MessageEvent) => {
+              console.log('WS Message: ', e);
               if (e.data) this.receiveWebsocketMessage(JSON.parse(e.data));
             };
+            this.activeWebsocket.onclose = ev => console.log('WS close: ', ev);
+            this.activeWebsocket.onopen = ev => console.log('WS open: ', ev);
+            this.activeWebsocket.onerror = ev => console.log('WS error: ', ev);
+            // }).catch(console.error);
           }
         }
-      }).catch(console.log);
+      }).catch(console.error);
+      // }).catch((data) => {
+      //   this.setState({ validToken: data.ok });
+      // });
     }
   }
 
@@ -444,7 +491,7 @@ export default class SlackChat extends React.PureComponent<Props, State> {
 
   active: boolean = false;
   activeChannel: Channel;
-  activeWebsocket: ?Websocket = null;
+  activeWebsocket: ?WebSocket = null;
   activeToken: string;
   activeAccount: Account;
   messagesRules: { emoji: boolean } = {
@@ -488,6 +535,7 @@ export default class SlackChat extends React.PureComponent<Props, State> {
         this.rawMessages = data.messages;
         this.setState({
           messages: data.messages,
+          connected: true,
         }, this.scrollDown);
       }
     });
@@ -535,41 +583,41 @@ export default class SlackChat extends React.PureComponent<Props, State> {
   }
 
   @autobind
-  renderChannel(channelID: string) {
-    const channel = this.rawChannels.find(c => c.id === channelID);
+  renderChannel({ id, name }: { id: string, name: string }) {
+    const channel = this.rawChannels.find(c => c.id === id);
     if (!channel) return null;
 
     return (
       <Button
-        key={channel.id} size='small'
-        className={channel.id === this.activeChannel.id ? 'selected' : ''}
+        key={id} size='small'
+        className={id === this.activeChannel.id ? 'selected' : ''}
         onClick={() => this.onChangeChannel(channel)}
       >
-        {channel.name}
+        {name}
       </Button>
     );
   }
 
   render() {
     const { newMessage, messages = [] } = this.state;
-    const { availableChannelsIDs = [] } = this.props;
+    const { availableChannels = [], components } = this.props;
 
-    const renderContent = messages && messages.length
-      ? (
-        <Scrollbars
-          className='messages-wrapper'
-          ref={(vref) => { this.messagesWrapper = vref; this.scrollDown(true); }}
-        >
-          { messages.map(this.renderMessage) }
-        </Scrollbars>
-      )
-      : availableChannelsIDs && availableChannelsIDs.length
-        ? (
-          <div className='buttons-wrapper'>
-            <Button strain='secondary'>Create channels</Button>
-          </div>
-        )
-        : null;
+    const renderContent = !(availableChannels && availableChannels.length)
+      ? <components.invalidChannels />
+      : !this.state.validToken
+        ? <components.invalidToken />
+        : !this.state.connected
+          ? <components.disconnected />
+          : !(messages && messages.length)
+            ? <components.emptyMessages />
+            : (
+              <Scrollbars
+                className='messages-wrapper'
+                ref={(vref) => { this.messagesWrapper = vref; this.scrollDown(true); }}
+              >
+                { messages.map(this.renderMessage) }
+              </Scrollbars>
+            );
 
     return (
       <div className='chat-wrapper'>
@@ -577,25 +625,27 @@ export default class SlackChat extends React.PureComponent<Props, State> {
 
           <div className='channels-wrapper'>
             <span className='legend'>Channels</span>
-            { availableChannelsIDs.map(this.renderChannel) }
+            { availableChannels.map(this.renderChannel) }
           </div>
 
           <div className='content'>
             { renderContent }
-            {/* <div>
-              {
-                this.state.fileUploadLoader
-              ? (
-              <div>
-              <span>Uploading</span>
-              </div>
-              )
-              : null
-              }
-            </div> */}
 
-            {/* {
-              !this.state.fileUploadLoader
+            {/*
+              <div>
+                { this.state.fileUploadLoader
+                ? (
+                <div>
+                <span>Uploading</span>
+                </div>
+                )
+                : null
+                }
+              </div>
+            */}
+
+            {/*
+              { !this.state.fileUploadLoader
                 ? (
               <FileInput
               id='uploader'
@@ -605,7 +655,8 @@ export default class SlackChat extends React.PureComponent<Props, State> {
               />
                 )
                 : null
-            } */}
+              }
+            */}
             <Input
               id='message'
               placeholder='Write your message…'
@@ -616,7 +667,14 @@ export default class SlackChat extends React.PureComponent<Props, State> {
             />
             <div className='footer'>
               <Button strain='link' size='regular'>Attach File</Button>
-              <Button strain='main' size='big' onClick={this.onSendNewMessage}>Send</Button>
+              <Button
+                strain='main'
+                size='big'
+                disabled={this.state.sending}
+                onClick={this.onSendNewMessage}
+              >
+                Send
+              </Button>
             </div>
           </div>
         </div>
