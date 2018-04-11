@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import autobind from 'autobind-decorator';
+import classnames from 'classnames';
 import Config from 'Config';
 import ReactPlayer from 'react-player';
 
@@ -25,6 +26,7 @@ type Viewport = {
 };
 
 export type StoreProps = {
+  className?: string,
   images?: ImageType[],
   videos?: VideoType[],
   videoWidth?: number,
@@ -34,7 +36,7 @@ export type StoreProps = {
   viewports?: Viewport[],
 };
 export type Actions = {
-
+  onClick?: Function,
 };
 type Props = StoreProps & Actions;
 type Default = {
@@ -183,11 +185,11 @@ export default class Carousel extends React.PureComponent<Props, State> {
   render() {
     const { selected, elements } = this.state;
     const {
-      viewports, videoWidth, videoHeight,
+      viewports, videoWidth, videoHeight, className,
     } = this.props;
 
     return (
-      <div className='carousel-wrapper'>
+      <div className={classnames('carousel-wrapper', { [`${className || ''}`]: className })}>
         <div className='content'>
           <div className='carousel'>
             { elements && elements.length
@@ -204,6 +206,7 @@ export default class Carousel extends React.PureComponent<Props, State> {
                         src={element.src}
                         srcSizes={element.srcSizes}
                         viewports={viewports}
+                        onClick={() => this.props.onClick(element)}
                       />
                     )
                     : (
