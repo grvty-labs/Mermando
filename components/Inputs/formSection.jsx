@@ -4,8 +4,8 @@ import * as React from 'react';
 type Props = {
   className?: string,
   legend?: string,
-  topComponent?: React.Node | Array<React.Node>,
-  children: React.Node | Array<React.Node>,
+  topComponent?: React.Node,
+  children: React.Node,
   onSubmit?: Function,
 };
 type State = {};
