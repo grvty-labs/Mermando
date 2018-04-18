@@ -122,7 +122,7 @@ export default class Carousel extends React.PureComponent<Props, State> {
     this.setState({ elements }, () => { this.onSelect(0); });
   }
 
-  timeout: number;
+  timeout: TimeoutID;
 
   @autobind
   renderButton(side: 'left' | 'right') {
@@ -140,7 +140,10 @@ export default class Carousel extends React.PureComponent<Props, State> {
     return (
       <span
         className={className}
-        onClick={() => this.onSelect(index)}
+        onClick={(e: SyntheticEvent<*>) => {
+          if (e) e.stopPropagation();
+          this.onSelect(index);
+        }}
         onKeyPress={() => this.onSelect(index)}
         role='button'
         tabIndex={0}
@@ -206,7 +209,10 @@ export default class Carousel extends React.PureComponent<Props, State> {
                         src={element.src}
                         srcSizes={element.srcSizes}
                         viewports={viewports}
-                        onClick={() => this.props.onClick(element)}
+                        onClick={() => (
+                          this.props.onClick
+                            ? this.props.onClick(element)
+                            : undefined)}
                       />
                     )
                     : (
