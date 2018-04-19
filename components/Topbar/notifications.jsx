@@ -49,7 +49,8 @@ export default class Notifications extends React.PureComponent<Props, State> {
             icon={anchor.icon}
             onClick={() => onAnchorClick(anchor.url)}
           >
-            <b>{anchor.title}</b> {anchor.text}
+            <b>{anchor.title}</b>
+            <div dangerouslySetInnerHTML={{ __html: anchor.text }} />
           </Button>
         ))}
       </Dropdown>
