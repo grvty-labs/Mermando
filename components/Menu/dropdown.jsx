@@ -20,6 +20,7 @@ export type Props = {
   headRightElement?: React.Node,
 
   children: Array<React.Node>,
+  onShow: Function,
 }
 
 type State = {};
@@ -72,6 +73,7 @@ export default class Dropdown extends React.PureComponent<Props, State> {
           iconSide='right'
           icon={icon}
           size={buttonSize}
+          onClick={this.props.onShow}
         >
           {text}
         </Button>

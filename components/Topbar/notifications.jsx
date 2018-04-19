@@ -17,6 +17,7 @@ export type StoreProps = {
   }>,
   leftElement?: React.Node,
   rightElement?: React.Node,
+  onShow?: Function;
 }
 
 export type Actions = {
@@ -45,6 +46,7 @@ export default class Notifications extends React.PureComponent<Props, State> {
         headTitle={title}
         headLeftElement={leftElement}
         headRightElement={rightElement}
+        onShow={this.props.onShow}
       >
         {anchors.map(anchor => (
           <Button
