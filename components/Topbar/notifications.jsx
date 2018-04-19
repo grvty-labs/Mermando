@@ -13,6 +13,7 @@ export type StoreProps = {
     icon?: string,
     url: string,
     [key: string]: string,
+    read: boolean,
   }>,
   leftElement?: React.Node,
   rightElement?: React.Node,
@@ -32,11 +33,14 @@ export default class Notifications extends React.PureComponent<Props, State> {
       leftElement, rightElement,
     } = this.props;
 
+    const unreadNumber = anchors.filter(n => !n.read).length;
+
     return (
       <Dropdown
         className='notifications'
         icon={icon}
         buttonSize='huge'
+        bubbleText={unreadNumber || ''}
         showHead
         headTitle={title}
         headLeftElement={leftElement}
