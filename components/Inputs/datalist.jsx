@@ -81,6 +81,8 @@ export default class DataListInput extends React.PureComponent<Props, State> {
     rightIcon: '',
     returnValueDisplay: false,
 
+    placeholder: 'Start typing...',
+
     forceMessageBeneath: false,
     forceInlineRequired: false,
 
@@ -194,7 +196,6 @@ export default class DataListInput extends React.PureComponent<Props, State> {
   @autobind
   renderOptions() {
     const { showOptionsLevel, filteredOptions } = this.state;
-    console.log(filteredOptions);
     return (
       <div
         className={`options ${showOptionsLevel > 0 ? 'open' : ''}`}
