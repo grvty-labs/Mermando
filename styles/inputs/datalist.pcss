@@ -18,7 +18,9 @@
       z-index: 1;
 
       &.open {
+        max-height: 200px;
         opacity: 1;
+        overflow-y: scroll;
         transition: opacity var(--select-transition-time) ease-in-out;
         visibility: visible;
       }
