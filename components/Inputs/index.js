@@ -12,6 +12,7 @@ import RadioInputGroup from './radio-group';
 import RadioInput from './radio';
 import RadioBox from './radio-box';
 import RadioBoxGroup from './radio-box-group';
+import SliderRange from './slider-range';
 
 import type { TagType as TagValue } from './input';
 import type { Message as InputMessage } from './input-atom';
@@ -34,6 +35,7 @@ export {
   RadioInput,
   RadioBox,
   RadioBoxGroup,
+  SliderRange,
 };
 
 export type {

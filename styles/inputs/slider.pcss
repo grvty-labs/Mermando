@@ -1,0 +1,109 @@
+/* Handle */
+
+.handle {
+  position: 'absolute';
+  display: 'inline-block';
+  cursor: 'pointer';
+  height: 30;
+  width: 30;
+  background-color: '#2771e2';
+  border: '1px solid #052350';
+  border-radius: '50%';
+  outline: 'none !important',
+}
+.handleVertical {
+  position: 'absolute';
+  display: 'inline-block';
+  cursor: 'pointer';
+  height: 30;
+  width: 30;
+  left: 0;
+  background-color: '#2771e2';
+  border: '1px solid #052350';
+  border-radius: '50%';
+  outline: 'none !important',
+}
+.focusedHandle {
+  border: '2px solid 052350',
+}
+.hoveredHandle {
+  background-color: 'white';
+  border: '2px solid #052350';
+  box-shadow: '0px 0px 5px 0px #0a53c3',
+}
+.activeHandle {
+  background-color: 'white';
+  border: '2px solid #052350';
+  box-shadow: 'inset 0px 0px 5px 0px #0a53c3',
+}
+.disabledHandle {
+  background-color: '#c4f9f4';
+  border: '1px solid #71e4db';
+  cursor: 'default';
+}
+
+/* Track */
+
+.track {
+  position: 'absolute';
+  width: '99%';
+  top: 13;
+  height: 4;
+  border-radius: 10;
+  background-color: 'white';
+  border: '1px solid #2771e2';
+}
+
+.trackVertical {
+  position: 'absolute';
+  height: '99%';
+  left: 14;
+  width: 4;
+  border-radius: 10;
+  background-color: 'white';
+  border: '1px solid #2771e2';
+}
+
+.disabledTrack {
+  opacity: '0.3';
+}
+
+/* HighlightedTrack */
+
+.highlightedTrack {
+  position: 'absolute';
+  width: '100%';
+  top: 13;
+  height: 4;
+  background-color: '#99c1ff';
+  border: '1px solid #2771e2';
+}
+
+.highlightedTrackVertical {
+  position: 'absolute';
+  height: '100%';
+  left: 14;
+  width: 4;
+  border-radius: 10;
+  background-color: '#99c1ff';
+  border: '1px solid #2771e2';
+}
+
+.disabledHighlightedTrack {
+  opacity: '0.3';
+}
+
+/* RangeSlider */
+
+.wrapper {
+  position: 'relative';
+  width: '100%';
+  height: 34;
+  background-color: :#F00;
+}
+
+.wrapperVertical {
+  position: 'relative';
+  height: '100%';
+  width: 34;
+}
