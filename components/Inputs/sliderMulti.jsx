@@ -31,6 +31,12 @@ export default class SliderMulti extends Component<Props, State> {
     onChange: () => {},
   };
 
+  constructor(props: Props) {
+    super(props);
+    this.range_min = React.createRef();
+    this.range_max = React.createRef();
+  }
+
   state: State = {
     start: 0,
     end: 0,
@@ -57,9 +63,6 @@ export default class SliderMulti extends Component<Props, State> {
     const { start, end } = this.state;
     onChange({ start, end });
   }
-
-  range_min: any;
-  range_max: any;
 
   render() {
     const { start, end } = this.state;
