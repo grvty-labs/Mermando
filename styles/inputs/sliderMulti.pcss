@@ -1,0 +1,52 @@
+.slider-multi {
+  display: block;
+  height: 2em;
+  margin: 0;
+  pointer-events: none;
+
+  -webkit-appearance: none;  /* Override default CSS styles */
+  appearance: none;
+  width: 100%; /* Full-width */
+  background: #d3d3d3; /* Grey background */
+  outline: none; /* Remove outline */
+  -webkit-transition: .2s; /* 0.2 seconds transition on hover */
+
+  & + .slider-multi {
+    margin-top: -2em;
+  }
+}
+
+.slider-multi:hover {
+}
+
+
+.slider-multi::-webkit-slider-thumb {
+    -webkit-appearance: none; /* Override default look */
+    appearance: none;
+    width: 25px; /* Set a specific slider handle width */
+    height: 25px; /* Slider handle height */
+    border-radius: 50%;
+    background: #4CAF50; /* Green background */
+    cursor: pointer; /* Cursor on hover */
+}
+
+.slider-multi::-moz-range-thumb {
+    width: 25px; /* Set a specific slider handle width */
+    height: 25px; /* Slider handle height */
+    border-radius: 50%;
+    background: #4CAF50; /* Green background */
+    cursor: pointer; /* Cursor on hover */
+}
+
+@define-mixin multirange-thumb {
+  pointer-events: all;
+}
+.slider-multi::-webkit-slider-thumb {
+  @mixin multirange-thumb;
+}
+.slider-multi::-moz-range-thumb {
+  @mixin multirange-thumb;
+}
+.slider-multi::-ms-thumb {
+  @mixin multirange-thumb;
+}
