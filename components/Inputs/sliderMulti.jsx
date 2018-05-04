@@ -79,21 +79,17 @@ export default class SliderMulti extends Component<Props, State> {
   // TODO: Take position of thumb instead percent
   renderHiglight() {
     const { max } = this.props;
-    const start = Number(this.range_min.current.value);
-    const end = Number(this.range_max.current.value);
-    let slider_l;
-    let slider_r;
-    if (start <= end) {
-      slider_l = (start > 0) ? (start / max) * this.range_min.current.offsetWidth : 1;
-      slider_r = ((end / max) * this.range_min.current.offsetWidth === this.range_min.current.offsetWidth)
-        ? 1
-        : this.range_min.current.offsetWidth - ((end / max) * this.range_min.current.offsetWidth);
-    } else {
-      slider_l = (end > 0) ? (end / max) * this.range_max.current.offsetWidth : 1;
-      slider_r = ((start / max) * this.range_max.current.offsetWidth === this.range_max.current.offsetWidth)
-        ? 1
-        : this.range_max.current.offsetWidth - ((start / max) * this.range_max.current.offsetWidth);
-    }
+    const { current: { value: min_value, offsetWidth: min_offset_width } } = this.range_min;
+    const { current: { value: max_value, offsetWidth: max_offset_width } } = this.range_max;
+    const start = Number(min_value);
+    const end = Number(max_value);
+    const val = (start <= end) ? start : end;
+    const val2 = (start <= end) ? end : start;
+    const offset = (start <= end) ? min_offset_width : max_offset_width;
+    const slider_l = (val > 0) ? (val / max) * offset : 1;
+    const slider_r = ((val2 / max) * offset === offset)
+      ? 1
+      : offset - ((val2 / max) * offset);
     this.slider_l.current.style.width = `${slider_l}px`;
     this.slider_r.current.style.width = `${slider_r}px`;
   }
