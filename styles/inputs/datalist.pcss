@@ -23,11 +23,16 @@
         overflow-y: scroll;
         transition: opacity var(--select-transition-time) ease-in-out;
         visibility: visible;
-      }
 
-      span {
-        display: block;
-        padding: 0.2em;
+        span {
+          cursor: default;
+          display: block;
+          padding: 0.2em;
+
+          &:hover {
+            background-color: #e0e0e0;
+          }
+        }
       }
     }
   }
