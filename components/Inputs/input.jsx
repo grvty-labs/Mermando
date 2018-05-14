@@ -88,6 +88,30 @@ export default class Input extends React.PureComponent<Props, void> {
     type: 'text',
   };
 
+  componentDidMount() {
+    if (this.props.value && this.inputElement) {
+      this.onResizeValue();
+    }
+  }
+
+  componentWillReceiveProps(nextProps: Props) {
+    if (nextProps.value !== this.props.value) {
+      this.onResizeValue();
+    }
+  }
+
+  @autobind
+  onResizeValue() {
+    if (this.props.type === 'textarea') {
+      setTimeout(() => {
+        if (this.inputElement) {
+          this.inputElement.style.cssText = 'height:auto; padding: 0';
+          this.inputElement.style.cssText = `height: ${this.inputElement.scrollHeight}px`;
+        }
+      }, 0);
+    }
+  }
+
   @autobind
   onHTMLInputChange(event: SyntheticInputEvent<*>) {
     const { type, onChange, maxLength } = this.props;
@@ -120,16 +144,6 @@ export default class Input extends React.PureComponent<Props, void> {
             break;
 
           case 'textarea':
-            clean = value;
-            onChange(clean);
-            setTimeout(() => {
-              if (this.inputElement) {
-                this.inputElement.style.cssText = 'height:auto; padding: 0';
-                this.inputElement.style.cssText = `height: ${this.inputElement.scrollHeight}px`;
-              }
-            }, 0);
-            break;
-
           case 'email':
           case 'password':
           case 'tel':

@@ -18,14 +18,21 @@
       z-index: 1;
 
       &.open {
+        max-height: 200px;
         opacity: 1;
+        overflow-y: scroll;
         transition: opacity var(--select-transition-time) ease-in-out;
         visibility: visible;
-      }
 
-      span {
-        display: block;
-        padding: 0.2em;
+        span {
+          cursor: default;
+          display: block;
+          padding: 0.2em;
+
+          &:hover {
+            background-color: #e0e0e0;
+          }
+        }
       }
     }
   }

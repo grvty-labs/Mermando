@@ -70,7 +70,7 @@ export default class FluidImage extends React.PureComponent<Props, State> {
         sizes={this.generateSizes()}
         src={this.props.src}
         alt={this.props.alt}
-        onClick={this.props.onClick}
+        onClick={this.props.onClick ? this.props.onClick : undefined}
       />
     );
   }

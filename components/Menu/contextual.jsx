@@ -8,7 +8,7 @@ import { Button } from '../Button';
 export type Props = {
   className?: string,
   icon?: React.Node | string,
-  children: Array<React.Node>,
+  children: React.Node,
 }
 
 type State = {

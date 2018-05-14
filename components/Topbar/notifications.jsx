@@ -13,9 +13,11 @@ export type StoreProps = {
     icon?: string,
     url: string,
     [key: string]: string,
+    read: boolean,
   }>,
   leftElement?: React.Node,
   rightElement?: React.Node,
+  onShow?: Function;
 }
 
 export type Actions = {
@@ -32,15 +34,19 @@ export default class Notifications extends React.PureComponent<Props, State> {
       leftElement, rightElement,
     } = this.props;
 
+    const unreadNumber = anchors.filter(n => !n.read).length;
+
     return (
       <Dropdown
         className='notifications'
         icon={icon}
         buttonSize='huge'
+        bubbleText={unreadNumber || ''}
         showHead
         headTitle={title}
         headLeftElement={leftElement}
         headRightElement={rightElement}
+        onShow={this.props.onShow}
       >
         {anchors.map(anchor => (
           <Button
@@ -49,7 +55,8 @@ export default class Notifications extends React.PureComponent<Props, State> {
             icon={anchor.icon}
             onClick={() => onAnchorClick(anchor.url)}
           >
-            <b>{anchor.title}</b> {anchor.text}
+            <b>{anchor.title}</b>
+            <div dangerouslySetInnerHTML={{ __html: anchor.text }} />
           </Button>
         ))}
       </Dropdown>

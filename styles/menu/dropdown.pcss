@@ -1,6 +1,22 @@
 .dropdown-wrapper {
   position: relative;
 
+  > .unread-bubble {
+    align-items: center;
+    background-color: red;
+    border-radius: 100%;
+    color: white;
+    display: flex;
+    font-size: 0.8em;
+    height: 1.5em;
+    justify-content: center;
+    position: absolute;
+    right: -20%;
+    top: -20%;
+    width: 1.5em;
+    z-index: 1;
+  }
+
   > :--button {
     /*font-size: 0.875rem;*/
     text-decoration: none;

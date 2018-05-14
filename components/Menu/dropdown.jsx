@@ -10,6 +10,9 @@ export type Props = {
   icon?: React.Node | string,
   buttonStrain?: $Keys<typeof strains>,
   buttonSize?: $Keys<typeof sizes>,
+  bubble?: React.Node | string,
+  bubbleSize?: $Keys<typeof sizes>,
+  bubbleText?: string,
 
   showHead?: boolean,
   headTitle?: string,
@@ -17,6 +20,7 @@ export type Props = {
   headRightElement?: React.Node,
 
   children: Array<React.Node>,
+  onShow: Function,
 }
 
 type State = {};
@@ -40,6 +44,8 @@ export default class Dropdown extends React.PureComponent<Props, State> {
       className, icon, text, headTitle, children, buttonSize,
       buttonStrain, headLeftElement, headRightElement,
       showHead,
+
+      bubbleText,
     } = this.props;
 
     const titleRender = showHead
@@ -54,11 +60,20 @@ export default class Dropdown extends React.PureComponent<Props, State> {
 
     return (
       <div className={`dropdown-wrapper ${className || ''}`}>
+        {
+          bubbleText
+            ?
+              <div className='unread-bubble'>
+                {bubbleText}
+              </div>
+            : null
+        }
         <Button
           strain={buttonStrain || (text ? 'link' : 'icon')}
           iconSide='right'
           icon={icon}
           size={buttonSize}
+          onClick={this.props.onShow}
         >
           {text}
         </Button>

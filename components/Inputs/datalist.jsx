@@ -30,7 +30,6 @@ export type Props = {
   rightIcon?: string,
   returnValueDisplay?: boolean,
 
-  type?: $Keys<typeof inputTypes>,
   options: Array<Option>,
   placeholder?: string,
   required?: boolean,
@@ -65,7 +64,8 @@ type Default = {
 }
 
 type State = {
-  showOptionsLevel: number
+  showOptionsLevel: number,
+  filteredOptions: Option[],
 };
 
 export default class DataListInput extends React.PureComponent<Props, State> {
@@ -81,6 +81,8 @@ export default class DataListInput extends React.PureComponent<Props, State> {
     rightIcon: '',
     returnValueDisplay: false,
 
+    placeholder: 'Start typing...',
+
     forceMessageBeneath: false,
     forceInlineRequired: false,
 
@@ -93,6 +95,17 @@ export default class DataListInput extends React.PureComponent<Props, State> {
 
   state: State = {
     showOptionsLevel: 0,
+    filteredOptions: [],
+  }
+
+  componentWillMount() {
+    const { options } = this.props;
+
+    if (options) {
+      this.setState({
+        filteredOptions: options,
+      });
+    }
   }
 
   componentDidMount() {
@@ -100,6 +113,11 @@ export default class DataListInput extends React.PureComponent<Props, State> {
     if (required && !value) {
       this.onSelectValue([options].value, [options].display);
     }
+    document.addEventListener('keyup', this.handleKeyPress);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('keyup', this.handleKeyPress);
   }
 
   @autobind
@@ -114,45 +132,9 @@ export default class DataListInput extends React.PureComponent<Props, State> {
           onChange(value);
           return;
         }
-
-        switch (type) {
-          case 'number':
-            clean = Number.parseInt(value, 10);
-            if (!Number.isNaN(clean)) {
-              onChange(clean);
-            }
-            break;
-
-          case 'float':
-            clean = Number.parseFloat(value);
-            if (!Number.isNaN(clean)) {
-              onChange(clean);
-            }
-            break;
-
-          case 'textarea':
-            clean = value;
-            onChange(clean);
-            setTimeout(() => {
-              if (this.inputElement) {
-                this.inputElement.style.cssText = 'height:auto; padding: 0';
-                this.inputElement.style.cssText = `height: ${this.inputElement.scrollHeight}px`;
-              }
-            }, 0);
-            break;
-
-          case 'email':
-          case 'password':
-          case 'tel':
-          case 'text':
-          case 'url':
-          case 'color':
-          default:
-            this.handleClick();
-            clean = value;
-            onChange(clean);
-            break;
-        }
+        this.handleClick();
+        clean = value;
+        onChange(clean);
       }
     }
   }
@@ -170,6 +152,18 @@ export default class DataListInput extends React.PureComponent<Props, State> {
           onSelect(newValue);
         }
         document.removeEventListener('click', this.handleOutsideClick);
+      });
+    }
+  }
+
+  @autobind
+  handleKeyPress(event) {
+    const { value, options } = this.props;
+    if (options) {
+      const rex = new RegExp(value, 'i');
+      const filtered = options.filter(o => rex.test(o.display));
+      this.setState({
+        filteredOptions: filtered,
       });
     }
   }
@@ -201,14 +195,13 @@ export default class DataListInput extends React.PureComponent<Props, State> {
 
   @autobind
   renderOptions() {
-    const { options } = this.props;
-    const { showOptionsLevel } = this.state;
+    const { showOptionsLevel, filteredOptions } = this.state;
     return (
       <div
         className={`options ${showOptionsLevel > 0 ? 'open' : ''}`}
         ref={(node) => { this.node = node; }}
       >
-        {options.map((option: Option, index: number) => (
+        {this.state.filteredOptions.map((option: Option, index: number) => (
           <span
             key={index}
             onClick={option.options
