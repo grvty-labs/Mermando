@@ -10,7 +10,7 @@ export type StoreProps = {
   clickToClose?: boolean,
   transitionsTime?: number,
   title: string,
-  legend?: string,
+  legend?: React.Node | string,
   icon?: React.Node | string,
 
   className?: string,
