@@ -631,33 +631,6 @@ export default class SlackChat extends React.Component<Props, State> {
 
           <div className='content'>
             { renderContent }
-
-            {/*
-              <div>
-                { this.state.fileUploadLoader
-                ? (
-                <div>
-                <span>Uploading</span>
-                </div>
-                )
-                : null
-                }
-              </div>
-            */}
-
-            {/*
-              { !this.state.fileUploadLoader
-                ? (
-              <FileInput
-              id='uploader'
-              type='single'
-              value={postMyFile}
-              onChange={this.handleFileChange}
-              />
-                )
-                : null
-              }
-            */}
             <Input
               id='message'
               placeholder='Write your message…'
