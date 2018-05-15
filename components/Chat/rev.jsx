@@ -603,6 +603,8 @@ export default class SlackChat extends React.Component<Props, State> {
     const { newMessage, messages = [] } = this.state;
     const { availableChannels = [], components } = this.props;
 
+    const enableInput = !!availableChannels && !!availableChannels.length &&
+      this.state.validToken && this.state.connected;
     const renderContent = !(availableChannels && availableChannels.length)
       ? <components.invalidChannels />
       : !this.state.validToken
@@ -634,17 +636,19 @@ export default class SlackChat extends React.Component<Props, State> {
             <Input
               id='message'
               placeholder='Write your message…'
+              editable={!this.state.sending}
+              disabled={!enableInput}
               type='textarea'
               value={newMessage}
               onChange={(value: string) => { this.setState({ newMessage: value }); }}
               onKeyPress={e => (e.key === 'Enter' ? this.onSendNewMessage() : null)}
             />
             <div className='footer'>
-              <Button strain='link' size='regular'>Attach File</Button>
+              <Button strain='link' size='regular' disabled={!enableInput || this.state.sending}>Attach File</Button>
               <Button
                 strain='main'
                 size='big'
-                disabled={this.state.sending}
+                disabled={!enableInput || this.state.sending}
                 onClick={this.onSendNewMessage}
               >
                 Send
