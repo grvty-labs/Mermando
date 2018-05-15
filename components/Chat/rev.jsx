@@ -57,6 +57,7 @@ type Bot = {
   id: string,
   name: string,
 
+  profile: void,
   app_id: string,
   deleted: boolean,
   icons: {
@@ -211,8 +212,8 @@ type RTMStartPayload = {
 }
 
 type Props = {
+  userId?: string,
   userToken?: string,
-  // userID?: string,
   debug?: boolean,
 
   refreshTime?: number,
@@ -322,7 +323,7 @@ export default class SlackChat extends React.Component<Props, State> {
           this.rawBots = resp.bots;
           this.rawUsers = resp.users;
           this.activeChannel = channel;
-          const user = this.rawUsers.find(c => c.id === resp.self.id);
+          const user = this.rawUsers.find(c => c.id === this.props.userId);
           if (user) {
             this.activeAccount = user;
             this.refetchMessages();
@@ -520,7 +521,7 @@ export default class SlackChat extends React.Component<Props, State> {
   refetchMessages() {
     this.debugLog('Load messages from channel: ', this.activeChannel);
     SlackChannels.history({
-      token: this.activeToken,
+      token: this.props.userToken,
       channel: this.activeChannel.id,
     }, (err, data) => {
       if (err) {
