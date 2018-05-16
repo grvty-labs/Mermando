@@ -43,12 +43,15 @@ export default class ChannelsCreator extends React.PureComponent<Props, State> {
   render() {
     return (
       <div className='create-channels'>
+        <span>
+          Hey!! There are no channels yet, should we create an internal and a public channel?
+        </span>
         <Button
           strain='secondary'
           size='regular'
           onClick={this.onCreateChannel}
         >
-          Create channels
+          Let's do this!!!
         </Button>
       </div>
     );

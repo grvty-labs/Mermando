@@ -223,6 +223,7 @@ type Props = {
     disconnected: React.ComponentType<any>,
     emptyMessages: React.ComponentType<any>,
     invalidChannels: React.ComponentType<any>,
+    login: React.ComponentType<any>,
     invalidToken: React.ComponentType<any>,
   },
 }
@@ -235,6 +236,7 @@ type Default = {
     disconnected: React.ComponentType<any>,
     emptyMessages: React.ComponentType<any>,
     invalidChannels: React.ComponentType<any>,
+    login: React.ComponentType<any>,
     invalidToken: React.ComponentType<any>,
   },
 }
@@ -601,26 +603,28 @@ export default class SlackChat extends React.Component<Props, State> {
 
   render() {
     const { newMessage, messages = [] } = this.state;
-    const { availableChannels = [], components } = this.props;
+    const { availableChannels = [], components, userToken } = this.props;
 
     const enableInput = !!availableChannels && !!availableChannels.length &&
-      this.state.validToken && this.state.connected;
-    const renderContent = !(availableChannels && availableChannels.length)
-      ? <components.invalidChannels />
-      : !this.state.validToken
-        ? <components.invalidToken />
-        : !this.state.connected
-          ? <components.disconnected />
-          : !(messages && messages.length)
-            ? <components.emptyMessages />
-            : (
-              <Scrollbars
-                className='messages-wrapper'
-                ref={(vref) => { this.messagesWrapper = vref; this.scrollDown(true); }}
-              >
-                { messages.map(this.renderMessage) }
-              </Scrollbars>
-            );
+      userToken && this.state.validToken && this.state.connected;
+    const renderContent = !userToken
+      ? <components.login />
+      : !(availableChannels && availableChannels.length)
+        ? <components.invalidChannels />
+        : !this.state.validToken
+          ? <components.invalidToken />
+          : !this.state.connected
+            ? <components.disconnected />
+            : !(messages && messages.length)
+              ? <components.emptyMessages />
+              : (
+                <Scrollbars
+                  className='messages-wrapper'
+                  ref={(vref) => { this.messagesWrapper = vref; this.scrollDown(true); }}
+                >
+                  { messages.map(this.renderMessage) }
+                </Scrollbars>
+              );
 
     return (
       <div className='chat-wrapper'>
