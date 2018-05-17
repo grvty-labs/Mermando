@@ -3,7 +3,6 @@ import * as React from 'react';
 import autobind from 'autobind-decorator';
 import Dropzone from 'react-dropzone';
 import ImageCompressor from 'image-compressor.js';
-import BrowserDetection from 'react-browser-detection';
 import Config from 'Config';
 import InputAtom from './input-atom';
 import { messageTypes } from '../../js/inputs';
@@ -83,7 +82,7 @@ export default class FileInput extends React.PureComponent<Props, void> {
     compressOptions: {
       quality: 0.6,
       maxWidth: 1000,
-      convertSize: 1000000,
+      convertSize: 500000,
     },
 
     messagesArray: [],
@@ -104,20 +103,7 @@ export default class FileInput extends React.PureComponent<Props, void> {
   };
 
   @autobind
-  onCompression(index: number, result) {
-    const { value = [] } = this.props;
-    let newValue = [...value];
-    const file = new File([result], result.name, { type: result.type, lastModified: Date.now() });
-    file.preview = URL.createObjectURL(file);
-    newValue = [
-      ...newValue,
-      file,
-    ];
-    return newValue;
-  }
-
-  @autobind
-  onSelectValue(acceptedFiles: FileType[], browser: string) {
+  onSelectValue(acceptedFiles: FileType[]) {
     const {
       type, value, onChange,
       compress, compressOptions,
@@ -125,13 +111,11 @@ export default class FileInput extends React.PureComponent<Props, void> {
 
     if (onChange && !this.props.disabled && this.props.editable) {
       if (type === 'single' && acceptedFiles && acceptedFiles.length && acceptedFiles[0]) {
-        if (compress && browser !== 'safari') {
+        if (compress) {
           new ImageCompressor(acceptedFiles[0], {
             ...compressOptions,
             success: (result) => {
-              const newValue = result;
-              newValue.preview = URL.createObjectURL(result);
-              onChange(this.onCompression(0, newValue)[0]);
+              onChange(casted.concat(result)[0]);
             },
           });
         } else {
@@ -142,12 +126,12 @@ export default class FileInput extends React.PureComponent<Props, void> {
           ? (value: FileType[])
           : [];
         if (acceptedFiles && acceptedFiles.length && acceptedFiles[0]) {
-          if (compress && browser !== 'safari') {
+          if (compress) {
             acceptedFiles.forEach((file, index) => {
               new ImageCompressor(file, {
                 ...compressOptions,
                 success: (result) => {
-                  onChange(this.onCompression(index, result));
+                  onChange(casted.concat(result));
                 },
               });
             });
@@ -303,73 +287,51 @@ export default class FileInput extends React.PureComponent<Props, void> {
     return (<span className='placeholder'>{placeholderMessage}</span>);
   }
 
-  browserHandler = {
-    default: (browser) => {
-      // if (browser !== 'chrome') {
-      //   const toast = {
-      //     id: 'browserToaster',
-      //     color: 'info',
-      //     title: 'Remember that Yellowbox works better on Chrome.',
-      //     clickToClose: true,
-      //     legend: <p>If you haven't installed it yet, you may download Google Chrome at the following link: <a href='https://www.google.com/chrome/' target='_blank'>https://www.google.com/chrome/</a></p>,
-      //   };
-      //   store.dispatch(addToast(toast));
-      // }
-      const {
-        messageType, editable, disabled, value,
-      } = this.props;
-
-      return (
-        <InputAtom
-          id={this.props.id}
-          label={this.props.label}
-          messagesArray={this.props.messagesArray}
-          message={this.props.message}
-          messageType={this.props.messageType}
-          forceInlineRequired={this.props.forceInlineRequired}
-          forceMessageBeneath={this.props.forceMessageBeneath}
-          className={this.props.className}
-          type='file'
-          rightIcon={this.props.rightIcon}
-          required={this.props.required}
-          readOnly={!editable}
-          disabled={disabled}
-          empty={!value || (value.constructor === Array && value.length === 0)}
-          invalid={messageType === 'error'}
-          footer={
-            editable
-              ? this.renderValues()
-              : undefined
-          }
-        >
-          <Dropzone
-            className='file-input'
-            disabled={disabled || !editable}
-            multiple={this.props.type === 'multiple'}
-            activeClassName='active'
-            acceptClassName='accept'
-            disabledClassName='disabled'
-            rejectClassName='reject'
-            accept={this.props.acceptedExtensions}
-            onDrop={chingo => this.onSelectValue(chingo, browser)}
-          >
-            {!editable
-              ? this.renderValues()
-              : this.renderPlaceholder
-            }
-          </Dropzone>
-        </InputAtom>
-      );
-    },
-  };
-
   render() {
+    const {
+      messageType, editable, disabled, value,
+    } = this.props;
+
     return (
-      <BrowserDetection
-        once={false}
+      <InputAtom
+        id={this.props.id}
+        label={this.props.label}
+        messagesArray={this.props.messagesArray}
+        message={this.props.message}
+        messageType={this.props.messageType}
+        forceInlineRequired={this.props.forceInlineRequired}
+        forceMessageBeneath={this.props.forceMessageBeneath}
+        className={this.props.className}
+        type='file'
+        rightIcon={this.props.rightIcon}
+        required={this.props.required}
+        readOnly={!editable}
+        disabled={disabled}
+        empty={!value || (value.constructor === Array && value.length === 0)}
+        invalid={messageType === 'error'}
+        footer={
+          editable
+            ? this.renderValues()
+            : undefined
+        }
       >
-        { this.browserHandler }
-      </BrowserDetection>
+        <Dropzone
+          className='file-input'
+          disabled={disabled || !editable}
+          multiple={this.props.type === 'multiple'}
+          activeClassName='active'
+          acceptClassName='accept'
+          disabledClassName='disabled'
+          rejectClassName='reject'
+          accept={this.props.acceptedExtensions}
+          onDrop={chingo => this.onSelectValue(chingo)}
+        >
+          {!editable
+            ? this.renderValues()
+            : this.renderPlaceholder
+          }
+        </Dropzone>
+      </InputAtom>
     );
   }
 }
