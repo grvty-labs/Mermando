@@ -9,6 +9,7 @@ type PostMsg = {
   token: string,
   channel: string | number,
   as_user?: boolean,
+  icon_url?: string,
 };
 
 export const arraysIdentical = (a, b) => JSON.stringify(a) === JSON.stringify(b);
@@ -39,7 +40,7 @@ export const hasEmoji: (x: string) => boolean = (text) => {
 export function postMessage(msg: PostMsg): Promise<*> {
   return new Promise((accept: Function, reject: Function) => {
     const {
-      text, lastThreadTs, token, channel, username, as_user,
+      text, lastThreadTs, token, channel, username, as_user, icon_url,
     } = msg;
     if (text) {
       const newMSG = {
@@ -48,9 +49,10 @@ export function postMessage(msg: PostMsg): Promise<*> {
         text,
         as_user,
       };
-      console.log(lastThreadTs);
       if (lastThreadTs) newMSG.thread_ts = lastThreadTs;
       if (username) newMSG.username = username;
+      if (icon_url) newMSG.icon_url = icon_url;
+      console.log(newMSG);
       return chat.postMessage(newMSG, (err, data) => (err ? reject(err) : accept(data)));
     }
     return reject();
