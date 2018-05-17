@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import autobind from 'autobind-decorator';
-import { channels as SlackChannels, rtm as RTM } from 'slack';
+import { channels as SlackChannels } from 'slack';
 
 import { Button } from '../Button';
 
