@@ -2,6 +2,7 @@
 import * as React from 'react';
 
 type Props = {
+  id?: string,
   className?: string,
   legend?: string,
   topComponent?: React.Node,
@@ -21,7 +22,7 @@ export default class FormSection extends React.PureComponent<Props, State> {
     } = this.props;
 
     return (
-      <form className={`form-section ${className || ''}`} onSubmit={this.props.onSubmit}>
+      <form className={`form-section ${className || ''}`} onSubmit={this.props.onSubmit} id={this.props.id}>
         <div className='top'>
           {
             legend
