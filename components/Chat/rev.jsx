@@ -214,12 +214,15 @@ type RTMStartPayload = {
 type Props = {
   userId?: string,
   userToken?: string,
+  appToken: string,
+  botToken: string,
+  userName?: string,
+  userAvatar?: string,
   debug?: boolean,
 
-  refreshTime?: number,
-  availableChannels: { id: string, name: string }[],
+  availableChannels?: { id: string, name: string }[],
 
-  components: {
+  components?: {
     disconnected: React.ComponentType<any>,
     emptyMessages: React.ComponentType<any>,
     invalidChannels: React.ComponentType<any>,
@@ -230,14 +233,13 @@ type Props = {
 
 type Default = {
   debug: boolean,
-  refreshTime: number,
 
   components: {
     disconnected: React.ComponentType<any>,
     emptyMessages: React.ComponentType<any>,
     invalidChannels: React.ComponentType<any>,
-    login: React.ComponentType<any>,
     invalidToken: React.ComponentType<any>,
+    login: React.ComponentType<any>,
   },
 }
 
@@ -254,13 +256,13 @@ type State = {
 export default class SlackChat extends React.Component<Props, State> {
   static defaultProps: Default = {
     debug: false,
-    refreshTime: 2000,
 
     components: {
       disconnected: DefaultComponent,
       emptyMessages: DefaultComponent,
       invalidChannels: DefaultComponent,
       invalidToken: DefaultComponent,
+      login: DefaultComponent,
     },
   }
 
@@ -306,10 +308,10 @@ export default class SlackChat extends React.Component<Props, State> {
       this.active = false;
     }
 
-    if (!this.active && userToken && availableChannels && availableChannels.length) {
-      this.debugLog('Connect to new');
-      this.activeToken = userToken;
+    if (!this.active && this.props.userToken && availableChannels && availableChannels.length) {
+      this.activeToken = this.props.userToken;
       this.active = true;
+      this.debugLog('Connect to new');
       // users.list({ token: this.activeToken }).then(console.log).catch(console.error);
       // apps.permissions.info({ token: this.activeToken }).then(console.log).catch(console.error);
       // bots.info({ token: this.activeToken }).then(console.log).catch(console.error);
@@ -362,15 +364,16 @@ export default class SlackChat extends React.Component<Props, State> {
         lastThreadTs: undefined,
         token: this.activeToken,
         channel: this.activeChannel.id,
-        username: this.activeAccount.name,
-        as_user: true,
+        username: this.props.userName || this.activeAccount.name,
+        icon_url: this.props.userAvatar,
+        as_user: !this.props.userName,
       }).then(() => {
         this.setState({
           newMessage: '',
           sending: false,
         }, () => {
           // Adjust scroll height
-          setTimeout(() => this.scrollDown(true), this.props.refreshTime);
+          setTimeout(() => this.scrollDown(true), 10);
         });
       }).catch((err) => {
         if (err) {
@@ -382,14 +385,10 @@ export default class SlackChat extends React.Component<Props, State> {
 
   @autobind
   onChangeChannel(channel: Channel) {
-    // stop propagation so we can prevent any other click events from firing
-    // if (this.reloadMessagesInterval) clearInterval(this.reloadMessagesInterval);
     this.activeChannel = channel;
     this.setState({}, () => {
       this.refetchMessages();
-      // this.reloadMessagesInterval = setInterval(this.refetchMessages, this.props.refreshTime);
     });
-    // Set this channel as active channel
   }
 
   @autobind
@@ -523,11 +522,11 @@ export default class SlackChat extends React.Component<Props, State> {
   refetchMessages() {
     this.debugLog('Load messages from channel: ', this.activeChannel);
     SlackChannels.history({
-      token: this.props.userToken,
+      token: this.props.appToken,
       channel: this.activeChannel.id,
     }, (err, data) => {
       if (err) {
-        this.debugLog(`There was an error loading messages for ${this.activeChannel.name}. ${err}`);
+        this.debugLog(`There was an error loading messages for ${this.activeChannel.name}. ${err} -- ${data}`);
         return;
       }
       // loaded channel history
@@ -571,9 +570,9 @@ export default class SlackChat extends React.Component<Props, State> {
           <div className='head'>
             <span className='name'>
               {
-                accprofile && accprofile.real_name
+                username || (accprofile && accprofile.real_name
                   ? accprofile.real_name
-                  : accname
+                  : accname)
               }
             </span>
             <span className='date'>{since}</span>
@@ -640,7 +639,7 @@ export default class SlackChat extends React.Component<Props, State> {
             <Input
               id='message'
               placeholder='Write your message…'
-              editable={!this.state.sending}
+              // editable={!this.state.sending}
               disabled={!enableInput}
               type='textarea'
               value={newMessage}
