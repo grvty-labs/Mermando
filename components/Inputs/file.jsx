@@ -131,6 +131,8 @@ export default class FileInput extends React.PureComponent<Props, void> {
               new ImageCompressor(file, {
                 ...compressOptions,
                 success: (result) => {
+                  const file = new File([result], result.name, { type: result.type, lastModified: Date.now() });
+                  result.preview = URL.createObjectURL(file);
                   onChange(casted.concat(result));
                 },
               });
