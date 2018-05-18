@@ -82,7 +82,7 @@ export default class FileInput extends React.PureComponent<Props, void> {
     compressOptions: {
       quality: 0.6,
       maxWidth: 1000,
-      convertSize: 500000,
+      convertSize: 100000,
     },
 
     messagesArray: [],
