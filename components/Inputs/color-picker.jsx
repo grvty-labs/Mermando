@@ -7,11 +7,12 @@ import { Button } from '../Button';
 
 export type ColorType = {
   label: string,
+  multiple?: boolean,
   editable?: boolean,
   disabled?: boolean,
   required?: boolean,
   className?: string,
-  onChange?: Function,
+  onChange: Function,
 };
 
 export type StoreProps = {
@@ -32,7 +33,9 @@ type Default = {
 
 export default class ColorPicker extends React.PureComponent<Props, State> {
   static defaultProps: Default = {
+    onChange: () => {},
     name: 'main',
+    multiple: false,
   };
   state: State = {
     values: ['f9d939'],
@@ -42,26 +45,26 @@ export default class ColorPicker extends React.PureComponent<Props, State> {
 
   renderColorPicker(index: number) {
     const {
-      id, value, disabled, required, editable, className,
-      onChange,
+      id, disabled, required, editable, className,
+      onChange, multiple,
     } = this.props;
 
     let newClassName = className || '';
     newClassName = `${newClassName} ${!editable ? 'blocked' : ''}`;
 
-    console.log(`#${this.state.values[index]}`);
-
-
     return (
-      <div className='color-container'>
+      <div className='color-container' key={index}>
         <input
           ref={(input) => { this.inputElement = input; }}
           id={`${id}`}
           type='text'
           className={newClassName}
           value={this.state.values[index] || ''}
-          onChange={val => {
-            console.log(val);
+          onChange={({ target: { value: valColor } }) => {
+            const newState = update(this.state, { values: { [index]: { $set: valColor } } });
+            this.setState(newState, () => {
+              onChange((multiple) ? this.state.values : this.state.values[0]);
+            });
           }}
           required={required}
           disabled={disabled || !editable}
@@ -90,7 +93,7 @@ export default class ColorPicker extends React.PureComponent<Props, State> {
   render() {
     const {
       id, name, label, value, disabled, required, editable, className,
-      onChange,
+      onChange, multiple,
     } = this.props;
 
     const { values } = this.state;
@@ -107,19 +110,22 @@ export default class ColorPicker extends React.PureComponent<Props, State> {
         readOnly={!editable}
         disabled={disabled}
         empty={!value && value !== 0}
-        onClick={() => { if (this.inputElement) this.inputElement.focus(); }}
+        // onClick={() => { if (this.inputElement) this.inputElement.focus(); }}
       >
         {
           values.map((val, index) => this.renderColorPicker(index))
         }
-        <Button
-          size='small'
-          strain='main'
-          onClick={() => this.setState({ values: [...this.state.values, 'f9d939'] })}
-          // disabled={!this.canSubmit()}
-        >
-          +
-        </Button>
+        {
+          (multiple) ? (
+            <Button
+              size='small'
+              strain='main'
+              onClick={() => this.setState({ values: [...this.state.values, 'f9d939'] })}
+              // disabled={!this.canSubmit()}
+            >
+              +
+            </Button>) : null
+        }
       </InputAtom>
     );
   }
