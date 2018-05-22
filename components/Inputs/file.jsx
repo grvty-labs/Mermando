@@ -105,7 +105,7 @@ export default class FileInput extends React.PureComponent<Props, void> {
   @autobind
   onSelectValue(acceptedFiles: FileType[]) {
     const {
-      type, value, onChange,
+      type, value = [], onChange,
       compress, compressOptions,
     } = this.props;
 
@@ -115,6 +115,8 @@ export default class FileInput extends React.PureComponent<Props, void> {
           new ImageCompressor(acceptedFiles[0], {
             ...compressOptions,
             success: (result) => {
+              const file = new File([result], result.name, { type: result.type, lastModified: Date.now() });
+              result.preview = URL.createObjectURL(file);
               onChange(casted.concat(result)[0]);
             },
           });
@@ -127,13 +129,18 @@ export default class FileInput extends React.PureComponent<Props, void> {
           : [];
         if (acceptedFiles && acceptedFiles.length && acceptedFiles[0]) {
           if (compress) {
-            acceptedFiles.forEach((file, index) => {
+            let newValue = [];
+            acceptedFiles.forEach((file) => {
               new ImageCompressor(file, {
                 ...compressOptions,
                 success: (result) => {
                   const file = new File([result], result.name, { type: result.type, lastModified: Date.now() });
                   result.preview = URL.createObjectURL(file);
-                  onChange(casted.concat(result));
+                  newValue = [
+                    ...newValue,
+                    result,
+                  ];
+                  onChange(newValue);
                 },
               });
             });
