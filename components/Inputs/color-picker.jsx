@@ -60,6 +60,7 @@ export default class ColorPicker extends React.PureComponent<Props, State> {
           type='text'
           className={newClassName}
           value={this.state.values[index] || ''}
+          style={{ paddingLeft: 16 }}
           onChange={({ target: { value: valColor } }) => {
             const newState = update(this.state, { values: { [index]: { $set: valColor } } });
             this.setState(newState, () => {
@@ -75,12 +76,12 @@ export default class ColorPicker extends React.PureComponent<Props, State> {
             <Button
               strain='icon'
               icon='cancel'
-              // onClick={() => {
-              //   this.setState({
-              //     showLightbox: true,
-              //     paymentDelete: method,
-              //   });
-              // }}
+              onClick={() => {
+                const newState = update(this.state, { values: { $splice: [[index, 1]] } });
+                this.setState(newState, () => {
+                  onChange((multiple) ? this.state.values : this.state.values[0]);
+                });
+              }}
             >
               delete
             </Button>
@@ -110,7 +111,6 @@ export default class ColorPicker extends React.PureComponent<Props, State> {
         readOnly={!editable}
         disabled={disabled}
         empty={!value && value !== 0}
-        // onClick={() => { if (this.inputElement) this.inputElement.focus(); }}
       >
         {
           values.map((val, index) => this.renderColorPicker(index))
@@ -118,10 +118,11 @@ export default class ColorPicker extends React.PureComponent<Props, State> {
         {
           (multiple) ? (
             <Button
-              size='small'
-              strain='main'
-              onClick={() => this.setState({ values: [...this.state.values, 'f9d939'] })}
-              // disabled={!this.canSubmit()}
+              size='huge'
+              strain='link'
+              onClick={() => this.setState({ values: [...this.state.values, 'f9d939'] }, () => {
+                onChange(this.state.values);
+              })}
             >
               +
             </Button>) : null
