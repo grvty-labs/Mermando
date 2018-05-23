@@ -74,6 +74,27 @@ export default class ColorPicker extends React.PureComponent<Props, State> {
 
     return (
       <div className='color-container' key={index}>
+        <div className='color' style={{ backgroundColor: `#${this.state.values[index]}` }}>
+          {
+            (editable) ? (
+              <div className='delete' style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+                <Button
+                  strain='icon'
+                  icon='cancel'
+                  onClick={() => {
+                    const newState = update(this.state, { values: { $splice: [[index, 1]] } });
+                    this.setState(newState, () => {
+                      const results = resultType === 'hex' ? this.state.values : arrayHexToRgb(this.state.values);
+                      onChange((multiple) ? results : results[0]);
+                    });
+                  }}
+                >
+                  delete
+                </Button>
+              </div>
+            ) : null
+          }
+        </div>
         <input
           ref={(input) => { this.inputElement = input; }}
           id={`${id}`}
@@ -81,6 +102,7 @@ export default class ColorPicker extends React.PureComponent<Props, State> {
           className={newClassName}
           value={this.state.values[index] || ''}
           style={{ paddingLeft: 16 }}
+          maxLength={6}
           onChange={({ target: { value: valColor } }) => {
             const newState = update(this.state, { values: { [index]: { $set: valColor } } });
             this.setState(newState, () => {
@@ -92,30 +114,13 @@ export default class ColorPicker extends React.PureComponent<Props, State> {
           disabled={disabled || !editable}
           pattern={'[0-9A-Fa-f]{6}'}
         />
-        <div className='color' style={{ backgroundColor: `#${this.state.values[index]}` }}>
-          <div className='delete' style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-            <Button
-              strain='icon'
-              icon='cancel'
-              onClick={() => {
-                const newState = update(this.state, { values: { $splice: [[index, 1]] } });
-                this.setState(newState, () => {
-                  const results = resultType === 'hex' ? this.state.values : arrayHexToRgb(this.state.values);
-                  onChange((multiple) ? results : results[0]);
-                });
-              }}
-            >
-              delete
-            </Button>
-          </div>
-        </div>
       </div>
     );
   }
 
   render() {
     const {
-      id, name, label, value, disabled, required, editable, className,
+      id, label, value, disabled, required, editable, className,
       onChange, multiple, resultType,
     } = this.props;
 
@@ -138,7 +143,7 @@ export default class ColorPicker extends React.PureComponent<Props, State> {
           values.map((val, index) => this.renderColorPicker(index))
         }
         {
-          (multiple) ? (
+          (multiple && editable) ? (
             <Button
               size='huge'
               strain='link'
