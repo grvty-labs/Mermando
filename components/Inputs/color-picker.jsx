@@ -74,46 +74,46 @@ export default class ColorPicker extends React.PureComponent<Props, State> {
 
     return (
       <div className='color-container' key={index}>
-        <div className='color' style={{ backgroundColor: `#${this.state.values[index]}` }}>
-          {
-            (editable) ? (
-              <div className='delete' style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-                <Button
-                  strain='icon'
-                  icon='cancel'
-                  onClick={() => {
-                    const newState = update(this.state, { values: { $splice: [[index, 1]] } });
-                    this.setState(newState, () => {
-                      const results = resultType === 'hex' ? this.state.values : arrayHexToRgb(this.state.values);
-                      onChange((multiple) ? results : results[0]);
-                    });
-                  }}
-                >
-                  delete
-                </Button>
-              </div>
-            ) : null
-          }
+        {
+          (editable) ? (
+            <div className='delete'>
+              <Button
+                strain='icon'
+                icon='cancel'
+                onClick={() => {
+                  const newState = update(this.state, { values: { $splice: [[index, 1]] } });
+                  this.setState(newState, () => {
+                    const results = resultType === 'hex' ? this.state.values : arrayHexToRgb(this.state.values);
+                    onChange((multiple) ? results : results[0]);
+                  });
+                }}
+              >
+                delete
+              </Button>
+            </div>
+          ) : null
+        }
+        <div className='color' style={{ backgroundColor: `#${this.state.values[index]}` }} />
+        <div className='input-container'>
+          <input
+            ref={(input) => { this.inputElement = input; }}
+            id={`${id}`}
+            type='text'
+            className={newClassName}
+            value={this.state.values[index] || ''}
+            maxLength={6}
+            onChange={({ target: { value: valColor } }) => {
+              const newState = update(this.state, { values: { [index]: { $set: valColor } } });
+              this.setState(newState, () => {
+                const results = resultType === 'hex' ? this.state.values : arrayHexToRgb(this.state.values);
+                onChange((multiple) ? results : results[0]);
+              });
+            }}
+            required={required}
+            disabled={disabled || !editable}
+            pattern={'[0-9A-Fa-f]{6}'}
+          />
         </div>
-        <input
-          ref={(input) => { this.inputElement = input; }}
-          id={`${id}`}
-          type='text'
-          className={newClassName}
-          value={this.state.values[index] || ''}
-          style={{ paddingLeft: 16 }}
-          maxLength={6}
-          onChange={({ target: { value: valColor } }) => {
-            const newState = update(this.state, { values: { [index]: { $set: valColor } } });
-            this.setState(newState, () => {
-              const results = resultType === 'hex' ? this.state.values : arrayHexToRgb(this.state.values);
-              onChange((multiple) ? results : results[0]);
-            });
-          }}
-          required={required}
-          disabled={disabled || !editable}
-          pattern={'[0-9A-Fa-f]{6}'}
-        />
       </div>
     );
   }

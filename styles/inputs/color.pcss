@@ -1,33 +1,71 @@
-.color-container {
-  background: rgba(127,127,127,0.1);
-  border-radius: 3px;
-  display: flex;
-  font-weight: bold;
-  margin-right: 1em;
-  padding: 0.5em;
+.input-atom {
+  &.readOnly {
+    .input-container {
+      position: static;
 
-  &::before {
-    align-self: center;
-    content: '#';
-    font-size: 1.5em;
-    margin-right: 0.5em;
+      &::before {
+        color: transparent;
+        content: '';
+      }
+
+      input {
+        background: transparent !important;
+        border: none !important;
+        padding-left: 0 !important;
+      }
+    }
   }
 
-  > input {
-    align-self: center;
-    background: white;
-    border: solid 1px #aaaaaa;
-    font-weight: bold;
-    height: 2em;
-    margin-right: 11px;
-    max-width: 80px;
-    text-transform: uppercase;
-  }
+  > .input-sham {
+    > .color-container {
+      background: rgba(127, 127, 127, 0.1);
+      border-radius: 3px;
+      display: flex;
+      font-weight: bold;
+      margin-right: 1em;
+      padding: 0.5em;
+      position: relative;
 
-  > .color {
-    border: solid 1px #aaaaaa;
-    border-radius: 8px;
-    min-height: 42px;
-    min-width: 42px;
+      > .delete {
+        position: absolute;
+        right: 0;
+        top: 0;
+        z-index: 1;
+      }
+
+      > .input-container {
+        display: flex;
+        position: relative;
+
+        &::before {
+          align-self: center;
+          content: '#';
+          font-size: 1.1em;
+          left: 6px;
+          position: absolute;
+        }
+
+        input {
+          align-self: center;
+          background: white;
+          border: solid 1px #aaaaaa;
+          font-weight: bold;
+          height: 2em;
+          margin-right: 11px;
+          max-width: 80px;
+          padding-left: 20px;
+          text-transform: uppercase;
+        }
+      }
+
+      > .color {
+        border: solid 1px #aaaaaa;
+        border-radius: 8px;
+        margin-right: 0.5em;
+        min-height: 42px;
+        min-width: 42px;
+        transition: background 0.3s ease;
+      }
+    }
   }
 }
