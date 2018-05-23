@@ -2,6 +2,8 @@
 import * as React from 'react';
 import autobind from 'autobind-decorator';
 import update from 'immutability-helper';
+import { arrayHexToRgb, arrayRgbToHex } from 'hex2rgbcolor';
+import type { RgbType } from 'hex2rgbcolor';
 import InputAtom from './input-atom';
 import { Button } from '../Button';
 
@@ -11,7 +13,10 @@ export type ColorType = {
   editable?: boolean,
   disabled?: boolean,
   required?: boolean,
+  resultType?: string,
   className?: string,
+  value?: string,
+  values?: string[] | RgbType[],
   onChange: Function,
 };
 
@@ -25,7 +30,7 @@ export type Actions = {
 };
 export type Props = StoreProps & Actions;
 type State = {
-  values: Array<string>,
+  values: string[],
 };
 type Default = {
   name: string,
@@ -36,17 +41,32 @@ export default class ColorPicker extends React.PureComponent<Props, State> {
     onChange: () => {},
     name: 'main',
     multiple: false,
+    values: [],
+    value: '',
+    resultType: 'hex',
   };
   state: State = {
     values: ['f9d939'],
-  };
+  }
+
+  componentWillMount() {
+    const { values } = this.props;
+    if (values) {
+      if (typeof values[0] === 'object') {
+        const v = arrayRgbToHex(values);
+        this.setState({ values: v.map(i => i.replace('#', '')) });
+      } else {
+        this.setState({ values });
+      }
+    }
+  }
 
   inputElement: ?any;
 
   renderColorPicker(index: number) {
     const {
       id, disabled, required, editable, className,
-      onChange, multiple,
+      onChange, multiple, resultType,
     } = this.props;
 
     let newClassName = className || '';
@@ -64,7 +84,8 @@ export default class ColorPicker extends React.PureComponent<Props, State> {
           onChange={({ target: { value: valColor } }) => {
             const newState = update(this.state, { values: { [index]: { $set: valColor } } });
             this.setState(newState, () => {
-              onChange((multiple) ? this.state.values : this.state.values[0]);
+              const results = resultType === 'hex' ? this.state.values : arrayHexToRgb(this.state.values);
+              onChange((multiple) ? results : results[0]);
             });
           }}
           required={required}
@@ -79,7 +100,8 @@ export default class ColorPicker extends React.PureComponent<Props, State> {
               onClick={() => {
                 const newState = update(this.state, { values: { $splice: [[index, 1]] } });
                 this.setState(newState, () => {
-                  onChange((multiple) ? this.state.values : this.state.values[0]);
+                  const results = resultType === 'hex' ? this.state.values : arrayHexToRgb(this.state.values);
+                  onChange((multiple) ? results : results[0]);
                 });
               }}
             >
@@ -94,7 +116,7 @@ export default class ColorPicker extends React.PureComponent<Props, State> {
   render() {
     const {
       id, name, label, value, disabled, required, editable, className,
-      onChange, multiple,
+      onChange, multiple, resultType,
     } = this.props;
 
     const { values } = this.state;
@@ -121,7 +143,8 @@ export default class ColorPicker extends React.PureComponent<Props, State> {
               size='huge'
               strain='link'
               onClick={() => this.setState({ values: [...this.state.values, 'f9d939'] }, () => {
-                onChange(this.state.values);
+                const results = resultType === 'hex' ? this.state.values : arrayHexToRgb(this.state.values);
+                onChange(results);
               })}
             >
               +
