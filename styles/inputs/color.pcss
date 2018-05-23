@@ -1,13 +1,32 @@
 .color-container {
+  background: rgba(127,127,127,0.1);
+  border-radius: 3px;
   display: flex;
+  font-weight: bold;
+  margin-right: 1em;
+  padding: 0.5em;
+
+  &::before {
+    align-self: center;
+    content: '#';
+    font-size: 1.5em;
+    margin-right: 0.5em;
+  }
 
   > input {
+    align-self: center;
+    background: white;
+    border: solid 1px #aaaaaa;
+    font-weight: bold;
+    height: 2em;
     margin-right: 11px;
     max-width: 80px;
+    text-transform: uppercase;
   }
 
   > .color {
-    border-radius: 3px;
+    border: solid 1px #aaaaaa;
+    border-radius: 8px;
     min-height: 42px;
     min-width: 42px;
   }
