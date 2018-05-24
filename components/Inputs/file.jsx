@@ -117,7 +117,7 @@ export default class FileInput extends React.PureComponent<Props, void> {
             success: (result) => {
               const file = new File([result], result.name, { type: result.type, lastModified: Date.now() });
               result.preview = URL.createObjectURL(file);
-              onChange(casted.concat(result)[0]);
+              onChange(result);
             },
           });
         } else {
@@ -129,7 +129,7 @@ export default class FileInput extends React.PureComponent<Props, void> {
           : [];
         if (acceptedFiles && acceptedFiles.length && acceptedFiles[0]) {
           if (compress) {
-            let newValue = [];
+            let newValue = [...value];
             acceptedFiles.forEach((file) => {
               new ImageCompressor(file, {
                 ...compressOptions,
