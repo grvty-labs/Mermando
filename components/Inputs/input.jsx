@@ -55,6 +55,8 @@ type Default = {
 
   viewDate: moment | string,
 
+  maxLength: number,
+
   leftIcon: string,
   rightIcon: string,
 
@@ -76,6 +78,8 @@ export default class Input extends React.PureComponent<Props, void> {
     forceMessageBeneath: false,
 
     viewDate: moment(),
+
+    maxLength: 255,
 
     leftIcon: '',
     rightIcon: '',
