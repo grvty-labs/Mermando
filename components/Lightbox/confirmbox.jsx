@@ -4,9 +4,16 @@ import autobind from 'autobind-decorator';
 import { Lightbox } from './';
 import { Button, ButtonContainer } from '../Button';
 
+type OptionType = {
+  title: string,
+  strain: string, // 'main' or 'link'
+  size: string,
+  linkColor: string,
+}
+
 export type StoreProps = {
   title: string,
-  options: string[],
+  options: OptionType[],
   children: React.Node,
   show: boolean,
 };
@@ -22,7 +29,7 @@ type State = {
 export default class ConfirmBox extends React.PureComponent<Props, State> {
   static defaultProps: Props = {
     title: '',
-    options: ['Cancelar'],
+    options: [],
     show: true,
     onOptionSelect: () => {},
     onCloseClick: () => {},
@@ -34,16 +41,18 @@ export default class ConfirmBox extends React.PureComponent<Props, State> {
     const { options, onOptionSelect } = this.props;
     return (
       <ButtonContainer className='options'>
-        { options.map((option, i) => (
+        { options.map(({
+          title, strain, size, linkColor,
+        }, i) => (
           <Button
             key={i}
             className='option'
-            strain='main'
-            size='small'
-            linkColor='success'
-            onClick={() => onOptionSelect(option)}
+            strain={strain}
+            size={size}
+            linkColor={linkColor}
+            onClick={() => onOptionSelect(title)}
           >
-            {option}
+            {title}
           </Button>
         )) }
       </ButtonContainer>
