@@ -1,27 +1,29 @@
 // @flow
+import Confirmbox from './confirmbox';
 import Lightbox from './lightbox';
 import LightboxTabbed from './tabbed';
 
 import type {
-  StoreProps as LightboxProps,
   Actions as LightboxActions,
+  StoreProps as LightboxProps,
 } from './lightbox';
 
 import type {
-  Zone as LightboxTabbedZone,
-  StoreProps as LightboxTabbedProps,
   Actions as LightboxTabbedActions,
+  StoreProps as LightboxTabbedProps,
+  Zone as LightboxTabbedZone,
 } from './tabbed';
 
 export {
+  Confirmbox,
   Lightbox,
   LightboxTabbed,
 };
 
 export type {
-  LightboxProps,
   LightboxActions,
-  LightboxTabbedZone,
-  LightboxTabbedProps,
+  LightboxProps,
   LightboxTabbedActions,
+  LightboxTabbedProps,
+  LightboxTabbedZone,
 };
