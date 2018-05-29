@@ -6,7 +6,7 @@ export function getNestedByString(dictionary: { [key: string]: any }, keyNesting
   const nested = tempStr.split('.');
   for (let i = 0, n = nested.length; i < n; i += 1) {
     const k = nested[i];
-    if (k in dictionary) {
+    if (dictionary && k in dictionary) {
       dictionary = dictionary[k];
     } else {
       return;
