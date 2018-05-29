@@ -9,6 +9,7 @@ import type {
   Header, Item, SingleItemActions, MultipleItemsActions,
   ItemAvailableAction,
 } from './types';
+import { getNestedByString } from '../../js/jsonObjects';
 
 export type PureTableProps = {
   className?: string,
@@ -33,7 +34,7 @@ export type PureTableActions = {
   // Posible lista de acciones disponibles en el botón de hotdog de cada item
   onSingleItemActions?: SingleItemActions,
   // Posible lista de acciones disponibles para la selección de múltiples items
-  onMultipleItemsActions?: MultipleItemsActions,
+  onMultipleItemsActions?: MultipleItemsActions[],
 };
 
 type Props = PureTableProps & PureTableActions;
@@ -80,7 +81,7 @@ export default class Table extends React.Component<Props, State> {
   }
 
   @autobind
-  renderActions(id: number | string, actions: Array<ItemAvailableAction>) {
+  renderActions(id: number | string, actions: ItemAvailableAction[]) {
     const { onSingleItemActions } = this.props;
     const actionsRender = actions.map((action, index) => {
       if (onSingleItemActions &&
@@ -129,14 +130,20 @@ export default class Table extends React.Component<Props, State> {
         }
         { headers.map((header, ind) => (
           <td key={ind}>
-            <span>{element[header.key]}</span>
+            <span>
+              {
+                header.parser
+                  ? header.parser(getNestedByString(element, header.key))
+                  : getNestedByString(element, header.key)
+              }
+            </span>
           </td>))
         }
         { onSingleItemActions
           ? (
             <td>
               <Contextual>
-                { this.renderActions(element.id, element.actions)}
+                { element.actions ? this.renderActions(element.id, element.actions) : null}
               </Contextual>
             </td>
           )

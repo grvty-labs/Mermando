@@ -6,6 +6,7 @@ export type Header = {
   key: string,
   // El título que debe de salir en el header de la tabla
   text: string,
+  parser?: (v: any) => any,
 };
 
 export type ItemAvailableAction = {
@@ -17,8 +18,10 @@ export type ItemAvailableAction = {
 
 export type Item = { // Cada item es un objeto que requiere tener una llave 'actions'
   id: number | string,
-  actions: Array<ItemAvailableAction>,
-} & Object;
+  actions?: ItemAvailableAction[],
+
+  [key: string]: any,
+};
 
 export type SingleItemActions = { // Un json en el cual cada propiedad debe tener 'text' y 'func'
   [key: string]: { // El key es el mismo que en 'Item.actions'
@@ -28,8 +31,8 @@ export type SingleItemActions = { // Un json en el cual cada propiedad debe tene
   },
 };
 
-export type MultipleItemsActions = Array<{
+export type MultipleItemsActions = {
   available: boolean, // La acción estará disponible para todos los seleccionados
   text: string, // Texto a mostrar en el objeto button
   func: Function, // Función onClick, como único parametro se envía la lista de items completa
-}>;
+};
