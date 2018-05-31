@@ -29,6 +29,12 @@ export default class Notifications extends React.PureComponent<Props, State> {
     focus: false,
   }
 
+  componentWillUnmount() {
+    // Remove listener on Unmount
+    // Removes this.setState() on render warning
+    document.removeEventListener('click', this.handleOutsideClick);
+  }
+
   @autobind
   onClick() {
     this.setState({ focus: true });
