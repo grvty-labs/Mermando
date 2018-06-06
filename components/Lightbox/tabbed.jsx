@@ -15,6 +15,7 @@ export type Zone = {
 export type StoreProps = {
   className?: string,
   show: boolean,
+  resetOnOpen?: boolean,
   title: string,
   lastBottomComponent?: React.Element<typeof Button>,
   zones: Array<Zone>,
@@ -29,15 +30,33 @@ type State = {
 };
 type Default = {
   className: string,
+  resetOnOpen: boolean,
 };
 
 export default class LightboxTabbed extends React.PureComponent<Props, State> {
   static defaultProps: Default = {
     className: '',
+    resetOnOpen: false,
   };
   state: State = {
     zoneSelected: 0,
   };
+
+  componenWillMount() {
+    if (this.props.resetOnOpen) {
+      this.setState({
+        zoneSelected: 0,
+      });
+    }
+  }
+
+  componentWillReceiveProps(nextProps: Props) {
+    if (nextProps.resetOnOpen && this.props.show !== nextProps.show) {
+      this.setState({
+        zoneSelected: 0,
+      });
+    }
+  }
 
   @autobind
   onZoneClick(id: number) {
