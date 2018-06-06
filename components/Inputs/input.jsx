@@ -24,6 +24,8 @@ export type Props = {
   maxTags?: number,
   maxLength?: number,
 
+  dateFormat?: string,
+
   leftIcon?: string,
   rightIcon?: string,
 
@@ -57,6 +59,8 @@ type Default = {
 
   maxLength: number,
 
+  dateFormat: string,
+
   leftIcon: string,
   rightIcon: string,
 
@@ -80,6 +84,8 @@ export default class Input extends React.PureComponent<Props, void> {
     viewDate: moment(),
 
     maxLength: 255,
+
+    dateFormat: 'DD-MMM-YYYY',
 
     leftIcon: '',
     rightIcon: '',
@@ -241,6 +247,7 @@ export default class Input extends React.PureComponent<Props, void> {
     const {
       id, type, className, value, required, disabled, editable,
       autoComplete, autoCompleteOptions, placeholder, viewDate, isValidDate,
+      dateFormat,
     } = this.props;
 
     let newClassName = className || '';
@@ -268,7 +275,7 @@ export default class Input extends React.PureComponent<Props, void> {
             value={value}
             className='datetime-input'
             onChange={this.onCustomInputChange}
-            dateFormat='DD-MMM-YYYY'
+            dateFormat={dateFormat}
             timeFormat='hh:mm A'
             isValidDate={isValidDate}
             inputProps={{
@@ -310,7 +317,7 @@ export default class Input extends React.PureComponent<Props, void> {
             value={value}
             className='datetime-input'
             onChange={this.onCustomInputChange}
-            dateFormat='DD-MMM-YYYY'
+            dateFormat={dateFormat}
             viewDate={viewDate}
             timeFormat={false}
             isValidDate={isValidDate}
@@ -420,6 +427,7 @@ export default class Input extends React.PureComponent<Props, void> {
       leftIcon, rightIcon, editable,
       disabled, onChange, autoComplete,
       autoCompleteOptions, onFocus, onBlur, isValidDate, viewDate,
+      dateFormat,
 
       ...otherProps
     } = this.props;
