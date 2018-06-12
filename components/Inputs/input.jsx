@@ -197,11 +197,12 @@ export default class Input extends React.PureComponent<Props, void> {
               ...casted.slice(index + 1),
             ]);
           } else {
+            const [max] = casted.sort((a, b) => (a.id < b.id ? 1 : -1));
+            this.counter = max.id + 1;
             onChange([
               ...casted,
               { id: this.counter, text: newValue },
             ]);
-            this.counter += 1;
           }
           break;
 
