@@ -25,6 +25,7 @@ export type Props = {
   maxLength?: number,
 
   dateFormat?: string,
+  closeOnSelect?: boolean,
 
   leftIcon?: string,
   rightIcon?: string,
@@ -60,6 +61,7 @@ type Default = {
   maxLength: number,
 
   dateFormat: string,
+  closeOnSelect: boolean,
 
   leftIcon: string,
   rightIcon: string,
@@ -86,6 +88,7 @@ export default class Input extends React.PureComponent<Props, void> {
     maxLength: 255,
 
     dateFormat: 'DD-MMM-YYYY',
+    closeOnSelect: false,
 
     leftIcon: '',
     rightIcon: '',
@@ -248,7 +251,7 @@ export default class Input extends React.PureComponent<Props, void> {
     const {
       id, type, className, value, required, disabled, editable,
       autoComplete, autoCompleteOptions, placeholder, viewDate, isValidDate,
-      dateFormat,
+      dateFormat, closeOnSelect,
     } = this.props;
 
     let newClassName = className || '';
@@ -279,6 +282,7 @@ export default class Input extends React.PureComponent<Props, void> {
             dateFormat={dateFormat}
             timeFormat='hh:mm A'
             isValidDate={isValidDate}
+            closeOnSelect={closeOnSelect}
             inputProps={{
               ...otherProps,
               id: `${id}`,
@@ -300,6 +304,7 @@ export default class Input extends React.PureComponent<Props, void> {
             dateFormat={false}
             timeFormat='hh:mm A'
             isValidDate={isValidDate}
+            closeOnSelect={closeOnSelect}
             inputProps={{
               ...otherProps,
               id: `${id}`,
@@ -322,6 +327,7 @@ export default class Input extends React.PureComponent<Props, void> {
             viewDate={viewDate}
             timeFormat={false}
             isValidDate={isValidDate}
+            closeOnSelect={closeOnSelect}
             inputProps={{
               ...otherProps,
               id: `${id}`,
@@ -428,7 +434,7 @@ export default class Input extends React.PureComponent<Props, void> {
       leftIcon, rightIcon, editable,
       disabled, onChange, autoComplete,
       autoCompleteOptions, onFocus, onBlur, isValidDate, viewDate,
-      dateFormat,
+      dateFormat, closeOnSelect,
 
       ...otherProps
     } = this.props;
