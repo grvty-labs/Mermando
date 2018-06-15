@@ -21,6 +21,7 @@ export type Props = {
   forceMessageBeneath?: boolean,
   className?: string,
   +value?: Value,
+  +defaultValue?: Value,
   maxTags?: number,
   maxLength?: number,
 
@@ -171,6 +172,46 @@ export default class Input extends React.PureComponent<Props, void> {
       }
     }
   }
+  
+  @autobind
+  onHTMLInputBlur(event: SyntheticInputEvent<*>) {
+    const { type, onBlur, maxLength } = this.props;
+    const { value } = event.target;
+    let clean;
+
+    if (!maxLength || value.length <= maxLength) {
+      if (onBlur) {
+        if (!value) {
+          onBlur(value);
+          return;
+        }
+
+        switch (type) {
+          case 'number':
+            clean = Number.parseInt(value, 10);
+            if (!Number.isNaN(clean)) onBlur(clean);
+            break;
+
+          case 'float':
+            clean = Number.parseFloat(value);
+            if (!Number.isNaN(clean)) onBlur(clean);
+            break;
+
+          case 'textarea':
+          case 'email':
+          case 'password':
+          case 'tel':
+          case 'text':
+          case 'url':
+          case 'color':
+          default:
+            clean = value;
+            onBlur(clean);
+            break;
+        }
+      }
+    }
+  }
 
   @autobind
   onCustomInputChange(newValue: ?Value, index?: number) {
@@ -251,7 +292,7 @@ export default class Input extends React.PureComponent<Props, void> {
     const {
       id, type, className, value, required, disabled, editable,
       autoComplete, autoCompleteOptions, placeholder, viewDate, isValidDate,
-      dateFormat, closeOnSelect,
+      dateFormat, closeOnSelect, defaultValue,
     } = this.props;
 
     let newClassName = className || '';
@@ -409,8 +450,10 @@ export default class Input extends React.PureComponent<Props, void> {
               type === 'float' ? 'number' : type
             } id={`${id}`}
             className={newClassName}
-            value={value || ''}
+            // value={value || ''}
+            defaultValue={defaultValue || ''}
             onChange={this.onHTMLInputChange}
+            onBlur={this.onHTMLInputBlur}
             required={required}
             disabled={disabled || !editable}
             // autoComplete={autoComplete}
@@ -458,7 +501,6 @@ export default class Input extends React.PureComponent<Props, void> {
         invalid={messageType === 'error'}
         onClick={() => { if (this.inputElement) this.inputElement.focus(); }}
         onFocus={onFocus}
-        onBlur={onBlur}
       >
         {this.renderInput(otherProps)}
       </InputAtom>
