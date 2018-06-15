@@ -298,6 +298,8 @@ export default class Input extends React.PureComponent<Props, void> {
     let newClassName = className || '';
     newClassName = `${newClassName} ${!editable ? 'blocked' : ''}`;
 
+    const moreProps = (value) ? { value: value || '' } : {};
+
     switch (type) {
       case 'textarea':
         return (
@@ -450,7 +452,7 @@ export default class Input extends React.PureComponent<Props, void> {
               type === 'float' ? 'number' : type
             } id={`${id}`}
             className={newClassName}
-            // value={value || ''}
+            {...moreProps}
             defaultValue={defaultValue || ''}
             onChange={this.onHTMLInputChange}
             onBlur={this.onHTMLInputBlur}
