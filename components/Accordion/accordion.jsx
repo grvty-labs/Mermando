@@ -5,6 +5,7 @@ import autobind from 'autobind-decorator';
 import { Button } from '../Button';
 
 type Props = {
+  id?: number | string,
   buttonStrain?: string,
   displayPanel?: boolean,
   className?: string,
@@ -39,8 +40,12 @@ export default class Accordion extends React.PureComponent<Props, State> {
 
   render() {
     const {
-      children, title, buttonStrain, className,
+      children, title, buttonStrain, className, id,
     } = this.props;
+    const elementId = id || 'panel';
+    const panelHeight = document.getElementById(elementId)
+      ? document.getElementById(elementId).scrollHeight
+      : 1000;
     const { displayPanel } = this.state;
     return (
       <div className={`accordion ${className || ''}`}>
@@ -62,7 +67,7 @@ export default class Accordion extends React.PureComponent<Props, State> {
           </div>
         </div>
         <div className='content'>
-          <div className={`panel ${displayPanel ? 'active' : ''}`}>
+          <div id={id || 'panel'} className={`panel ${displayPanel ? 'active' : ''}`} style={displayPanel ? {maxHeight: `${panelHeight}px`} : null}>
             { children }
           </div>
         </div>
