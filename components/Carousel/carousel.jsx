@@ -18,6 +18,7 @@ export type VideoType = {
   id: number | string,
   type?: 'video',
   url: string,
+  playing?: boolean,
 }
 
 type Viewport = {
@@ -114,6 +115,7 @@ export default class Carousel extends React.PureComponent<Props, State> {
         ...elements,
         ...videos.map(vid => ({
           ...vid,
+          playing: vid.playing || false,
           type: 'video',
           id: vid.id + images.length,
         })),
@@ -142,6 +144,19 @@ export default class Carousel extends React.PureComponent<Props, State> {
         className={className}
         onClick={(e: SyntheticEvent<*>) => {
           if (e) e.stopPropagation();
+          if (elements[selected].type === 'video') {
+            const newVideoElement = elements[this.state.selected];
+            this.setState({
+              elements: [
+                ...this.state.elements.slice(0, this.state.selected),
+                {
+                  ...newVideoElement,
+                  playing: false,
+                },
+                ...this.state.elements.slice(this.state.selected + 1),
+              ],
+            });
+          }
           this.onSelect(index);
         }}
         onKeyPress={() => this.onSelect(index)}
@@ -221,14 +236,48 @@ export default class Carousel extends React.PureComponent<Props, State> {
                         controls
                         width={`${videoWidth}px`}
                         height={`${videoHeight}px`}
+                        playing={element.playing}
                         onPlay={() => {
                           clearTimeout(this.timeout);
+                          const newVideoElement = elements[this.state.selected];
+                          this.setState({
+                            elements: [
+                              ...this.state.elements.slice(0, this.state.selected),
+                              {
+                                ...newVideoElement,
+                                playing: true,
+                              },
+                              ...this.state.elements.slice(this.state.selected + 1),
+                            ],
+                          });
                         }}
                         onPause={() => {
-                          this.onSelect(this.state.selected);
+                          clearTimeout(this.timeout);
+                          const newVideoElement = elements[selected];
+                          this.setState({
+                            elements: [
+                              ...this.state.elements.slice(0, this.state.selected),
+                              {
+                                ...newVideoElement,
+                                playing: false,
+                              },
+                              ...this.state.elements.slice(this.state.selected + 1),
+                            ],
+                          });
                         }}
                         onEnded={() => {
                           this.onSelect(this.state.selected);
+                          const newVideoElement = elements[this.state.selected];
+                          this.setState({
+                            elements: [
+                              ...this.state.elements.slice(0, this.state.selected),
+                              {
+                                ...newVideoElement,
+                                playing: false,
+                              },
+                              ...this.state.elements.slice(this.state.selected + 1),
+                            ],
+                          });
                         }}
                       />
                     )
