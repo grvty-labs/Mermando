@@ -302,7 +302,8 @@ export default class Input extends React.PureComponent<Props, void> {
     let newClassName = className || '';
     newClassName = `${newClassName} ${!editable ? 'blocked' : ''}`;
 
-    const moreProps = (value) ? { value: value || '' } : {};
+    const moreProps = (value !== undefined) ? { value: value || '' } : {};
+    const moreDefaultValue = (defaultValue !== undefined) ? { defaultValue: defaultValue || '' } : {};
 
     switch (type) {
       case 'textarea':
@@ -440,7 +441,6 @@ export default class Input extends React.PureComponent<Props, void> {
             placeholder={placeholder}
           />
         );
-
       case 'email':
       case 'float':
       case 'number':
@@ -456,8 +456,8 @@ export default class Input extends React.PureComponent<Props, void> {
               type === 'float' ? 'number' : type
             } id={`${id}`}
             className={newClassName}
+            {...moreDefaultValue}
             {...moreProps}
-            defaultValue={defaultValue || ''}
             onChange={this.onHTMLInputChange}
             onBlur={this.onHTMLInputBlur}
             required={required}
