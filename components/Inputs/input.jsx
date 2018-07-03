@@ -24,6 +24,7 @@ export type Props = {
   +defaultValue?: Value,
   maxTags?: number,
   maxLength?: number,
+  validationErrorReport?: 'onSubmit' | 'onChange' | 'onBlur',
 
   dateFormat?: string,
   closeOnSelect?: boolean,
@@ -52,6 +53,8 @@ type Default = {
   label: string,
   className: string,
 
+  validationErrorReport: string,
+
   messagesArray: Message[],
   message: string,
   messageType: $Keys<typeof messageTypes>,
@@ -78,6 +81,8 @@ export default class Input extends React.PureComponent<Props, void> {
   static defaultProps: Default = {
     label: '',
     className: '',
+
+    validationErrorReport: 'onSubmit',
 
     messagesArray: [],
     message: '',
@@ -128,7 +133,7 @@ export default class Input extends React.PureComponent<Props, void> {
 
   @autobind
   onHTMLInputChange(event: SyntheticInputEvent<*>) {
-    const { type, onChange, maxLength } = this.props;
+    const { type, onChange, maxLength, validationErrorReport } = this.props;
     const { value } = event.target;
     let clean;
 
@@ -157,56 +162,30 @@ export default class Input extends React.PureComponent<Props, void> {
             if (!Number.isNaN(clean)) onChange(clean);
             break;
 
-          case 'textarea':
           case 'email':
+            if (validationErrorReport === 'onChange') {
+              this.runValidationTest(value, this.EMAIL_PATTERN);
+            }
+            clean = value;
+            onChange(clean, this.validInput);
+            break;
+
+          case 'color':
+            if (validationErrorReport === 'onChange') {
+              this.runValidationTest(value, this.COLOR_PATTERN);
+            }
+            clean = value;
+            onChange(clean, this.validInput);
+            break;
+
+          case 'textarea':
           case 'password':
           case 'tel':
           case 'text':
           case 'url':
-          case 'color':
           default:
             clean = value;
             onChange(clean);
-            break;
-        }
-      }
-    }
-  }
-  
-  @autobind
-  onHTMLInputBlur(event: SyntheticInputEvent<*>) {
-    const { type, onBlur, maxLength } = this.props;
-    const { value } = event.target;
-    let clean;
-
-    if (!maxLength || value.length <= maxLength) {
-      if (onBlur) {
-        if (!value) {
-          onBlur(value);
-          return;
-        }
-
-        switch (type) {
-          case 'number':
-            clean = Number.parseInt(value, 10);
-            if (!Number.isNaN(clean)) onBlur(clean);
-            break;
-
-          case 'float':
-            clean = Number.parseFloat(value);
-            if (!Number.isNaN(clean)) onBlur(clean);
-            break;
-
-          case 'textarea':
-          case 'email':
-          case 'password':
-          case 'tel':
-          case 'text':
-          case 'url':
-          case 'color':
-          default:
-            clean = value;
-            onBlur(clean);
             break;
         }
       }
@@ -260,8 +239,92 @@ export default class Input extends React.PureComponent<Props, void> {
     }
   }
 
+  @autobind
+  onHTMLInputBlur(event: SyntheticInputEvent<*>) {
+    const { type, onBlur, maxLength, validationErrorReport } = this.props;
+    const { value } = event.target;
+    let clean;
+
+    if (!maxLength || value.length <= maxLength) {
+      if (onBlur) {
+        if (!value) {
+          onBlur(value);
+          return;
+        }
+
+        switch (type) {
+          case 'number':
+            clean = Number.parseInt(value, 10);
+            if (!Number.isNaN(clean)) onBlur(clean);
+            break;
+
+          case 'float':
+            clean = Number.parseFloat(value);
+            if (!Number.isNaN(clean)) onBlur(clean);
+            break;
+
+          case 'email':
+            if (validationErrorReport === 'onBlur') {
+              this.runValidationTest(value, this.EMAIL_PATTERN);
+            }
+            clean = value;
+            onBlur(clean, this.validInput);
+            break;
+          
+          case 'color':
+            if (validationErrorReport === 'onBlur') {
+              this.runValidationTest(value, this.COLOR_PATTERN);
+            }
+            clean = value;
+            onBlur(clean, this.validInput);
+            break;
+
+          case 'textarea':
+          case 'password':
+          case 'tel':
+          case 'text':
+          case 'url':
+          default:
+            clean = value;
+            onBlur(clean);
+            break;
+        }
+      }
+    }
+  }
+
+  @autobind
+  runValidationTest(value, regExpPattern) {
+    const { type } = this.props;
+
+    const rex = new RegExp(regExpPattern);
+    if (rex.test(value) === false) {
+      this.messageOverrideType = 'error';
+      this.validInput = false;
+
+      switch(type) {
+        case 'email':
+          this.messageOverride = 'Please use an appropriate format for email';
+          break;
+        default:
+          break;
+      }
+    } else {
+      this.messageOverrideType = undefined;
+      this.messageOverride = undefined;
+      this.validInput = true;
+    }
+  }
+
   counter: number = 0;
   inputElement: ?any;
+  validInput: boolean = false;
+  messageOverride: ?string;
+  messageOverrideType: ?string;
+  COLOR_PATTERN: string = '[0-9A-Fa-f]{6}';
+  NUMBER_PATTERN: string = '[-+]?[0-9]+';
+  FLOAT_PATTERN: string = '[-+]?[0-9]*[.,]?[0-9]+';
+  EMAIL_PATTERN: string = '[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,10}$';
 
   @autobind
   generatePattern() {
@@ -270,19 +333,19 @@ export default class Input extends React.PureComponent<Props, void> {
     if (!newPattern) {
       switch (type) {
         case 'color':
-          newPattern = '[0-9A-Fa-f]{6}';
+          newPattern = this.COLOR_PATTERN;
           break;
         case 'number':
-          newPattern = '[-+]?[0-9]+';
+          newPattern = this.NUMBER_PATTERN;
           break;
         case 'float':
-          newPattern = '[-+]?[0-9]*[.,]?[0-9]+';
+          newPattern = this.FLOAT_PATTERN;
           break;
         // case 'tel':
         //   newPattern = '[\\+]\\d{2}[\\(]\\d{2}[\\)]\\d{4}[\\-]\\d{4}';
         //   break;
         case 'email':
-          newPattern = '[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]+$';
+          newPattern = this.EMAIL_PATTERN;
           break;
         default:
           break;
@@ -483,17 +546,24 @@ export default class Input extends React.PureComponent<Props, void> {
       leftIcon, rightIcon, editable,
       disabled, onChange, autoComplete,
       autoCompleteOptions, onFocus, onBlur, isValidDate, viewDate,
-      dateFormat, closeOnSelect,
+      dateFormat, closeOnSelect, validationErrorReport,
 
       ...otherProps
     } = this.props;
+
+    const messageString = this.messageOverride && this.messageOverride.length
+      ? this.messageOverride
+      : message;
+    const messageTypeString = this.messageOverrideType && this.messageOverrideType.length
+      ? this.messageOverrideType
+      : messageType;
 
     return (
       <InputAtom
         id={id} label={label}
         messagesArray={messagesArray}
-        message={message}
-        messageType={messageType}
+        message={messageString}
+        messageType={messageTypeString}
         forceInlineRequired={forceInlineRequired}
         forceMessageBeneath={forceMessageBeneath}
         className={className}
