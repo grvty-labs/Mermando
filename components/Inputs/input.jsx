@@ -24,7 +24,7 @@ export type Props = {
   +defaultValue?: Value,
   maxTags?: number,
   maxLength?: number,
-  validationErrorReport?: 'onSubmit' | 'onChange' | 'onBlur',
+  validationErrorReport?: 'none' | 'onChange' | 'onBlur',
 
   dateFormat?: string,
   closeOnSelect?: boolean,
@@ -82,7 +82,7 @@ export default class Input extends React.PureComponent<Props, void> {
     label: '',
     className: '',
 
-    validationErrorReport: 'onSubmit',
+    validationErrorReport: 'none',
 
     messagesArray: [],
     message: '',
@@ -108,8 +108,21 @@ export default class Input extends React.PureComponent<Props, void> {
   };
 
   componentDidMount() {
-    if (this.props.value && this.inputElement) {
-      this.onResizeValue();
+    const { value, inputElement, type } = this.props;
+    if (value) {
+      switch (type) {
+        case 'email':
+          this.runValidationTest(value, this.EMAIL_PATTERN);
+          break;
+        case 'color':
+          this.runValidationTest(value, this.COLOR_PATTERN);
+          break;
+        default:
+          break;
+      }
+      if (inputElement) {
+        this.onResizeValue();
+      }
     }
   }
 
@@ -318,7 +331,7 @@ export default class Input extends React.PureComponent<Props, void> {
 
   counter: number = 0;
   inputElement: ?any;
-  validInput: boolean = false;
+  validInput: boolean;
   messageOverride: ?string;
   messageOverrideType: ?string;
   COLOR_PATTERN: string = '[0-9A-Fa-f]{6}';
