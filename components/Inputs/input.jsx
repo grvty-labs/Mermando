@@ -53,7 +53,7 @@ type Default = {
   label: string,
   className: string,
 
-  validationErrorReport: string,
+  validationErrorReport: 'none',
 
   messagesArray: Message[],
   message: string,
@@ -146,7 +146,9 @@ export default class Input extends React.PureComponent<Props, void> {
 
   @autobind
   onHTMLInputChange(event: SyntheticInputEvent<*>) {
-    const { type, onChange, maxLength, validationErrorReport } = this.props;
+    const {
+      type, onChange, maxLength, validationErrorReport,
+    } = this.props;
     const { value } = event.target;
     let clean;
 
@@ -254,7 +256,9 @@ export default class Input extends React.PureComponent<Props, void> {
 
   @autobind
   onHTMLInputBlur(event: SyntheticInputEvent<*>) {
-    const { type, onBlur, maxLength, validationErrorReport } = this.props;
+    const {
+      type, onBlur, maxLength, validationErrorReport,
+    } = this.props;
     const { value } = event.target;
     let clean;
 
@@ -283,7 +287,7 @@ export default class Input extends React.PureComponent<Props, void> {
             clean = value;
             onBlur(clean, this.validInput);
             break;
-          
+
           case 'color':
             if (validationErrorReport === 'onBlur') {
               this.runValidationTest(value, this.COLOR_PATTERN);
@@ -315,7 +319,7 @@ export default class Input extends React.PureComponent<Props, void> {
       this.messageOverrideType = 'error';
       this.validInput = false;
 
-      switch(type) {
+      switch (type) {
         case 'email':
           this.messageOverride = 'Please use an appropriate format for email';
           break;
