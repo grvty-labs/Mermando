@@ -15,8 +15,8 @@ export type Zone = {
   title: string,
   topComponent?: React.Node | Array<React.Node>,
   type: 'separated-rows' | 'split' | 'none',
-  renderComponent: Function,
-  renderTopComponent?: Function,
+  renderComponent: (changeZone?: Function) => void,
+  renderTopComponent?: (changeZone?: Function) => void,
 }
 
 export type StoreProps = {
