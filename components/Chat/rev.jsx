@@ -221,6 +221,9 @@ type Props = {
   debug?: boolean,
 
   availableChannels?: { id: string, name: string }[],
+  showChannels?: boolean,
+  canAttach?: boolean,
+  legend?: string,
 
   components?: {
     disconnected: React.ComponentType<any>,
@@ -233,6 +236,9 @@ type Props = {
 
 type Default = {
   debug: boolean,
+  showChannels: boolean,
+  canAttach: boolean,
+  legend: string,
 
   components: {
     disconnected: React.ComponentType<any>,
@@ -256,6 +262,9 @@ type State = {
 export default class SlackChat extends React.Component<Props, State> {
   static defaultProps: Default = {
     debug: false,
+    showChannels: true,
+    canAttach: false,
+    legend: 'Channels',
 
     components: {
       disconnected: DefaultComponent,
@@ -602,7 +611,10 @@ export default class SlackChat extends React.Component<Props, State> {
 
   render() {
     const { newMessage, messages = [] } = this.state;
-    const { availableChannels = [], components, userToken } = this.props;
+    const {
+      availableChannels = [], components, userToken, legend,
+      showChannels, canAttach,
+    } = this.props;
 
     const enableInput = !!availableChannels && !!availableChannels.length &&
       userToken && this.state.validToken && this.state.connected;
@@ -630,8 +642,8 @@ export default class SlackChat extends React.Component<Props, State> {
         <div className='chat'>
 
           <div className='channels-wrapper'>
-            <span className='legend'>Channels</span>
-            { availableChannels.map(this.renderChannel) }
+            <span className='legend'>{legend}</span>
+            { showChannels ? availableChannels.map(this.renderChannel) : null }
           </div>
 
           <div className='content'>
@@ -647,7 +659,11 @@ export default class SlackChat extends React.Component<Props, State> {
               onKeyPress={e => (e.key === 'Enter' ? this.onSendNewMessage() : null)}
             />
             <div className='footer'>
-              <Button strain='link' size='regular' disabled={!enableInput || this.state.sending}>Attach File</Button>
+              {
+                canAttach
+                ? <Button strain='link' size='regular' disabled={!enableInput || this.state.sending}>Attach File</Button>
+                : <div />
+              }
               <Button
                 strain='main'
                 size='big'
