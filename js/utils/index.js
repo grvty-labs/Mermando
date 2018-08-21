@@ -18,7 +18,10 @@ export function intToRGB(i: number): string {
 
 export function getNameInitials(name: string): string {
   const initials = name.match(/\b\w/g);
-  return ((initials.shift() || '') + (initials.pop() || '')).toUpperCase();
+  if (initials) {
+    return ((initials.shift() || '') + (initials.pop() || '')).toUpperCase();
+  }
+  return '';
 }
 
 export function getNameColor(name: string): string {
