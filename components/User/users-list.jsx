@@ -49,6 +49,13 @@ export default class UsersList extends React.PureComponent<Props, State> {
         <Avatar {...user} />
         <div className='data'>
           <span className='name'>{user.name}</span>
+          {
+            user.spec
+            ? (
+              <span className='spec'>{user.spec}</span>
+            )
+            : null
+          }
           <span className='email'>{user.email}</span>
         </div>
         <div className='actions'>
