@@ -15,10 +15,12 @@ type Props = {
   avatar?: AvatarProps,
   name?: string,
   hover?: 'simple' | 'complex' | 'none',
+  onClick?: () => void,
 };
 type Default = {
   name: string,
   hover: 'simple' | 'complex' | 'none',
+  onClick: undefined,
 };
 
 export default class Avatar extends React.PureComponent<Props, void> {
@@ -35,7 +37,9 @@ export default class Avatar extends React.PureComponent<Props, void> {
   }
 
   render() {
-    const { avatar, name, hover } = this.props;
+    const {
+      avatar, name, hover, onClick,
+    } = this.props;
     return (
       <div
         className='avatar'
@@ -45,6 +49,10 @@ export default class Avatar extends React.PureComponent<Props, void> {
         }
         aria-hidden={hover === 'none'}
         title={hover === 'simple' ? name : null}
+        onClick={onClick || undefined}
+        onKeyPress={onClick || undefined}
+        role={onClick ? 'button' : null}
+        tabIndex={onClick ? 0 : -1}
       >
         { avatar && avatar.src ? null : <span>{this.getNameInitials(name || '')}</span> }
       </div>
