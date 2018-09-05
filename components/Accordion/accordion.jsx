@@ -11,6 +11,8 @@ type Props = {
   className?: string,
   title?: string,
   children?: React.Node | string,
+
+  onDisplayPanel?: Function,
 };
 
 type State = {
@@ -26,6 +28,7 @@ export default class Accordion extends React.PureComponent<Props, State> {
   static defaultProps: Default = {
     buttonStrain: 'link',
     displayPanel: false,
+    onDisplayPanel: () => {},
   };
   state: State = {
     displayPanel: false,
@@ -41,6 +44,7 @@ export default class Accordion extends React.PureComponent<Props, State> {
   render() {
     const {
       children, title, buttonStrain, className, id,
+      onDisplayPanel
     } = this.props;
     const elementId = id || 'panel';
     const panelHeight = document.getElementById(elementId)
@@ -59,6 +63,8 @@ export default class Accordion extends React.PureComponent<Props, State> {
               onClick={() => {
                 this.setState({
                   displayPanel: !this.state.displayPanel,
+                }, () => {
+                  onDisplayPanel(this.state.displayPanel);
                 });
               }}
             >
