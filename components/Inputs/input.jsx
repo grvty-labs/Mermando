@@ -339,7 +339,7 @@ export default class Input extends React.PureComponent<Props, void> {
   messageOverride: ?string;
   messageOverrideType: ?string;
   COLOR_PATTERN: string = '[0-9A-Fa-f]{6}';
-  NUMBER_PATTERN: string = '[-+]?[0-9]+';
+  NUMBER_PATTERN: string = '^[-+]?[0-9]+$';
   FLOAT_PATTERN: string = '[-+]?[0-9]*[.,]?[0-9]+';
   EMAIL_PATTERN: string = '[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,10}$';
 
