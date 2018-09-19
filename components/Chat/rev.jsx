@@ -257,6 +257,7 @@ type State = {
 
   validToken: boolean,
   connected: boolean,
+  show: boolean,
 }
 
 export default class SlackChat extends React.Component<Props, State> {
@@ -280,6 +281,7 @@ export default class SlackChat extends React.Component<Props, State> {
     messages: [],
     loading: false,
     sending: false,
+    show: false,
 
     validToken: true,
     connected: false,
@@ -638,9 +640,9 @@ export default class SlackChat extends React.Component<Props, State> {
               );
 
     return (
-      <div className='chat-wrapper'>
+      <div className={classnames('chat-wrapper', { show: this.state.show })}>
+        <div className='overlay' onClick={() => { this.setState({ show: !this.state.show }); }} />
         <div className='chat'>
-
           <div className='channels-wrapper'>
             <span className='legend'>{legend}</span>
             { showChannels ? availableChannels.map(this.renderChannel) : null }
@@ -675,6 +677,12 @@ export default class SlackChat extends React.Component<Props, State> {
             </div>
           </div>
         </div>
+        <Button
+          className='show-button'
+          strain='link'
+          icon='chat'
+          onClick={() => { this.setState({ show: !this.state.show }); }}
+        />
       </div>
     );
   }

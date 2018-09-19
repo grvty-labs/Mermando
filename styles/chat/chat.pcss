@@ -145,4 +145,95 @@
       }
     }
   }
+
+  > .overlay {
+    background-color: rgba(0, 0, 0, 0.75);
+    height: 100%;
+    position: absolute;
+    pointer-events: none;
+    visibility: hidden;
+    width: 100%;
+  }
+
+  > :--button {
+    &.show-button {
+      background-color: var(--royal-blue);
+      border-radius: 2em;
+      color: var(--white);
+      display: none;
+      position: fixed;
+      bottom: 3em;
+      font-size: 1.5em;
+      right: 0.875em;
+      padding: 0.75em;
+
+      > .symbolicon {
+        display: block;
+        margin: 0;
+      }
+    }
+  }
+
+  @media (--mobile-screens) {
+    bottom: 0;
+    height: 100vh;
+    left: 0;
+    font-size: 1.2em;
+    pointer-events: none;
+    position: fixed;
+    right: 0;
+    width: 100vw;
+
+    &.show {
+      > .chat {
+        position: absolute;
+        visibility: visible;
+
+        > .channels-wrapper,
+        > .content {
+          pointer-events: all;
+        }
+      }
+
+      > .overlay {
+        pointer-events: all;
+        visibility: visible;
+      }
+
+      > :--button.show-button {
+        pointer-events: none;
+        visibility: hidden;
+      }
+    }
+
+    > .chat {
+      bottom: 0;
+      height: fit-content;
+      left: 0;
+      margin: 10vh auto auto;
+      max-height: 80vh;
+      max-width: 90vw;
+      right: 0;
+
+      > .content {
+        > .footer {
+          > :--button {
+            font-size: 1em;
+          }
+        }
+      }
+    }
+
+    > .chat,
+    > .overlay {
+      pointer-events: none;
+      visibility: hidden;
+    }
+
+    > :--button.show-button {
+      display: block;
+      pointer-events: all;
+      visibility: visible;
+    }
+  }
 }
