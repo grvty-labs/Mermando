@@ -208,14 +208,29 @@
 
     > .chat {
       bottom: 0;
+      display: flex;
+      flex-direction: column;
       height: fit-content;
       left: 0;
       margin: 10vh auto auto;
       max-height: 80vh;
       max-width: 90vw;
+      min-height: 80vh;
       right: 0;
+      top: 0;
 
       > .content {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        justify-content: flex-end;
+
+        > div {
+          &:first-child {
+            flex: 1;
+          }
+        }
+
         > .footer {
           > :--button {
             font-size: 1em;
