@@ -2,7 +2,7 @@
 import * as React from 'react';
 import autobind from 'autobind-decorator';
 import moment from 'moment';
-import { rtm as SlackRTM, channels as SlackChannels, apps, auth, bots, users } from 'slack';
+import { rtm as SlackRTM, channels as SlackChannels } from 'slack';
 import { load as emojiLoader, parse as emojiParser } from 'gh-emoji';
 import classnames from 'classnames';
 import { Scrollbars } from 'react-custom-scrollbars';
@@ -260,6 +260,19 @@ type State = {
   show: boolean,
 }
 
+const throttle = (func, limit) => {
+  let inThrottle;
+  return function () {
+    const args = arguments;
+    const context = this;
+    if (!inThrottle) {
+      func.apply(context, args);
+      inThrottle = true;
+      setTimeout(() => { inThrottle = false; }, limit);
+    }
+  };
+};
+
 export default class SlackChat extends React.Component<Props, State> {
   static defaultProps: Default = {
     debug: false,
@@ -293,7 +306,7 @@ export default class SlackChat extends React.Component<Props, State> {
         ...this.messagesRules,
         emoji: true,
       };
-    }).catch(err => console.error(`Cant initiate emoji library ${err}`));
+    }).catch(err => this.errorLog(`Cant initiate emoji library ${err}`));
   }
 
   componentDidMount() {
@@ -305,6 +318,7 @@ export default class SlackChat extends React.Component<Props, State> {
   }
 
   componentWillUnmount() {
+    this.activeWebsocket.close();
     // if (this.reloadMessagesInterval) clearInterval(this.reloadMessagesInterval);
   }
 
@@ -321,42 +335,13 @@ export default class SlackChat extends React.Component<Props, State> {
 
     if (!this.active && this.props.userToken && availableChannels && availableChannels.length) {
       this.activeToken = this.props.userToken;
-      this.active = true;
-      this.debugLog('Connect to new');
       // users.list({ token: this.activeToken }).then(console.log).catch(console.error);
       // apps.permissions.info({ token: this.activeToken }).then(console.log).catch(console.error);
       // bots.info({ token: this.activeToken }).then(console.log).catch(console.error);
       // auth.test({ token: this.activeToken }).then((data) => {
       //   this.setState({ validToken: data.ok });
       //   console.log(data);
-      SlackRTM.start({ token: this.props.botToken }).then((resp: RTMStartPayload) => {
-        this.debugLog('RTM Start: ', resp);
-        this.rawChannels = resp.channels;
-        const [defChannelID] = availableChannels;
-        const channel = this.rawChannels.find(c => c.id === defChannelID.id);
-        if (channel) {
-          this.rawBots = resp.bots;
-          this.rawUsers = resp.users;
-          this.activeChannel = channel;
-          const user = this.rawUsers.find(c => c.id === this.props.userId);
-          if (user) {
-            this.activeAccount = user;
-            this.refetchMessages();
-
-            // SlackRTM.connect({ token: this.props.botToken }).then((response) => {
-            // console.log('RTM Connect: ', response);
-            this.activeWebsocket = new WebSocket(resp.url);
-            this.activeWebsocket.onmessage = (e: MessageEvent) => {
-              console.log('WS Message: ', e);
-              if (e.data) this.receiveWebsocketMessage(JSON.parse(e.data));
-            };
-            this.activeWebsocket.onclose = ev => console.log('WS close: ', ev);
-            this.activeWebsocket.onopen = ev => console.log('WS open: ', ev);
-            this.activeWebsocket.onerror = ev => console.log('WS error: ', ev);
-            // }).catch(console.error);
-          }
-        }
-      }).catch(console.error);
+      this.throttleConnect();
       // }).catch((data) => {
       //   this.setState({ validToken: data.ok });
       // });
@@ -453,6 +438,60 @@ export default class SlackChat extends React.Component<Props, State> {
   }
 
   @autobind
+  errorLog(...args: any): void {
+    if (process.env.NODE_ENV !== 'production' && this.props.debug) {
+      console.error('[SlackChat Error]', ...args);
+    }
+  }
+
+  @autobind
+  connectRTM() {
+    const { availableChannels } = this.props;
+    if (!this.active) {
+      SlackRTM.start({ token: this.props.botToken }).then((resp: RTMStartPayload) => {
+        this.debugLog('RTM Start: ', resp);
+        this.rawChannels = resp.channels;
+        const [defChannelID] = availableChannels;
+        const channel = this.rawChannels.find(c => c.id === defChannelID.id);
+        if (channel) {
+          this.rawBots = resp.bots;
+          this.rawUsers = resp.users;
+          this.activeChannel = channel;
+          const user = this.rawUsers.find(c => c.id === this.props.userId);
+          if (user) {
+            this.activeAccount = user;
+            this.refetchMessages();
+
+            // SlackRTM.connect({ token: this.props.botToken }).then((response) => {
+            // console.log('RTM Connect: ', response);
+            this.activeWebsocket = new WebSocket(resp.url);
+            this.activeWebsocket.onmessage = (e: MessageEvent) => {
+              this.debugLog('WS Message: ', e);
+              if (e.data) this.receiveWebsocketMessage(JSON.parse(e.data));
+            };
+            this.activeWebsocket.onclose = (ev) => {
+              this.debugLog('WS close: ', ev);
+              this.active = false;
+            };
+            this.activeWebsocket.onopen = (ev) => {
+              this.debugLog('WS open: ', ev);
+              this.active = true;
+            };
+            this.activeWebsocket.onerror = ev => this.errorLog('WS error: ', ev);
+            // }).catch(console.error);
+          }
+        }
+      }).catch((err) => {
+        this.errorLog(err);
+        this.debugLog(err.retry);
+        if (err.message === 'ratelimited') {
+          setTimeout(this.throttleConnect, 1000);
+        }
+      });
+    }
+  }
+
+  @autobind
   receiveWebsocketMessage(message: Message) {
     const {
       type, subtype, channel, ts,
@@ -515,6 +554,7 @@ export default class SlackChat extends React.Component<Props, State> {
   rawChannels: Channel[] = [];
   rawBots: Bot[] = [];
   rawUsers: User[] = [];
+  throttleConnect = throttle(this.connectRTM, 3000);
 
   @autobind
   scrollDown(force?: boolean) {
