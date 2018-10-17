@@ -1,15 +1,16 @@
 .accordion {
   > .header {
-      align-items: center;
-      display: flex;
-      justify-content: space-between;
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
   }
 
   > .content {
     .panel {
+      height: 0;
+      min-height: 0;
       overflow: hidden;
-      transition: max-height 0.2s ease-out;
-      max-height: 0;
+      transition: min-height 0.2s ease-out;
     }
   }
 }

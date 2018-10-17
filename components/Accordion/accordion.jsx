@@ -73,7 +73,7 @@ export default class Accordion extends React.PureComponent<Props, State> {
           </div>
         </div>
         <div className='content'>
-          <div id={id || 'panel'} className={`panel ${displayPanel ? 'active' : ''}`} style={displayPanel ? {maxHeight: `${panelHeight}px`} : null}>
+          <div id={id || 'panel'} className={`panel ${displayPanel ? 'active' : ''}`} style={displayPanel ? {minHeight: `${panelHeight}px`} : null}>
             { children }
           </div>
         </div>
