@@ -318,7 +318,9 @@ export default class SlackChat extends React.Component<Props, State> {
   }
 
   componentWillUnmount() {
-    this.activeWebsocket.close();
+    if (this.activeWebsocket !== null && this.activeWebsocket.readyState !== this.activeWebsocket.CLOSED) {
+      this.activeWebsocket.close();
+    }
     // if (this.reloadMessagesInterval) clearInterval(this.reloadMessagesInterval);
   }
 
