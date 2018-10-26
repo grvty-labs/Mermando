@@ -566,7 +566,7 @@ export default class Input extends React.PureComponent<Props, void> {
       leftIcon, rightIcon, editable,
       disabled, onChange, autoComplete,
       autoCompleteOptions, onFocus, onBlur, isValidDate, viewDate,
-      dateFormat, closeOnSelect, validationErrorReport,
+      dateFormat, closeOnSelect, validationErrorReport, delimiters,
 
       ...otherProps
     } = this.props;

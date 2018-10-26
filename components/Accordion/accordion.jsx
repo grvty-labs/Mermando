@@ -36,9 +36,12 @@ export default class Accordion extends React.PureComponent<Props, State> {
 
   componentWillMount() {
     const { displayPanel } = this.props;
-    this.setState({
-      displayPanel,
-    });
+    const callback = () => this.setState({ displayPanel });
+    if (displayPanel) {
+      setTimeout(callback, 100);
+    } else {
+      callback();
+    }
   }
 
   render() {
@@ -73,7 +76,11 @@ export default class Accordion extends React.PureComponent<Props, State> {
           </div>
         </div>
         <div className='content'>
-          <div id={id || 'panel'} className={`panel ${displayPanel ? 'active' : ''}`} style={displayPanel ? {minHeight: `${panelHeight}px`} : null}>
+          <div
+            id={id || 'panel'}
+            className={`panel ${displayPanel ? 'active' : ''}`}
+            style={displayPanel ? { minHeight: `${panelHeight}px` } : { minHeight: '0px' }}
+          >
             { children }
           </div>
         </div>
