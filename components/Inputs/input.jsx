@@ -42,6 +42,7 @@ export type Props = {
   forceInlineRequired?: boolean,
   editable?: boolean,
   disabled?: boolean,
+  delimiters?: number[],
 
   onChange?: Function,
   onFocus?: Function,
@@ -75,6 +76,7 @@ type Default = {
   editable: boolean,
   disabled: boolean,
   type: $Keys<typeof inputTypes>,
+  delimiters: number[],
 };
 
 export default class Input extends React.PureComponent<Props, void> {
@@ -105,6 +107,15 @@ export default class Input extends React.PureComponent<Props, void> {
     disabled: false,
     editable: true,
     type: 'text',
+    delimiters: [
+      keyCodes.PERIOD,
+      keyCodes.COMMA,
+      keyCodes.SEMI_COLON,
+      keyCodes.COLON,
+      keyCodes.SPACE,
+      keyCodes.ENTER,
+      keyCodes.TAB,
+    ],
   };
 
   componentDidMount() {
@@ -376,7 +387,7 @@ export default class Input extends React.PureComponent<Props, void> {
     const {
       id, type, className, value, required, disabled, editable,
       autoComplete, autoCompleteOptions, placeholder, viewDate, isValidDate,
-      dateFormat, closeOnSelect, defaultValue,
+      dateFormat, closeOnSelect, defaultValue, delimiters,
     } = this.props;
 
     let newClassName = className || '';
@@ -497,15 +508,7 @@ export default class Input extends React.PureComponent<Props, void> {
             tags={value || []}
             suggestions={autoCompleteOptions}
             autofocus={false}
-            delimiters={[
-              keyCodes.PERIOD,
-              keyCodes.COMMA,
-              keyCodes.SEMI_COLON,
-              keyCodes.COLON,
-              keyCodes.SPACE,
-              keyCodes.ENTER,
-              keyCodes.TAB,
-            ]}
+            delimiters={delimiters}
             classNames={{
               tags: `tags ${editable && disabled ? 'disabled' : ''} ${newClassName}`,
               tagInput: 'inputLine',
