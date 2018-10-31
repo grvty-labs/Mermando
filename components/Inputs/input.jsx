@@ -545,7 +545,7 @@ export default class Input extends React.PureComponent<Props, void> {
             onBlur={this.onHTMLInputBlur}
             required={required}
             disabled={disabled || !editable}
-            // autoComplete={autoComplete}
+            autoComplete={!autoComplete ? id : null}
             pattern={this.generatePattern()}
           />
         );
