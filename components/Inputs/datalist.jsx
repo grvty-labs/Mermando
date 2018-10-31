@@ -99,13 +99,8 @@ export default class DataListInput extends React.PureComponent<Props, State> {
   }
 
   componentWillMount() {
-    const { options } = this.props;
-
-    if (options) {
-      this.setState({
-        filteredOptions: options,
-      });
-    }
+    const { options = [] } = this.props;
+    this.setState({ filteredOptions: options });
   }
 
   componentDidMount() {
@@ -113,16 +108,19 @@ export default class DataListInput extends React.PureComponent<Props, State> {
     if (required && !value) {
       this.onSelectValue([options].value, [options].display);
     }
-    document.addEventListener('keyup', this.handleKeyPress);
+    // document.addEventListener('keyup', this.handleKeyPress);
+    // document.addEventListener('click', this.onBlur);
   }
 
   componentWillUnmount() {
-    document.removeEventListener('keyup', this.handleKeyPress);
+    // document.removeEventListener('keyup', this.handleKeyPress);
+    // document.removeEventListener('click', this.onBlur);
+    document.removeEventListener('click', this.handleOptsOutsideClick);
   }
 
   @autobind
   onHTMLInputChange(event: SyntheticInputEvent<*>) {
-    const { type, onChange, maxLength } = this.props;
+    const { onChange, maxLength = null, options } = this.props;
     const { value } = event.target;
     let clean;
 
@@ -135,6 +133,12 @@ export default class DataListInput extends React.PureComponent<Props, State> {
         this.handleClick();
         clean = value;
         onChange(clean);
+
+        if (options) {
+          const rex = new RegExp(value, 'i');
+          const filtered = options.filter(o => rex.test(o.display));
+          this.setState({ filteredOptions: filtered });
+        }
       }
     }
   }
@@ -151,13 +155,22 @@ export default class DataListInput extends React.PureComponent<Props, State> {
         } else {
           onSelect(newValue);
         }
-        document.removeEventListener('click', this.handleOutsideClick);
+        document.removeEventListener('click', this.handleOptsOutsideClick);
       });
     }
   }
 
   @autobind
-  handleKeyPress(event) {
+  onBlur(e: Event) {
+    if (this.atom && e && (this.atom.isEqualNode(e.target) || this.atom.contains(e.target))) {
+      return;
+    }
+    const { onBlur } = this.props;
+    if (onBlur) onBlur();
+  }
+
+  @autobind
+  handleKeyPress(event: Event) {
     const { value, options } = this.props;
     if (options) {
       const rex = new RegExp(value, 'i');
@@ -168,6 +181,7 @@ export default class DataListInput extends React.PureComponent<Props, State> {
     }
   }
 
+  atom: ?HTMLDivElement;
   node: ?HTMLDivElement;
 
   @autobind
@@ -177,20 +191,22 @@ export default class DataListInput extends React.PureComponent<Props, State> {
       return;
     }
     if (this.state.showOptionsLevel === 0) {
-      document.addEventListener('click', this.handleOutsideClick);
+      document.addEventListener('click', this.handleOptsOutsideClick);
       this.setState({ showOptionsLevel: 1 });
     }
   }
 
   @autobind
-  handleOutsideClick(e: Event) {
+  handleOptsOutsideClick(e: Event) {
     // ignore clicks on the component itself
-    if (this.node && this.node.contains(e.target)) {
+    if (this.atom && e && (this.atom.isEqualNode(e.target) || this.atom.contains(e.target))) {
       return;
     }
 
     this.setState({ showOptionsLevel: 0 });
-    document.removeEventListener('click', this.handleOutsideClick);
+    const { onBlur } = this.props;
+    if (onBlur) onBlur();
+    document.removeEventListener('click', this.handleOptsOutsideClick);
   }
 
   @autobind
@@ -200,8 +216,9 @@ export default class DataListInput extends React.PureComponent<Props, State> {
       <div
         className={`options ${showOptionsLevel > 0 ? 'open' : ''}`}
         ref={(node) => { this.node = node; }}
+        onBlur={() => this.handleOptsOutsideClick()}
       >
-        {this.state.filteredOptions.map((option: Option, index: number) => (
+        {filteredOptions.map((option: Option, index: number) => (
           <span
             key={index}
             onClick={option.options
@@ -260,7 +277,8 @@ export default class DataListInput extends React.PureComponent<Props, State> {
         invalid={messageType === 'error'}
         onClick={() => { if (this.inputElement) this.inputElement.focus(); }}
         onFocus={onFocus}
-        onBlur={onBlur}
+        onBlur={this.onBlur}
+        ref={(vref) => { this.atom = vref ? vref.wrapRef : null; }}
       >
         <input
           {...otherProps}

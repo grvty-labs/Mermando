@@ -111,6 +111,8 @@ export default class InputAtom extends React.PureComponent<Props, State> {
     }
   }
 
+  wrapRef: ?HTMLDivElement;
+
   @autobind
   renderLeftIcon(): React.Node {
     const {
@@ -253,14 +255,15 @@ export default class InputAtom extends React.PureComponent<Props, State> {
     return (
       <div
         className={newClassName}
-        onBlur={() => {
-          if (onBlur) { onBlur(); }
+        onBlur={(e) => {
+          if (onBlur) { onBlur(e); }
           this.setState({ focused: false });
         }}
         onFocus={() => {
           if (onFocus) { onFocus(); }
           this.setState({ focused: true });
         }}
+        ref={(vref) => { this.wrapRef = vref; }}
       >
         { label ? <Label htmlFor={id}>{label}</Label> : null}
         <div
