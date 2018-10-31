@@ -10,6 +10,7 @@ export type UserProps = {
   id: number | string,
   avatar?: AvatarProps,
   name: string,
+  spec?: string,
   email: string,
   actions?: React.Node,
 };
@@ -33,7 +34,6 @@ type State = {};
 export default class UsersList extends React.PureComponent<Props, State> {
   static defaultProps: Default = {
     className: '',
-    overlap: true,
   };
 
   @autobind
@@ -49,14 +49,14 @@ export default class UsersList extends React.PureComponent<Props, State> {
         <Avatar {...user} />
         <div className='data'>
           <span className='name'>{user.name}</span>
-          {
-            user.spec
-            ? (
-              <span className='spec'>{user.spec}</span>
-            )
+          { Object.prototype.hasOwnProperty.call(user, 'spec') && user.spec
+            ? <span className='spec'>{user.spec}</span>
             : null
           }
-          <span className='email'>{user.email}</span>
+          { Object.prototype.hasOwnProperty.call(user, 'email') && user.email
+            ? <span className='email'>{user.email}</span>
+            : null
+          }
         </div>
         <div className='actions'>
           {user.actions}
@@ -68,7 +68,7 @@ export default class UsersList extends React.PureComponent<Props, State> {
   render() {
     const { users, className } = this.props;
     return (
-      <div className={`users-list ${className || ''}`}>
+      <div className={classNames('users-list', `${className}`)}>
         { users
           ? users.map(this.renderUserElement)
           : null
