@@ -59,7 +59,7 @@ export default class Page extends React.PureComponent<Props, State> {
   render() {
     const {
       backText, className, children, legend, title, topComponent, type,
-      progressValue, middleComponent, hideSeparator,
+      progressValue, middleComponent, hideSeparator, onBackClick
     } = this.props;
     const { bannerHeight, close } = this.state;
 
@@ -67,7 +67,11 @@ export default class Page extends React.PureComponent<Props, State> {
       <div className={classnames('page', { close, open: !close }, `${className || ''}`)}>
         <div className='banner' ref={(vref) => { if (vref) this.setState({ bannerHeight: vref.clientHeight }); }}>
           <div className='top'>
-            <Button strain='link' onClick={this.onBackClick}>{backText}</Button>
+            {
+              onBackClick
+              ? <Button strain='link' onClick={this.onBackClick}>{backText}</Button>
+              : null
+            }
           </div>
           <div className='header'>
             {
