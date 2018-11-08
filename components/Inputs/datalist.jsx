@@ -115,7 +115,7 @@ export default class DataListInput extends React.PureComponent<Props, State> {
   componentWillUnmount() {
     // document.removeEventListener('keyup', this.handleKeyPress);
     // document.removeEventListener('click', this.onBlur);
-    document.removeEventListener('click', this.handleOptsOutsideClick);
+    document.removeEventListener('click', this.onBlur);
   }
 
   @autobind
@@ -155,7 +155,7 @@ export default class DataListInput extends React.PureComponent<Props, State> {
         } else {
           onSelect(newValue);
         }
-        document.removeEventListener('click', this.handleOptsOutsideClick);
+        document.removeEventListener('click', this.onBlur);
       });
     }
   }
@@ -165,8 +165,10 @@ export default class DataListInput extends React.PureComponent<Props, State> {
     if (this.atom && e && (this.atom.isEqualNode(e.target) || this.atom.contains(e.target))) {
       return;
     }
+    this.setState({ showOptionsLevel: 0 });
     const { onBlur } = this.props;
     if (onBlur) onBlur();
+    document.removeEventListener('click', this.onBlur);
   }
 
   @autobind
@@ -191,22 +193,9 @@ export default class DataListInput extends React.PureComponent<Props, State> {
       return;
     }
     if (this.state.showOptionsLevel === 0) {
-      document.addEventListener('click', this.handleOptsOutsideClick);
+      document.addEventListener('click', this.onBlur);
       this.setState({ showOptionsLevel: 1 });
     }
-  }
-
-  @autobind
-  handleOptsOutsideClick(e: Event) {
-    // ignore clicks on the component itself
-    if (this.atom && e && (this.atom.isEqualNode(e.target) || this.atom.contains(e.target))) {
-      return;
-    }
-
-    this.setState({ showOptionsLevel: 0 });
-    const { onBlur } = this.props;
-    if (onBlur) onBlur();
-    document.removeEventListener('click', this.handleOptsOutsideClick);
   }
 
   @autobind
@@ -216,7 +205,7 @@ export default class DataListInput extends React.PureComponent<Props, State> {
       <div
         className={`options ${showOptionsLevel > 0 ? 'open' : ''}`}
         ref={(node) => { this.node = node; }}
-        onBlur={() => this.handleOptsOutsideClick()}
+        onBlur={this.onBlur}
       >
         {filteredOptions.map((option: Option, index: number) => (
           <span
