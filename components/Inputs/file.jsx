@@ -125,7 +125,7 @@ export default class FileInput extends React.PureComponent<Props, void> {
         }
       } else if (type === 'multiple' && acceptedFiles && acceptedFiles.length) {
         const casted = value && value.constructor === Array && value.length
-          ? (value: FileType[])
+          ? value
           : [];
         if (acceptedFiles && acceptedFiles.length && acceptedFiles[0]) {
           if (compress) {
@@ -155,12 +155,13 @@ export default class FileInput extends React.PureComponent<Props, void> {
   @autobind
   onRemoveIndex(index: number = 0) {
     const {
-      value, onChange,
+      value, onChange, disabled,
+      editable, type,
     } = this.props;
-    if (onChange && !this.props.disabled && this.props.editable) {
-      if (this.props.type === 'multiple') {
+    if (onChange && !disabled && editable) {
+      if (type === 'multiple') {
         const casted = value && value.constructor === Array && value.length
-          ? (value: FileType[])
+          ? value
           : [];
         if (index >= 0 && index < casted.length) {
           onChange([
@@ -178,17 +179,18 @@ export default class FileInput extends React.PureComponent<Props, void> {
   renderSinglePreview(file: FileType, index: number = 0) {
     const {
       disabled, editable, onZoomClick,
+      previewType, hidePreviewTag,
     } = this.props;
 
     if (!editable) {
-      if (this.props.previewType === 'image') {
+      if (previewType === 'image') {
         return (
           <div className='img' key={index}>
             <img
               src={file.preview}
               alt={file.name}
             />
-            <span className='tag'>{index === 0 && !this.props.hidePreviewTag ? 'Main Image' : ''}</span>
+            <span className='tag'>{index === 0 && !hidePreviewTag ? 'Main Image' : ''}</span>
             <div
               className='overlay'
               onClick={onZoomClick ? onZoomClick : () => {}} // eslint-disable-line
@@ -206,19 +208,20 @@ export default class FileInput extends React.PureComponent<Props, void> {
           key={index}
           href={file.preview}
           target='_blank'
+          rel='noopener noreferrer'
         >
           {file.name}
         </a>
       );
     }
-    if (this.props.previewType === 'image') {
+    if (previewType === 'image') {
       return (
         <div className='img' key={index}>
           <img
             src={file.preview}
             alt={file.name}
           />
-          <span className='tag'>{index === 0 && !this.props.hidePreviewTag ? 'Main Image' : ''}</span>
+          <span className='tag'>{index === 0 && !hidePreviewTag ? 'Main Image' : ''}</span>
           <span
             className={`remove-btn ${disabled ? 'disabled' : ''}`}
             onClick={() => this.onRemoveIndex(index)}
@@ -250,17 +253,15 @@ export default class FileInput extends React.PureComponent<Props, void> {
     const { previewType, type, value } = this.props;
     if (value) {
       if (type === 'single' && value && value.constructor !== Array) {
-        const casted = (value: FileType);
         return (
           <div className={`attachment single ${previewType === 'image' ? 'grid' : ''}`}>
-            { this.renderSinglePreview(casted) }
+            { this.renderSinglePreview(value) }
           </div>
         );
       } else if (type === 'multiple' && value && value.constructor === Array && value.length) {
-        const casted = (value: FileType[]);
         return (
           <div className={`attachment multiple ${previewType === 'image' ? 'grid' : ''}`}>
-            { casted.map(this.renderSinglePreview) }
+            { value.map(this.renderSinglePreview) }
           </div>
         );
       }
@@ -271,7 +272,7 @@ export default class FileInput extends React.PureComponent<Props, void> {
 
   @autobind
   renderPlaceholder(values: { isDragActive: boolean, isDragAccept: boolean }) {
-    const { type } = this.props;
+    const { type, placeholder, previewType } = this.props;
     let placeholderMessage;
     if (values.isDragActive) {
       if (values.isDragAccept) {
@@ -284,8 +285,8 @@ export default class FileInput extends React.PureComponent<Props, void> {
           : 'The file will be rejected';
       }
     } else {
-      placeholderMessage = this.props.placeholder || (
-        this.props.previewType === 'images'
+      placeholderMessage = placeholder || (
+        previewType === 'images'
           ? type === 'multiple'
             ? 'Drag & Drop your images here'
             : 'Drag & Drop your image here'
@@ -298,22 +299,26 @@ export default class FileInput extends React.PureComponent<Props, void> {
 
   render() {
     const {
-      messageType, editable, disabled, value,
+      id, label, messagesArray, message,
+      messageType, forceInlineRequired,
+      forceMessageBeneath, className, rightIcon,
+      editable, disabled, value, required,
+      type, acceptedExtensions,
     } = this.props;
 
     return (
       <InputAtom
-        id={this.props.id}
-        label={this.props.label}
-        messagesArray={this.props.messagesArray}
-        message={this.props.message}
-        messageType={this.props.messageType}
-        forceInlineRequired={this.props.forceInlineRequired}
-        forceMessageBeneath={this.props.forceMessageBeneath}
-        className={this.props.className}
+        id={id}
+        label={label}
+        messagesArray={messagesArray}
+        message={message}
+        messageType={messageType}
+        forceInlineRequired={forceInlineRequired}
+        forceMessageBeneath={forceMessageBeneath}
+        className={className}
         type='file'
-        rightIcon={this.props.rightIcon}
-        required={this.props.required}
+        rightIcon={rightIcon}
+        required={required}
         readOnly={!editable}
         disabled={disabled}
         empty={!value || (value.constructor === Array && value.length === 0)}
@@ -327,12 +332,12 @@ export default class FileInput extends React.PureComponent<Props, void> {
         <Dropzone
           className='file-input'
           disabled={disabled || !editable}
-          multiple={this.props.type === 'multiple'}
+          multiple={type === 'multiple'}
           activeClassName='active'
           acceptClassName='accept'
           disabledClassName='disabled'
           rejectClassName='reject'
-          accept={this.props.acceptedExtensions}
+          accept={acceptedExtensions}
           onDrop={chingo => this.onSelectValue(chingo)}
         >
           {!editable
