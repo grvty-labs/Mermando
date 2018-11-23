@@ -128,7 +128,6 @@ export default class Button extends React.PureComponent<Props, State> {
   @autobind
   handlePromise(promise: Promise) {
     if (promise && promise.then && promise.catch) {
-      console.log('PROMISE');
       promise.then((data) => {
         this.success(null, true, data);
       }).catch((err) => {

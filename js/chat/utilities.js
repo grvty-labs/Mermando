@@ -52,7 +52,6 @@ export function postMessage(msg: PostMsg): Promise<*> {
       if (lastThreadTs) newMSG.thread_ts = lastThreadTs;
       if (username) newMSG.username = username;
       if (icon_url) newMSG.icon_url = icon_url;
-      console.log(newMSG);
       return chat.postMessage(newMSG, (err, data) => (err ? reject(err) : accept(data)));
     }
     return reject();
