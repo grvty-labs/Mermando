@@ -129,7 +129,11 @@ export default class Button extends React.PureComponent<Props, State> {
   handlePromise(promise: Promise) {
     if (promise && promise.then && promise.catch) {
       promise.then((data) => {
-        this.success(null, true, data);
+        if (data && data.then && data.catch) {
+          this.handlePromise(data);
+        } else {
+          this.success(null, true, data);
+        }
       }).catch((err) => {
         this.error(null, err);
       });
@@ -199,7 +203,8 @@ export default class Button extends React.PureComponent<Props, State> {
         <button
           ref={(vref) => { this.btn = vref; }}
           onClick={this.onClick}
-          type={type || ''}
+          // type={type || 'button'}
+          type='button'
           disabled={disabled || currentState === STATUS.DISABLED}
           className={
             `button ${strain || ''} ${size || ''} ${
