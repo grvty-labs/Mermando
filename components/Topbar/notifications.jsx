@@ -31,7 +31,7 @@ export default class Notifications extends React.PureComponent<Props, State> {
   render() {
     const {
       icon, anchors, title, onAnchorClick,
-      leftElement, rightElement,
+      leftElement, rightElement, onShow,
     } = this.props;
 
     const unreadNumber = anchors.filter(n => !n.read).length;
@@ -46,7 +46,7 @@ export default class Notifications extends React.PureComponent<Props, State> {
         headTitle={title}
         headLeftElement={leftElement}
         headRightElement={rightElement}
-        onShow={this.props.onShow}
+        onShow={onShow}
       >
         {anchors.map(anchor => (
           <Button
