@@ -119,7 +119,7 @@ export default class Input extends React.PureComponent<Props, void> {
   };
 
   componentDidMount() {
-    const { value, inputElement, type } = this.props;
+    const { value, type } = this.props;
     if (value) {
       switch (type) {
         case 'email':
@@ -131,21 +131,23 @@ export default class Input extends React.PureComponent<Props, void> {
         default:
           break;
       }
-      if (inputElement) {
+      if (this.inputElement) {
         this.onResizeValue();
       }
     }
   }
 
-  componentWillReceiveProps(nextProps: Props) {
-    if (nextProps.value !== this.props.value) {
+  componentDidUpdate(prevProps: Props) {
+    const { value } = this.props;
+    if (prevProps.value !== value) {
       this.onResizeValue();
     }
   }
 
   @autobind
   onResizeValue() {
-    if (this.props.type === 'textarea') {
+    const { type } = this.props;
+    if (type === 'textarea') {
       setTimeout(() => {
         if (this.inputElement) {
           this.inputElement.style.cssText = 'height:auto; padding: 0';
