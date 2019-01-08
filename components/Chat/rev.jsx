@@ -224,6 +224,7 @@ type Props = {
   showChannels?: boolean,
   canAttach?: boolean,
   legend?: string,
+  excludedMessageSubtypes: string[],
 
   components?: {
     disconnected: React.ComponentType<any>,
@@ -239,6 +240,7 @@ type Default = {
   showChannels: boolean,
   canAttach: boolean,
   legend: string,
+  excludedMessageSubtypes: string[],
 
   components: {
     disconnected: React.ComponentType<any>,
@@ -279,6 +281,9 @@ export default class SlackChat extends React.Component<Props, State> {
     showChannels: true,
     canAttach: false,
     legend: 'Channels',
+    excludedMessageSubtypes: [
+      'channel_join',
+    ],
 
     components: {
       disconnected: DefaultComponent,
@@ -327,16 +332,16 @@ export default class SlackChat extends React.Component<Props, State> {
   @autobind
   onUpdateProps(prevProps: Props) {
     const { userToken } = prevProps;
-    const { availableChannels } = this.props;
-    if (this.active && this.props.userToken !== userToken) {
+    const { availableChannels, userToken: newToken } = this.props;
+    if (this.active && newToken !== userToken) {
       this.debugLog('Disable previous');
       this.setState({ connected: false });
 
       this.active = false;
     }
 
-    if (!this.active && this.props.userToken && availableChannels && availableChannels.length) {
-      this.activeToken = this.props.userToken;
+    if (!this.active && newToken && availableChannels && availableChannels.length) {
+      this.activeToken = newToken;
       // users.list({ token: this.activeToken }).then(console.log).catch(console.error);
       // apps.permissions.info({ token: this.activeToken }).then(console.log).catch(console.error);
       // bots.info({ token: this.activeToken }).then(console.log).catch(console.error);
@@ -355,6 +360,7 @@ export default class SlackChat extends React.Component<Props, State> {
     const {
       newMessage: text, sending, loading,
     } = this.state;
+    const { userName, userAvatar } = this.props;
     if (!sending && !loading) {
       this.setState({ sending: true });
       postMessage({
@@ -362,9 +368,9 @@ export default class SlackChat extends React.Component<Props, State> {
         lastThreadTs: undefined,
         token: this.activeToken,
         channel: this.activeChannel.id,
-        username: this.props.userName || this.activeAccount.name,
-        icon_url: this.props.userAvatar,
-        as_user: !this.props.userName,
+        username: userName || this.activeAccount.name,
+        icon_url: userAvatar,
+        as_user: !userName,
       }).then(() => {
         this.setState({
           newMessage: '',
@@ -395,9 +401,12 @@ export default class SlackChat extends React.Component<Props, State> {
     const { profile = undefined, icons = undefined } = account;
     let image;
     if (profile) {
-      image = profile.image_72 || profile.image_48 ||
-        profile.image_192 || profile.image_32 ||
-        profile.image_24 || profile.image_512;
+      image = profile.image_24
+        || profile.image_32
+        || profile.image_48
+        || profile.image_72
+        || profile.image_192
+        || profile.image_512;
     }
     if (!image && icons) {
       image = icons.image_72 || icons.image_64 ||
@@ -448,9 +457,9 @@ export default class SlackChat extends React.Component<Props, State> {
 
   @autobind
   connectRTM() {
-    const { availableChannels } = this.props;
+    const { availableChannels, userId, botToken } = this.props;
     if (!this.active) {
-      SlackRTM.start({ token: this.props.botToken }).then((resp: RTMStartPayload) => {
+      SlackRTM.start({ token: botToken }).then((resp: RTMStartPayload) => {
         this.debugLog('RTM Start: ', resp);
         this.rawChannels = resp.channels;
         const [defChannelID] = availableChannels;
@@ -459,7 +468,7 @@ export default class SlackChat extends React.Component<Props, State> {
           this.rawBots = resp.bots;
           this.rawUsers = resp.users;
           this.activeChannel = channel;
-          const user = this.rawUsers.find(c => c.id === this.props.userId);
+          const user = this.rawUsers.find(c => c.id === userId);
           if (user) {
             this.activeAccount = user;
             this.refetchMessages();
@@ -498,12 +507,16 @@ export default class SlackChat extends React.Component<Props, State> {
     const {
       type, subtype, channel, ts,
     } = message;
+    const { excludedMessageSubtypes = [] } = this.props;
+    const { messages } = this.state;
     this.debugLog('WS Message: ', message);
     switch (type) {
       case 'message':
-        if (this.activeChannel && channel === this.activeChannel.id) {
-          if (subtype === 'message_replied') this.setState({ messages: [...this.state.messages, message.message] }, this.scrollDown);
-          else this.setState({ messages: [...this.state.messages, message] }, this.scrollDown);
+        if (!excludedMessageSubtypes.includes(subtype)) {
+          if (this.activeChannel && channel === this.activeChannel.id) {
+            if (subtype === 'message_replied') this.setState({ messages: [...messages, message.message] }, this.scrollDown);
+            else this.setState({ messages: [...messages, message] }, this.scrollDown);
+          }
         }
         break;
       default:
@@ -573,6 +586,7 @@ export default class SlackChat extends React.Component<Props, State> {
 
   @autobind
   refetchMessages() {
+    const { excludedMessageSubtypes = [] } = this.props;
     this.debugLog('Load messages from channel: ', this.activeChannel);
     SlackChannels.history({
       token: this.props.appToken,
@@ -587,7 +601,7 @@ export default class SlackChat extends React.Component<Props, State> {
       // reverse() mutates the array
       if (!arraysIdentical(this.rawMessages, data.messages.reverse())) {
         this.debugLog('Messages loaded: ', data);
-        this.rawMessages = data.messages;
+        this.rawMessages = data.messages.filter(m => !excludedMessageSubtypes.includes(m.subtype));
         this.setState({
           messages: data.messages,
           connected: true,
@@ -654,21 +668,31 @@ export default class SlackChat extends React.Component<Props, State> {
   }
 
   render() {
-    const { newMessage, messages = [] } = this.state;
+    const {
+      newMessage, messages: messagesRaw = [],
+      validToken, connected, show,
+      sending,
+    } = this.state;
     const {
       availableChannels = [], components, userToken, legend,
-      showChannels, canAttach,
+      showChannels, canAttach, excludedMessageSubtypes = [],
     } = this.props;
 
-    const enableInput = !!availableChannels && !!availableChannels.length &&
-      userToken && this.state.validToken && this.state.connected;
+    const messages = messagesRaw.filter(m => !excludedMessageSubtypes.includes(m.subtype));
+
+    const enableInput = !!availableChannels
+      && !!availableChannels.length
+      && !this.activeChannel.is_archived
+      && userToken
+      && validToken
+      && connected;
     const renderContent = !userToken
       ? <components.login />
       : !(availableChannels && availableChannels.length)
         ? <components.invalidChannels />
-        : !this.state.validToken
+        : !validToken
           ? <components.invalidToken />
-          : !this.state.connected
+          : !connected
             ? <components.disconnected />
             : !(messages && messages.length)
               ? <components.emptyMessages />
@@ -682,8 +706,8 @@ export default class SlackChat extends React.Component<Props, State> {
               );
 
     return (
-      <div className={classnames('chat-wrapper', { show: this.state.show })}>
-        <div className='overlay' onClick={() => { this.setState({ show: !this.state.show }); }} />
+      <div className={classnames('chat-wrapper', { show })}>
+        <div className='overlay' onClick={() => { this.setState({ show: !show }); }} />
         <div className='chat'>
           <div className='channels-wrapper'>
             <span className='legend'>{legend}</span>
@@ -705,13 +729,13 @@ export default class SlackChat extends React.Component<Props, State> {
             <div className='footer'>
               {
                 canAttach
-                ? <Button strain='link' size='regular' disabled={!enableInput || this.state.sending}>Attach File</Button>
-                : <div />
-              }
+                  ? <Button strain='link' size='regular' disabled={!enableInput || sending}>Attach File</Button>
+                  : <div />
+              } 
               <Button
                 strain='main'
                 size='big'
-                disabled={!enableInput || this.state.sending}
+                disabled={!enableInput || sending}
                 onClick={this.onSendNewMessage}
               >
                 Send
@@ -723,7 +747,7 @@ export default class SlackChat extends React.Component<Props, State> {
           className='show-button'
           strain='link'
           icon='chat'
-          onClick={() => { this.setState({ show: !this.state.show }); }}
+          onClick={() => { this.setState({ show: !show }); }}
         />
       </div>
     );
