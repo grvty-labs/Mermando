@@ -680,8 +680,9 @@ export default class SlackChat extends React.Component<Props, State> {
 
     const messages = messagesRaw.filter(m => !excludedMessageSubtypes.includes(m.subtype));
 
-    const enableInput = !!availableChannels
-      && !!availableChannels.length
+    const enableInput = availableChannels
+      && availableChannels.length
+      && this.activeChannel
       && !this.activeChannel.is_archived
       && userToken
       && validToken
