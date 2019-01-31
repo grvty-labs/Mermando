@@ -32,6 +32,7 @@ export type Props = {
 
   options: Array<Option>,
   placeholder?: string,
+  autoComplete?: boolean,
   required?: boolean,
   editable?: boolean,
   disabled?: boolean,
@@ -57,6 +58,7 @@ type Default = {
   rightIcon: string,
   returnValueDisplay: boolean,
 
+  autoComplete: boolean,
   required: boolean,
   editable: boolean,
   disabled: boolean,
@@ -86,7 +88,7 @@ export default class DataListInput extends React.PureComponent<Props, State> {
     forceMessageBeneath: false,
     forceInlineRequired: false,
 
-
+    autoComplete: false,
     required: false,
     disabled: false,
     editable: true,
@@ -238,6 +240,7 @@ export default class DataListInput extends React.PureComponent<Props, State> {
 
       leftIcon, rightIcon, editable, disabled, value, type,
       onFocus, onBlur, onChange, onSelect, returnValueDisplay,
+      autoComplete,
 
 
       ...otherProps
@@ -275,6 +278,7 @@ export default class DataListInput extends React.PureComponent<Props, State> {
           type={
             type === 'float' ? 'number' : type
           } id={`${id}`}
+          autoComplete={!autoComplete ? 'off' : null}
           value={value || ''}
           onChange={this.onHTMLInputChange}
           className={newClassName}
