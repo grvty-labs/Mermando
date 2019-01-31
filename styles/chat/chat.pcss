@@ -68,21 +68,15 @@
 
           &.mine {
             justify-content: flex-end;
-            margin-bottom: 1.1em;
             padding-left: 30%;
-
-            & + .not-mine {
-              margin-top: 1.5em;
-            }
           }
 
           &.not-mine {
             justify-content: flex-start;
-            margin-bottom: 1.1em;
+          }
 
-            & + .mine {
-              margin-top: 1.5em;
-            }
+          &.diff {
+            margin-top: 0.3em;
           }
 
           > .avatar {
@@ -90,7 +84,12 @@
           }
 
           > .msg-cnt {
-            margin-left: 1em;
+            background-color: transparent;
+            border-radius: 3px;
+            margin-left: 0.8em;
+            padding: 0.2em;
+            transition: background-color 0.3s ease-in-out;
+            width: 100%;
 
             > .head {
               display: flex;
@@ -109,11 +108,24 @@
               }
             }
 
+            > .date {
+              float: right;
+              font-size: 0.7em;
+              margin: 0.2em 0 0;
+              opacity: 0;
+              transition: opacity 0.3s ease-in-out;
+
+              > .tooltip {
+                font-size: 1em;
+                line-height: 1;
+              }
+            }
+
             > .text {
               letter-spacing: normal;
               line-break: strict;
               line-height: 1.33;
-              margin: 0.666em 0 0;
+              margin: 0;
               overflow-wrap: break-word;
               text-overflow: clip;
               white-space: pre-wrap;
@@ -124,8 +136,8 @@
               }
 
               .gh-emoji {
-                max-height: 1.8em;
-                max-width: 1.8em;
+                max-height: 1.5em;
+                max-width: 1.5em;
               }
 
               .mention {
@@ -133,6 +145,19 @@
                 font-weight: bold;
               }
             }
+
+            &:--enter-action,
+            &:hover {
+              background-color: var(--snow);
+
+              > .date {
+                opacity: 1;
+              }
+            }
+          }
+
+          &:last-child {
+            margin-bottom: 2em;
           }
         }
       }

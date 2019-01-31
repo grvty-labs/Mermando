@@ -611,44 +611,66 @@ export default class SlackChat extends React.Component<Props, State> {
   }
 
   @autobind
-  renderMessage(message: Message): React.Node {
-    const { user, username, bot_id: bid } = message;
+  renderMessages(messages: Message[]): React.Node {
+    let lastMessageFrom = '';
+    const renderedMessages = messages.map((message) => {
+      const { user, username, bot_id: bid } = message;
 
-    let account;
-    if (user) account = this.getAccountByID(user);
-    else if (bid) account = this.getAccountByID(bid);
-    else account = this.getAccountByID(username);
+      let account;
+      if (user) account = this.getAccountByID(user);
+      else if (bid) account = this.getAccountByID(bid);
+      else account = this.getAccountByID(username);
 
-    const { id: accid, profile: accprofile, name: accname } = account;
+      const { id: accid, profile: accprofile, name: accname } = account;
 
-    const mine = accid === this.activeAccount.id;
+      const mine = accid === this.activeAccount.id;
 
-    // TODO: Return System Message
-    // TODO: Return Hook Message
+      // TODO: Return System Message
+      // TODO: Return Hook Message
 
-    const mentioned = message.text.indexOf(`@${this.activeAccount.id}`) > -1;
-    const since = moment(message.ts, 'X').fromNow();
+      const mentioned = message.text.indexOf(`@${this.activeAccount.id}`) > -1;
+      const timestamp = moment(message.ts, 'X');
+      const displayName = username || (accprofile && accprofile.real_name
+        ? accprofile.real_name
+        : accname);
+      const hideHead = displayName === lastMessageFrom;
+      lastMessageFrom = displayName;
 
-    return (
-      <div className={classnames('msg-row', { mentioned, mine, 'not-mine': !mine })} key={message.ts}>
-        {this.getAccountAvatar(account)}
+      return (
+        <div
+          key={message.ts}
+          className={classnames('msg-row', {
+            mentioned, mine, 'not-mine': !mine, diff: !hideHead,
+          })}
+        >
+          {
+            hideHead
+              ? <div className='avatar empty'/>
+              : this.getAccountAvatar(account)
+          }
 
-        <div className='msg-cnt'>
-          <div className='head'>
-            <span className='name'>
-              {
-                username || (accprofile && accprofile.real_name
-                  ? accprofile.real_name
-                  : accname)
-              }
-            </span>
-            <span className='date'>{since}</span>
+          <div className='msg-cnt'>
+            {
+              hideHead
+                ? null
+                : (
+                  <div className='head'>
+                    <span className='name'>{displayName}</span>
+                    <span className='date'>{timestamp.fromNow()}</span>
+                  </div>
+                )
+            }
+            {this.parseMessageText(message.text)}
+            <div className='date'>
+              <div className='tooltip'>
+                {timestamp.format('LT')}
+              </div>
+            </div>
           </div>
-
-          {this.parseMessageText(message.text)}
         </div>
-      </div>
-    );
+      );
+    });
+    return renderedMessages;
   }
 
   @autobind
@@ -702,7 +724,7 @@ export default class SlackChat extends React.Component<Props, State> {
                   className='messages-wrapper'
                   ref={(vref) => { this.messagesWrapper = vref; this.scrollDown(true); }}
                 >
-                  { messages.map(this.renderMessage) }
+                  { this.renderMessages(messages) }
                 </Scrollbars>
               );
 
